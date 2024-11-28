@@ -59,7 +59,16 @@ struct Node *find_node(struct Node *start, int target) {
   return NULL;
 }
 
-void find_and_remove_node(struct Node *head, int find_index) {}
+void find_and_remove_node(struct Node *head, int find_index) {
+  struct Node *found = find_node(head, find_index);
+  struct Node *prev = found->prev;
+  struct Node *next = found->next;
+
+  prev->next = next;
+  next->prev = prev;
+
+  free(found);
+}
 
 void find_and_insert_node(struct Node *head, int find_index, int new_index) {
   struct Node *found = find_node(head, find_index);
@@ -163,4 +172,30 @@ int main(int argc, char **argv) {
 
   // Remove a node
   head = start;
+  find_and_remove_node(head, 8);
+
+  found_node = find_node(head, 8); // Should return null since 8 was removed.
+  assert(found_node == NULL);
+
+  assert(head->index == 0);
+  printf("head index is %i\n", head->index);
+  head = head->next;
+
+  assert(head->index == 1);
+  printf("head index is %i\n", head->index);
+  head = head->next;
+
+  assert(head->index == 2);
+  printf("head index is %i\n", head->index);
+  assert(head->next == NULL);
+  head = head->prev;
+
+  assert(head->index == 1);
+  printf("head index is %i\n", head->index);
+  head = head->prev;
+
+  assert(head->index == 0);
+  printf("head index is %i\n", head->index);
+
+  assert(head->prev == NULL);
 }
