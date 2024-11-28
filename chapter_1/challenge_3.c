@@ -59,6 +59,22 @@ struct Node *find_node(struct Node *start, int target) {
   return NULL;
 }
 
+void find_and_insert_node(struct Node *head, int find_index, int new_index) {
+  struct Node *found = find_node(head, find_index);
+  struct Node *prev = found;
+  struct Node *next = found->next;
+
+  struct Node *new = malloc(sizeof(struct Node));
+  new->index = new_index;
+  new->prev = prev;
+  new->next = next;
+
+  if (prev)
+    prev->next = new;
+  if (next)
+    next->prev = new;
+}
+
 int main(int argc, char **argv) {
   struct Node *head = init_linked_list(0);
   struct Node *start = head;
@@ -98,11 +114,16 @@ int main(int argc, char **argv) {
 
   // Find a node
   head = start;
-  struct Node* third_node = head->next->next;
-  struct Node* found_node = find_node(head, 2);
+  struct Node *third_node = head->next->next;
+  struct Node *found_node = find_node(head, 2);
   assert(third_node == found_node);
   printf("Address of third node %p\n", third_node);
   printf("Address of found node %p\n", found_node);
+
+  // Insert a node
+  find_and_insert_node(head, 1, 8);
+  struct Node* new_node = head->next->next;
+  assert(new_node->index == 8);
 
   // Pop a node
   head = start;
@@ -113,6 +134,10 @@ int main(int argc, char **argv) {
   head = head->next;
 
   assert(head->index == 1);
+  printf("head index is %i\n", head->index);
+  head = head->next;
+
+  assert(head->index == 8);
   printf("head index is %i\n", head->index);
   head = head->next;
 
