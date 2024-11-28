@@ -40,6 +40,25 @@ void pop_node(struct Node *head) {
   prev->next = NULL;
 }
 
+struct Node *find_node(struct Node *start, int target) {
+  struct Node *head = start;
+  // Search forwards
+  while (head) {
+    if (head->index == target)
+      return head;
+    head = head->next;
+  }
+
+  // Search backwards
+  head = start;
+  while (head) {
+    if (head->index == target)
+      return head;
+    head = head->prev;
+  }
+  return NULL;
+}
+
 int main(int argc, char **argv) {
   struct Node *head = init_linked_list(0);
   struct Node *start = head;
@@ -77,6 +96,15 @@ int main(int argc, char **argv) {
 
   assert(head == NULL);
 
+  // Find a node
+  head = start;
+  struct Node* third_node = head->next->next;
+  struct Node* found_node = find_node(head, 2);
+  assert(third_node == found_node);
+  printf("Address of third node %p\n", third_node);
+  printf("Address of found node %p\n", found_node);
+
+  // Pop a node
   head = start;
   pop_node(head);
 
