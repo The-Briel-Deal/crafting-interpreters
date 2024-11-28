@@ -23,14 +23,31 @@ void push_node(struct Node *head) {
     head = head->next;
   }
   assert(head->next == NULL);
+
+  next->index = head->index + 1;
+
   head->next = next;
 }
 
 int main(int argc, char **argv) {
-  struct Node head = {.next = NULL, .index = 1};
-  struct Node next_node = {.next = NULL, .index = 2};
-  head.next = &next_node;
+  struct Node *head = init_linked_list();
+  push_node(head);
+  push_node(head);
+  push_node(head);
 
-  printf("head index is %i\n", head.index);
-  printf("head.next index is %i\n", head.next->index);
+  assert(head->index == 0);
+  printf("head index is %i\n", head->index);
+  head = head->next;
+
+  assert(head->index == 1);
+  printf("head index is %i\n", head->index);
+  head = head->next;
+  assert(head->index == 2);
+  printf("head index is %i\n", head->index);
+  head = head->next;
+  assert(head->index == 3);
+  printf("head index is %i\n", head->index);
+  head = head->next;
+
+  assert(head == NULL);
 }
