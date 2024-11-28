@@ -5,6 +5,7 @@
 
 struct Node {
   struct Node *next;
+  struct Node *prev;
   int index;
 };
 
@@ -19,7 +20,7 @@ void push_node(struct Node *head, int index) {
   struct Node *next = malloc(sizeof(struct Node));
   next->next = NULL;
   next->index = index;
-  while (head->next != NULL) {
+  while (head->next) {
     head = head->next;
   }
   assert(head->next == NULL);
@@ -27,8 +28,19 @@ void push_node(struct Node *head, int index) {
   head->next = next;
 }
 
+void pop_node(struct Node *head) {
+  struct Node *prev = NULL;
+  while (head->next) {
+    prev = head;
+    head = head->next;
+  }
+  free(head);
+  prev->next = NULL;
+}
+
 int main(int argc, char **argv) {
   struct Node *head = init_linked_list(0);
+  struct Node *start = head;
   push_node(head, 1);
   push_node(head, 2);
   push_node(head, 3);
@@ -46,6 +58,23 @@ int main(int argc, char **argv) {
   head = head->next;
 
   assert(head->index == 3);
+  printf("head index is %i\n", head->index);
+  head = head->next;
+
+  assert(head == NULL);
+
+  head = start;
+  pop_node(head);
+
+  assert(head->index == 0);
+  printf("head index is %i\n", head->index);
+  head = head->next;
+
+  assert(head->index == 1);
+  printf("head index is %i\n", head->index);
+  head = head->next;
+
+  assert(head->index == 2);
   printf("head index is %i\n", head->index);
   head = head->next;
 
