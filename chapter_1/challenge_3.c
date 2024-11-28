@@ -13,6 +13,7 @@ struct Node *init_linked_list(int index) {
   struct Node *head = malloc(sizeof(struct Node));
   head->index = index;
   head->next = NULL;
+  head->prev = NULL;
   return head;
 }
 
@@ -25,6 +26,7 @@ void push_node(struct Node *head, int index) {
   }
   assert(head->next == NULL);
 
+  next->prev = head;
   head->next = next;
 }
 
@@ -59,7 +61,19 @@ int main(int argc, char **argv) {
 
   assert(head->index == 3);
   printf("head index is %i\n", head->index);
-  head = head->next;
+  head = head->prev; // Start going backwards
+
+  assert(head->index == 2);
+  printf("head index is %i\n", head->index);
+  head = head->prev;
+
+  assert(head->index == 1);
+  printf("head index is %i\n", head->index);
+  head = head->prev;
+
+  assert(head->index == 0);
+  printf("head index is %i\n", head->index);
+  head = head->prev;
 
   assert(head == NULL);
 
