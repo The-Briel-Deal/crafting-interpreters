@@ -104,12 +104,12 @@ class Scanner {
 				break;
 			case '>':
 				addToken(match('=') ? GREATER_EQUAL : GREATER);
+				break;
 			case '/':
 				if (match('/')) {
 					while (peek() != '\n' && !isAtEnd()) {
 						advance();
 					}
-
 				} else {
 					addToken(SLASH);
 				}
@@ -228,7 +228,7 @@ class Scanner {
 	}
 
 	private boolean isAlpha(char c) {
-		return (c >= 'a' && c <= 'z') || (c >= 'a' && c <= 'z') || c == '_';
+		return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
 	}
 
 	private boolean isDigit(char c) {
