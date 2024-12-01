@@ -54,11 +54,11 @@ public class Lox {
 	}
 
 	static void error(int line, String message) {
-		report(line, "", message);
+		report(line,  message);
 	}
 
-	private static void report(int line, String where, String message) {
-		System.err.printf("[line %i] Error %s: %s", line, where, message);
+	private static void report(int line, String message) {
+		System.err.printf("[line %d] Error: %s", line,  message);
 		hadError = true;
 	}
 }
