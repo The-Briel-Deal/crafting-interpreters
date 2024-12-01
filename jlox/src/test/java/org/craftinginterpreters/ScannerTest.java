@@ -27,7 +27,7 @@ class ScannerTest {
     }
     @org.junit.jupiter.api.Test
     void scanTokensWithBlockComments() {
-        var scanner = new Scanner("if (foo == bar) /* Hi I'm a \n\nblock comment */ {print \"Foo is bar\"} /* I am a greasy comment*/");
+        var scanner = new Scanner("if (foo == bar) /* Hi I'm /* a \n\nblock */ comment */ {print \"Foo is bar\"} /* I am a greasy comment*/");
         var tokens = scanner.scanTokens();
         var result = tokens.toArray();
         Token[] expect = {

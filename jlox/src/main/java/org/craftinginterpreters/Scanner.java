@@ -111,12 +111,19 @@ class Scanner {
                         advance();
                     }
                 } else if (match('*')) {
-                    while (peek() != '*' && peekNext() != '/' && !isAtEnd()) {
-                        advance();
-                    }
-                    if (peek() == '*' && peekNext() == '/') {
-                        advance();
-                        advance();
+                    var nest_level = 1;
+                    while (nest_level > 0) {
+                        if (peek() == '/' && peekNext() == '*') {
+                            nest_level++;
+                            advance();
+                            advance();
+                        } else if (peek() == '*' && peekNext() == '/') {
+                            nest_level--;
+                            advance();
+                            advance();
+                        } else {
+                            advance();
+                        }
                     }
                 } else {
                     addToken(SLASH);
