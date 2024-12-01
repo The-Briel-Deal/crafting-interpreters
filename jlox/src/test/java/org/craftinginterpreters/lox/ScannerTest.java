@@ -1,4 +1,4 @@
-package org.craftinginterpreters;
+package org.craftinginterpreters.lox;
 
 import org.junit.jupiter.api.Assertions;
 
