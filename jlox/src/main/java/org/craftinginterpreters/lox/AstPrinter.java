@@ -2,13 +2,13 @@ package org.craftinginterpreters.lox;
 
 class AstPrinter implements Expr.Visitor<String> {
 	public static void main(String[] args) {
-		// 1 + 2 - 3 * 4
-		var unary = new Expr.Unary(
-				new Token(TokenType.MINUS, "-", null, 1),
-				new Expr.Literal(123));
-		var grouping = new Expr.Grouping(new Expr.Literal(45.67));
-
-		var expression = new Expr.Binary(unary, new Token(TokenType.STAR, "*", null, 1), grouping);
+		// (1 + 2) * (4 - 3)
+		var expression = new Expr.Binary(
+				new Expr.Binary(new Expr.Literal(1), new Token(TokenType.PLUS, "+", null, 1),
+						new Expr.Literal(2)),
+				new Token(TokenType.STAR, "*", null, 1),
+				new Expr.Binary(new Expr.Literal(4), new Token(TokenType.MINUS, "-", null, 1),
+						new Expr.Literal(3)));
 
 		System.out.println(new AstPrinter().print(expression));
 	}
@@ -42,12 +42,12 @@ class AstPrinter implements Expr.Visitor<String> {
 	private String parenthesize(String name, Expr... exprs) {
 		StringBuilder builder = new StringBuilder();
 
-		builder.append("(").append(name);
 		for (Expr expr : exprs) {
-			builder.append(" ");
 			builder.append(expr.accept(this));
+			builder.append(" ");
 		}
-		builder.append(")");
+		
+		builder.append(name);
 
 		return builder.toString();
 	}
