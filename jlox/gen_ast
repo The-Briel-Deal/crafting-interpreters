@@ -1,0 +1,3 @@
+#!/usr/bin/sh
+mvn compile
+java -cp ./target/classes/ tool.GenerateAst ./src/main/java/org/craftinginterpreters/lox/

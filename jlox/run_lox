@@ -1,0 +1,4 @@
+#!/usr/bin/sh
+mvn compile
+java -cp ./target/classes/ org.craftinginterpreters.lox.Lox
+

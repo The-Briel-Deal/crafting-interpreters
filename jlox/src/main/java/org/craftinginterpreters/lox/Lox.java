@@ -45,11 +45,15 @@ public class Lox {
 
 	private static void run(String source) {
 		var scanner = new Scanner(source);
-
 		var tokens = scanner.scanTokens();
-		for (Token token : tokens) {
-			System.out.println(token);
-		}
+
+		var parser = new Parser(tokens);
+		var expression = parser.parse();
+
+		if (hadError) return;
+
+
+		System.out.println(new AstPrinter().print(expression));
 
 	}
 
@@ -67,6 +71,10 @@ public class Lox {
 
 	private static void report(int line, String message) {
 		System.err.printf("[line %d] Error: %s", line, message);
+		hadError = true;
+	}
+	private static void report(int line, String at, String message) {
+		System.err.printf("[line %d] %s Error: %s", line, at, message);
 		hadError = true;
 	}
 }
