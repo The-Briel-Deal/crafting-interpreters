@@ -27,8 +27,8 @@ class Parser {
 
 	/* @formatter:off
      * expression      → comma_seperator ;
-	 * comma_seperator → ternary ( "," ternary )* ;
-	 * ternary         → equality ( "?" expression ":" expression )? ;
+	 * comma_seperator → conditional ( "," conditional )* ;
+	 * conditional     → equality ( "?" expression ":" expression )? ;
      * equality        → comparison ( ( "!=" | "==" ) comparison )* ;
      * comparison      → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
      * term            → factor ( ( "-" | "+" ) factor )* ;
@@ -37,6 +37,12 @@ class Parser {
      *                 | primary ;
      * primary         → NUMBER | STRING | "true" | "false" | "nil"
      *                 | "(" expression ")" ;
+	 *                 // Error Productions
+	 *                 | "+" factor
+	 *                 | ("/" | "*") unary
+	 *                 | ( "!= | "==" ) comparison
+	 *                 | ( ">" | ">=" | "<" | "<=" ) term
+	 *                 | "?" expression ":" conditional
 	 * @formatter:on */
 
 	private Expr expression() {
@@ -131,6 +137,24 @@ class Parser {
 			var expr = expression();
 			consume(RIGHT_PAREN, "Expect ')' after expression.");
 			return new Expr.Grouping(expr);
+		}
+
+		if (match(PLUS)) {
+			error(previous(), "Missing left operand.");
+			term();
+			return null;
+		}
+
+		if (match(BANG_EQUAL, EQUAL_EQUAL)) {
+			error(previous(), "Missing left operand.");
+			equality();
+			return null;
+		}
+
+		if (match(GREATER, GREATER_EQUAL, LESS, LESS_EQUAL)) {
+			error(previous(), "Missing left operand.");
+			comparison();
+			return null;
 		}
 
 		throw error(peek(), "Expect expression.");
