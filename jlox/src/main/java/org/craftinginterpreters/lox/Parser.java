@@ -1,6 +1,9 @@
 package org.craftinginterpreters.lox;
 
 import java.util.List;
+
+import org.craftinginterpreters.lox.Expr.Binary;
+
 import static org.craftinginterpreters.lox.TokenType.*;
 
 class Parser {
@@ -23,8 +26,9 @@ class Parser {
 	}
 
 	/* @formatter:off
-	 * comma_seperator → expression ( "," expression )* ;
-     * expression      → equality ;
+     * expression      → comma_seperator ;
+	 * comma_seperator → ternary ( "," ternary )* ;
+	 * ternary         → equality ( "?" expression ":" expression )? ;
      * equality        → comparison ( ( "!=" | "==" ) comparison )* ;
      * comparison      → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
      * term            → factor ( ( "-" | "+" ) factor )* ;
@@ -40,16 +44,27 @@ class Parser {
 	}
 
 	private Expr comma_seperator() {
-		var expr = equality();
+		var expr = conditional();
 
 		while (match(COMMA)) {
 			var operator = previous();
-			var right = equality();
+			var right = conditional();
 			expr = new Expr.Binary(expr, operator, right);
 		}
 
 		return expr;
 
+	}
+
+	private Expr conditional() {
+		Expr expr = equality();
+		if (match(QUESTION_MARK)) {
+			var then_expr = expression();
+			consume(COLON, "Ternary should contain ':' after first expression.");
+			var else_expr = conditional();
+			expr = new Expr.Conditional(expr, then_expr, else_expr);
+		}
+		return expr;
 	}
 
 	private Expr equality() {
