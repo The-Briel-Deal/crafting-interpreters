@@ -20,7 +20,6 @@ class Parser {
 		} catch (ParseError error) {
 			return null;
 		}
-
 	}
 
 	private Expr expression() {
@@ -129,19 +128,15 @@ class Parser {
 		for (TokenType type : types) {
 			if (check(type)) {
 				advance();
-
 				return true;
 			}
 		}
-
 		return false;
-
 	}
 
 	private Token consume(TokenType type, String message) {
 		if (check(type))
 			return advance();
-
 		throw error(peek(), message);
 	}
 
@@ -168,5 +163,4 @@ class Parser {
 	private Token previous() {
 		return tokens.get(current - 1);
 	}
-
 }
