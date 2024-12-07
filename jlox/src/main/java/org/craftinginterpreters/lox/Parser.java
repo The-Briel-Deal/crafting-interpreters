@@ -22,8 +22,34 @@ class Parser {
 		}
 	}
 
+	/* @formatter:off
+	 * comma_seperator → expression ( "," expression )* ;
+     * expression      → equality ;
+     * equality        → comparison ( ( "!=" | "==" ) comparison )* ;
+     * comparison      → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
+     * term            → factor ( ( "-" | "+" ) factor )* ;
+     * factor          → unary ( ( "/" | "*" ) unary )* ;
+     * unary           → ( "!" | "-" ) unary
+     *                 | primary ;
+     * primary         → NUMBER | STRING | "true" | "false" | "nil"
+     *                 | "(" expression ")" ;
+	 * @formatter:on */
+
 	private Expr expression() {
-		return equality();
+		return comma_seperator();
+	}
+
+	private Expr comma_seperator() {
+		var expr = equality();
+
+		while (match(COMMA)) {
+			var operator = previous();
+			var right = equality();
+			expr = new Expr.Binary(expr, operator, right);
+		}
+
+		return expr;
+
 	}
 
 	private Expr equality() {
