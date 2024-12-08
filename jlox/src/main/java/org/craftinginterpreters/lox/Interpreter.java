@@ -132,6 +132,8 @@ class Interpreter implements Expr.Visitor<Object> {
 	}
 
 	private void checkNumberOperands(Token operator, Object left, Object right) {
+		if (operator.type == TokenType.SLASH && right instanceof Double && (double) right == 0)
+			throw new RuntimeError(operator, "Divide by 0 error.");
 
 		if (left instanceof Double && right instanceof Double)
 			return;
