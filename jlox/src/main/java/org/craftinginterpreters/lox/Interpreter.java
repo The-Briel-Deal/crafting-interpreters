@@ -23,6 +23,7 @@ class Interpreter implements Expr.Visitor<Object> {
 
 		switch (expr.operator.type) {
 			case MINUS:
+				checkNumberOperand(expr.operator, right);
 				return -(double) right;
 			case BANG:
 				return !isTruthy(right);
@@ -42,18 +43,27 @@ class Interpreter implements Expr.Visitor<Object> {
 				if (left instanceof Double && right instanceof Double) {
 					return (double) left + (double) right;
 				}
-				return null;
+				if (left instanceof String && right instanceof String) {
+					return (String) left + (String) right;
+				}
+				throw new RuntimeError(expr.operator, "Operands must be two numbers or two strings.");
 			case SLASH:
+				checkNumberOperands(expr.operator, left, right);
 				return (double) left / (double) right;
 			case STAR:
+				checkNumberOperands(expr.operator, left, right);
 				return (double) left * (double) right;
 			case GREATER:
+				checkNumberOperands(expr.operator, left, right);
 				return (double) left > (double) right;
 			case GREATER_EQUAL:
+				checkNumberOperands(expr.operator, left, right);
 				return (double) left >= (double) right;
 			case LESS:
+				checkNumberOperands(expr.operator, left, right);
 				return (double) left < (double) right;
 			case LESS_EQUAL:
+				checkNumberOperands(expr.operator, left, right);
 				return (double) left <= (double) right;
 			case BANG_EQUAL:
 				return !isEqual(left, right);
@@ -77,10 +87,28 @@ class Interpreter implements Expr.Visitor<Object> {
 	}
 
 	private boolean isEqual(Object a, Object b) {
-		if (a == null && b == null) return true;
-		if (a == null) return false;
+		if (a == null && b == null)
+			return true;
+		if (a == null)
+			return false;
 
 		return a.equals(b);
+	}
+
+	private void checkNumberOperand(Token operator, Object operand) {
+
+		if (operand instanceof Double)
+			return;
+		throw new RuntimeError(operator, "Operand must be a number.");
 
 	}
+
+	private void checkNumberOperands(Token operator, Object left, Object right) {
+
+		if (left instanceof Double && right instanceof Double)
+			return;
+		throw new RuntimeError(operator, "Operand must be a number.");
+
+	}
+
 }
