@@ -38,8 +38,9 @@ class Interpreter implements Expr.Visitor<Object> {
 				return -(double) right;
 			case BANG:
 				return !isTruthy(right);
+			default:
+				return null;
 		}
-		return null;
 	}
 
 	@Override
