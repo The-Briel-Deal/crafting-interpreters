@@ -38,8 +38,9 @@ class Interpreter implements Expr.Visitor<Object> {
 				return -(double) right;
 			case BANG:
 				return !isTruthy(right);
+			default:
+				return null;
 		}
-		return null;
 	}
 
 	@Override
@@ -56,6 +57,14 @@ class Interpreter implements Expr.Visitor<Object> {
 				}
 				if (left instanceof String && right instanceof String) {
 					return (String) left + (String) right;
+				}
+				if ((left instanceof String || right instanceof String)
+						&& (left instanceof Double || right instanceof Double)) {
+					if (left instanceof String && right instanceof Double) {
+						return left + stringify(right);
+					} else if (left instanceof Double && right instanceof String) {
+						return stringify(left) + right;
+					}
 				}
 				throw new RuntimeError(expr.operator, "Operands must be two numbers or two strings.");
 			case SLASH:
@@ -112,14 +121,18 @@ class Interpreter implements Expr.Visitor<Object> {
 
 		if (object instanceof Double) {
 			String text = object.toString();
-			if (text.endsWith(".0")) {
-				text = text.substring(0, text.length() - 2);
-			}
-			return text;
+			return trimFloat(text);
 		}
 
 		return object.toString();
 
+	}
+
+	private String trimFloat(String text) {
+		if (text.endsWith(".0")) {
+			text = text.substring(0, text.length() - 2);
+		}
+		return text;
 	}
 
 	private void checkNumberOperand(Token operator, Object operand) {
