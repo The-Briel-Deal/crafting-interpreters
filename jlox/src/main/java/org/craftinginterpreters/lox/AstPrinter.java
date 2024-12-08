@@ -2,7 +2,6 @@ package org.craftinginterpreters.lox;
 
 class AstPrinter implements Expr.Visitor<String> {
 	public static void main(String[] args) {
-		// 1 + 2 - 3 * 4
 		var unary = new Expr.Unary(
 				new Token(TokenType.MINUS, "-", null, 1),
 				new Expr.Literal(123));
