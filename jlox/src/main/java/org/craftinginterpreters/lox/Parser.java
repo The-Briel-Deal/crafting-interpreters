@@ -54,7 +54,12 @@ class Parser {
 		if (match(LEFT_BRACE))
 			return new Stmt.Block(block());
 
-		return expressionStatement();
+		for (var token : tokens) {
+			if (token.type == SEMICOLON) {
+				return expressionStatement();
+			}
+		}
+		return new Stmt.Print(expression());
 	}
 
 	private Stmt printStatement() {
