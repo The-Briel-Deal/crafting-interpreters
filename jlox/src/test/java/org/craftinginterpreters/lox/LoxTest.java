@@ -2,14 +2,8 @@ package org.craftinginterpreters.lox;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
 import java.io.PrintStream;
-import java.nio.Buffer;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
 class LoxTest {
