@@ -79,6 +79,10 @@ class LoxTest {
 				.append("{")
 				.append("  var b = 10;")
 				.append("  print a + b * a;")
+				.append("  {")
+				.append("    var a = 30;")
+				.append("    print a + b * a;")
+				.append("  }")
 				.append("}")
 				.append("print a + b * a;")
 				.toString();
@@ -87,6 +91,7 @@ class LoxTest {
 
 		var expect = new StringBuilder()
 				.append("33\n")
+				.append("330\n")
 				.append("18\n")
 				.toString();
 		var result = output.get();
