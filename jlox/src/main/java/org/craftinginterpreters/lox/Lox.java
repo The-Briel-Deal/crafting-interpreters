@@ -48,7 +48,7 @@ public class Lox {
 		}
 	}
 
-	private static void run(String source) {
+	 static void run(String source) {
 		var scanner = new Scanner(source);
 		var tokens = scanner.scanTokens();
 
@@ -59,6 +59,13 @@ public class Lox {
 			return;
 
 		interpreter.interpret(statements);
+	}
+
+	static void resetState() {
+		interpreter.clearEnv();
+		hadError = false;
+		hadRuntimeError = false;
+
 	}
 
 	static void error(int line, String message) {

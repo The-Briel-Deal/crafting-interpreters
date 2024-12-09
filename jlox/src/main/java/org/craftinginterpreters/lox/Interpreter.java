@@ -37,6 +37,10 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 		}
 	}
 
+	public void clearEnv() {
+		environment = new Environment();
+	};
+
 	@Override
 	public Void visitBlockStmt(Block stmt) {
 		executeBlock(stmt.statements, new Environment(environment));
