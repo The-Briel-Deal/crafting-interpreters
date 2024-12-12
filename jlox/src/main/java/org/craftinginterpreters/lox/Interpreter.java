@@ -1,5 +1,7 @@
 package org.craftinginterpreters.lox;
 
+import static org.craftinginterpreters.lox.TokenType.BREAK;
+
 import java.util.List;
 
 import org.craftinginterpreters.lox.Expr.Assign;
@@ -13,11 +15,13 @@ import org.craftinginterpreters.lox.Stmt.If;
 
 class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 	private Environment environment = new Environment();
+	private Boolean hitBreak = false;
 
 	void interpret(List<Stmt> statements) {
 		try {
-			for (Stmt statement : statements)
+			for (Stmt statement : statements) {
 				execute(statement);
+			}
 		} catch (RuntimeError error) {
 			Lox.runtimeError(error);
 		}
@@ -32,6 +36,19 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 		try {
 			this.environment = environment;
 			for (Stmt statement : statements) {
+				if (statement instanceof Stmt.Expression) {
+					var statement_expr = (Stmt.Expression) statement;
+					if (statement_expr.expression instanceof Expr.Literal) {
+						var literal = (Expr.Literal) statement_expr.expression;
+						if (literal.value instanceof Token) {
+							var token = (Token) literal.value;
+							if (token.type == BREAK) {
+								hitBreak = true;
+								break;
+							}
+						}
+					}
+				}
 				execute(statement);
 			}
 		} finally {
@@ -174,6 +191,11 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 	public Void visitWhileStmt(Stmt.While stmt) {
 		while (isTruthy(evaluate(stmt.condition))) {
 			execute(stmt.body);
+			if (hitBreak) {
+				hitBreak = false;
+				break;
+
+			}
 		}
 
 		return null;

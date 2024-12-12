@@ -50,6 +50,7 @@ class Parser {
 	}
 
 	private Stmt whileStatement() {
+
 		consume(LEFT_PAREN, "Expect '(' after 'while'.");
 		Expr condition = expression();
 		consume(RIGHT_PAREN, "Expect ')' after condition.");
@@ -60,6 +61,8 @@ class Parser {
 	}
 
 	private Stmt statement() {
+		if (match(BREAK))
+			return breakStatement();
 		if (match(FOR))
 			return forStatement();
 		if (match(IF))
@@ -72,6 +75,12 @@ class Parser {
 			return new Stmt.Block(block());
 
 		return expressionStatement();
+	}
+
+	private Stmt breakStatement() {
+		var token = previous();
+		consume(SEMICOLON, "Expect semicolon after break.");
+		return new Stmt.Expression(new Expr.Literal(token));
 	}
 
 	private Stmt forStatement() {
