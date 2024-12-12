@@ -134,6 +134,10 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
 	@Override
 	public Void visitVarStmt(Stmt.Var stmt) {
+		if (!stmt.initialized) {
+			environment.define(stmt.name.lexeme, "UNDEFINED");
+			return null;
+		}
 		Object value = null;
 		if (stmt.initializer != null) {
 			value = evaluate(stmt.initializer);
@@ -152,7 +156,11 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
 	@Override
 	public Object visitVariableExpr(Expr.Variable expr) {
-		return environment.get(expr.name);
+		var result = environment.get(expr.name);
+		if (result == "UNDEFINED") {
+			throw new RuntimeError(expr.name, "Undefined expression");
+		}
+		return result;
 	}
 
 	private boolean isTruthy(Object object) {
