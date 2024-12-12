@@ -137,6 +137,51 @@ class LoxTest {
 		assertEquals(expect, result);
 	}
 
+	@org.junit.jupiter.api.Test
+	void fibonacci() {
+		var output = new CapturedOutput();
+
+		var script = new StringBuilder()
+				.append("var a = 0;")
+				.append("var temp;")
+				.append("")
+				.append("for (var b = 1; a < 10000; b = temp + b) {")
+				.append("  print a;")
+				.append("  temp = a;")
+				.append("  a = b;")
+				.append("}")
+				.toString();
+
+		Lox.run(script);
+
+		var expect = new StringBuilder()
+				.append("0\n")
+				.append("1\n")
+				.append("1\n")
+				.append("2\n")
+				.append("3\n")
+				.append("5\n")
+				.append("8\n")
+				.append("13\n")
+				.append("21\n")
+				.append("34\n")
+				.append("55\n")
+				.append("89\n")
+				.append("144\n")
+				.append("233\n")
+				.append("377\n")
+				.append("610\n")
+				.append("987\n")
+				.append("1597\n")
+				.append("2584\n")
+				.append("4181\n")
+				.append("6765\n")
+				.toString();
+
+		var result = output.get();
+		assertEquals(expect, result);
+	}
+
 	class CapturedOutput {
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 
