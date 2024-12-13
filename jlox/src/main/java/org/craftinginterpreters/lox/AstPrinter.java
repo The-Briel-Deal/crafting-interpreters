@@ -1,6 +1,8 @@
 package org.craftinginterpreters.lox;
 
 import org.craftinginterpreters.lox.Expr.Assign;
+import org.craftinginterpreters.lox.Expr.Call;
+import org.craftinginterpreters.lox.Expr.Logical;
 
 class AstPrinter implements Expr.Visitor<String> {
 	public static void main(String[] args) {
@@ -48,6 +50,16 @@ class AstPrinter implements Expr.Visitor<String> {
 	@Override
 	public String visitAssignExpr(Assign expr) {
 		return String.format("%s = %s", expr.name, expr.value);
+	}
+
+	@Override
+	public String visitLogicalExpr(Logical expr) {
+		return parenthesize(expr.operator.lexeme, expr.left, expr.right);
+	}
+
+	@Override
+	public String visitCallExpr(Call expr) {
+		return parenthesize(expr.callee.toString(), expr.arguments.toArray(new Expr[0]));
 	}
 
 	private String parenthesize(String name, Expr... exprs) {
