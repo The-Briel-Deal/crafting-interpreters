@@ -1,0 +1,7 @@
+fun count(num, target) {
+  if (num <= target) {
+	print(num);
+    count(num + 1, target);
+  }
+}
+count(0, 3);

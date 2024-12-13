@@ -10,7 +10,7 @@ class LoxTest {
 
 	@BeforeEach
 	public void setUp() {
-		Lox.resetState();
+		// Lox.resetState();
 	}
 
 	@org.junit.jupiter.api.Test
@@ -179,6 +179,55 @@ class LoxTest {
 				.toString();
 
 		var result = output.get();
+		assertEquals(expect, result);
+	}
+
+	@org.junit.jupiter.api.Test
+	void function() {
+		var output = new CapturedOutput();
+
+		var script = new StringBuilder()
+				.append("fun bark() {\n")
+				.append("  print \"woof\";\n")
+				.append("}\n")
+				.append("bark();\n").toString();
+
+		Lox.run(script);
+
+		var expect = new StringBuilder()
+				.append("woof\n")
+				.toString();
+
+		var result = output.get();
+
+		assertEquals(expect, result);
+	}
+
+	@org.junit.jupiter.api.Test
+	void recursiveFunction() {
+		var output = new CapturedOutput();
+		var script = new StringBuilder()
+				.append("fun count(num, target) {")
+				.append(" if (num <= target) {")
+				.append(" print(num);")
+				.append(" count(num + 1, target);")
+				.append(" }")
+				.append("}\n\n")
+				.append("count(0, 3);")
+				.toString();
+
+		Lox.run(script);
+
+		var expect = new StringBuilder()
+				.append("0\n")
+				.append("1\n")
+				.append("2\n")
+				.append("3\n")
+				.toString();
+
+		var result = output.get();
+		System.out.println(result);
+
 		assertEquals(expect, result);
 	}
 
