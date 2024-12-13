@@ -9,24 +9,25 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class Lox {
-	private static final Interpreter interpreter = new Interpreter();
-	static boolean hadError = false;
-	static boolean hadRuntimeError = false;
+	private final Interpreter interpreter = new Interpreter();
+	boolean hadError = false;
+	boolean hadRuntimeError = false;
 
 	public static void main(String[] args) throws IOException {
+		var lox = new Lox();
 		if (args.length > 1) {
 			System.out.println("Usage: jlox [script]");
 			System.exit(64);
 		} else if (args.length == 1) {
 			var filepath = args[0];
-			runFile(filepath);
+			lox.runFile(filepath);
 		} else {
-			runPrompt();
+			lox.runPrompt();
 
 		}
 	}
 
-	private static void runFile(String path) throws IOException {
+	private void runFile(String path) throws IOException {
 		var bytes = Files.readAllBytes(Paths.get(path));
 		run(new String(bytes, Charset.defaultCharset()));
 		if (hadError)
@@ -35,7 +36,7 @@ public class Lox {
 			System.exit(70);
 	}
 
-	private static void runPrompt() throws IOException {
+	private void runPrompt() throws IOException {
 		var input = new InputStreamReader(System.in);
 		var reader = new BufferedReader(input);
 
@@ -48,31 +49,24 @@ public class Lox {
 		}
 	}
 
-	 static void run(String source) {
-		var scanner = new Scanner(source);
+	void run(String source) {
+		var scanner = new Scanner(this, source);
 		var tokens = scanner.scanTokens();
 
-		var parser = new Parser(tokens);
+		var parser = new Parser(this, tokens);
 		List<Stmt> statements = parser.parse();
 
 		if (hadError)
 			return;
 
-		interpreter.interpret(statements);
+		interpreter.interpret(this, statements);
 	}
 
-	static void resetState() {
-		interpreter.clearEnv();
-		hadError = false;
-		hadRuntimeError = false;
-
-	}
-
-	static void error(int line, String message) {
+	void error(int line, String message) {
 		report(line, message);
 	}
 
-	static void error(Token token, String message) {
+	void error(Token token, String message) {
 		if (token.type == TokenType.EOF) {
 			report(token.line, " at end", message);
 		} else {
@@ -80,17 +74,17 @@ public class Lox {
 		}
 	}
 
-	static void runtimeError(RuntimeError error) {
+	void runtimeError(RuntimeError error) {
 		System.err.println(error.getMessage() + "\n[line " + error.token.line + "]");
 		hadRuntimeError = true;
 	}
 
-	private static void report(int line, String message) {
+	private void report(int line, String message) {
 		System.err.printf("[line %d] Error: %s", line, message);
 		hadError = true;
 	}
 
-	private static void report(int line, String at, String message) {
+	private void report(int line, String at, String message) {
 		System.err.printf("[line %d] %s Error: %s", line, at, message);
 		hadError = true;
 	}

@@ -4,17 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import org.junit.jupiter.api.BeforeEach;
 
 class LoxTest {
 
-	@BeforeEach
-	public void setUp() {
-		// Lox.resetState();
-	}
-
 	@org.junit.jupiter.api.Test
 	void print_str_literal() {
+		var lox = new Lox();
 		var output = new CapturedOutput();
 
 		var script = new StringBuilder()
@@ -22,7 +17,7 @@ class LoxTest {
 				.append("print \"Im a dog\";")
 				.toString();
 
-		Lox.run(script);
+		lox.run(script);
 
 		var expect = new StringBuilder()
 				.append("Im a dog\n")
@@ -34,6 +29,7 @@ class LoxTest {
 
 	@org.junit.jupiter.api.Test
 	void declare_var() {
+		var lox = new Lox();
 		var output = new CapturedOutput();
 
 		var script = new StringBuilder()
@@ -41,7 +37,7 @@ class LoxTest {
 				.append("print dog;")
 				.toString();
 
-		Lox.run(script);
+		lox.run(script);
 
 		var expect = new StringBuilder()
 				.append("Im a dog\n")
@@ -52,6 +48,7 @@ class LoxTest {
 
 	@org.junit.jupiter.api.Test
 	void var_math() {
+		var lox = new Lox();
 		var output = new CapturedOutput();
 
 		var script = new StringBuilder()
@@ -60,7 +57,7 @@ class LoxTest {
 				.append("print a + b * a;")
 				.toString();
 
-		Lox.run(script);
+		lox.run(script);
 
 		var expect = new StringBuilder()
 				.append("18\n")
@@ -71,6 +68,7 @@ class LoxTest {
 
 	@org.junit.jupiter.api.Test
 	void lexical_scope() {
+		var lox = new Lox();
 		var output = new CapturedOutput();
 
 		var script = new StringBuilder()
@@ -87,7 +85,7 @@ class LoxTest {
 				.append("print a + b * a;")
 				.toString();
 
-		Lox.run(script);
+		lox.run(script);
 
 		var expect = new StringBuilder()
 				.append("33\n")
@@ -100,6 +98,7 @@ class LoxTest {
 
 	@org.junit.jupiter.api.Test
 	void str_cat() {
+		var lox = new Lox();
 		var output = new CapturedOutput();
 
 		var script = new StringBuilder()
@@ -108,7 +107,7 @@ class LoxTest {
 				.append("print a + b;")
 				.toString();
 
-		Lox.run(script);
+		lox.run(script);
 
 		var expect = new StringBuilder()
 				.append("I'm a big greasy dog\n")
@@ -119,6 +118,7 @@ class LoxTest {
 
 	@org.junit.jupiter.api.Test
 	void assignment() {
+		var lox = new Lox();
 		var output = new CapturedOutput();
 
 		var script = new StringBuilder()
@@ -128,7 +128,7 @@ class LoxTest {
 				.append("print a + b;")
 				.toString();
 
-		Lox.run(script);
+		lox.run(script);
 
 		var expect = new StringBuilder()
 				.append("I'm a big greasy silly dog\n")
@@ -139,6 +139,7 @@ class LoxTest {
 
 	@org.junit.jupiter.api.Test
 	void fibonacci() {
+		var lox = new Lox();
 		var output = new CapturedOutput();
 
 		var script = new StringBuilder()
@@ -152,7 +153,7 @@ class LoxTest {
 				.append("}")
 				.toString();
 
-		Lox.run(script);
+		lox.run(script);
 
 		var expect = new StringBuilder()
 				.append("0\n")
@@ -184,6 +185,7 @@ class LoxTest {
 
 	@org.junit.jupiter.api.Test
 	void function() {
+		var lox = new Lox();
 		var output = new CapturedOutput();
 
 		var script = new StringBuilder()
@@ -192,7 +194,7 @@ class LoxTest {
 				.append("}\n")
 				.append("bark();\n").toString();
 
-		Lox.run(script);
+		lox.run(script);
 
 		var expect = new StringBuilder()
 				.append("woof\n")
@@ -205,6 +207,7 @@ class LoxTest {
 
 	@org.junit.jupiter.api.Test
 	void recursiveFunction() {
+		var lox = new Lox();
 		var output = new CapturedOutput();
 		var script = new StringBuilder()
 				.append("fun count(num, target) {")
@@ -216,7 +219,7 @@ class LoxTest {
 				.append("count(0, 3);")
 				.toString();
 
-		Lox.run(script);
+		lox.run(script);
 
 		var expect = new StringBuilder()
 				.append("0\n")

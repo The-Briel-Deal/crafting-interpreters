@@ -6,7 +6,8 @@ class ScannerTest {
 
     @org.junit.jupiter.api.Test
     void scanTokens() {
-        var scanner = new Scanner("if (foo == bar) {print \"Foo is bar\"}");
+		var lox = new Lox();
+        var scanner = new Scanner(lox, "if (foo == bar) {print \"Foo is bar\"}");
         var tokens = scanner.scanTokens();
         var result = tokens.toArray();
         Token[] expect = {

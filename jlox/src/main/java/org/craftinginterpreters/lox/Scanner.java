@@ -38,13 +38,15 @@ class Scanner {
 		// @formatter:on
 	}
 
+	private final Lox lox;
 	private final String source;
 	private final List<Token> tokens = new ArrayList<Token>();
 	private int start = 0;
 	private int current = 0;
 	private int line = 1;
 
-	Scanner(String source) {
+	Scanner(Lox lox, String source) {
+		this.lox = lox;
 		this.source = source;
 	}
 
@@ -131,7 +133,7 @@ class Scanner {
 				} else if (isAlpha(c)) {
 					identifier();
 				} else {
-					Lox.error(line, "Unexpected character.");
+					lox.error(line, "Unexpected character.");
 				}
 				break;
 		}
@@ -147,7 +149,7 @@ class Scanner {
 		}
 		// File ended before end of string.
 		if (isAtEnd()) {
-			Lox.error(line, "Unterminated string.");
+			lox.error(line, "Unterminated string.");
 			return;
 		}
 		// String has been closed.

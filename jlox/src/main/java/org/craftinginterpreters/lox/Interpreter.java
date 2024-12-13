@@ -38,12 +38,12 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
 	}
 
-	void interpret(List<Stmt> statements) {
+	void interpret(Lox lox, List<Stmt> statements) {
 		try {
 			for (Stmt statement : statements)
 				execute(statement);
 		} catch (RuntimeError error) {
-			Lox.runtimeError(error);
+			lox.runtimeError(error);
 		}
 	}
 
