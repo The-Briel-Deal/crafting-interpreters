@@ -234,6 +234,52 @@ class LoxTest {
 		assertEquals(expect, result);
 	}
 
+	@org.junit.jupiter.api.Test
+	void recursiveFibonacci() {
+		var lox = new Lox();
+		var output = new CapturedOutput();
+		var script = new StringBuilder()
+				.append("fun fib(n) {\n")
+				.append("  if (n <= 1) return n;\n")
+				.append("  return fib(n - 2) + fib(n - 1);\n")
+				.append("}\n")
+				.append("\n")
+				.append("for (var i = 0; i < 20; i = i + 1) {\n")
+				.append("  print fib(i);\n")
+				.append("}\n")
+				.toString();
+
+		lox.run(script);
+
+		var expect = new StringBuilder()
+				.append("0\n")
+				.append("1\n")
+				.append("1\n")
+				.append("2\n")
+				.append("3\n")
+				.append("5\n")
+				.append("8\n")
+				.append("13\n")
+				.append("21\n")
+				.append("34\n")
+				.append("55\n")
+				.append("89\n")
+				.append("144\n")
+				.append("233\n")
+				.append("377\n")
+				.append("610\n")
+				.append("987\n")
+				.append("1597\n")
+				.append("2584\n")
+				.append("4181\n")
+				.toString();
+
+		var result = output.get();
+		System.out.println(result);
+
+		assertEquals(expect, result);
+	}
+
 	class CapturedOutput {
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 
