@@ -12,6 +12,7 @@ import org.craftinginterpreters.lox.Expr.Logical;
 import org.craftinginterpreters.lox.Expr.Unary;
 import org.craftinginterpreters.lox.Stmt.Block;
 import org.craftinginterpreters.lox.Stmt.If;
+import org.craftinginterpreters.lox.Stmt.Return;
 
 class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 	final Environment globals = new Environment();
@@ -212,6 +213,15 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 		Object value = evaluate(stmt.expression);
 		System.out.println(stringify(value));
 		return null;
+	}
+
+	@Override
+	public Void visitReturnStmt(Return stmt) {
+		Object value = null;
+		if (stmt.value != null)
+			value = evaluate(stmt.value);
+
+		throw new Return(value);
 	}
 
 	@Override
