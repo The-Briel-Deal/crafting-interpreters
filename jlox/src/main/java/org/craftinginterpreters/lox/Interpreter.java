@@ -41,7 +41,6 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
 	@Override
 	public Object visitAnonFunctionExpr(AnonFunction expr) {
-		System.out.println("Anon func with params " + expr.params + " containing " + expr.body);
 		return new LoxAnonFunction(expr, environment);
 	}
 
