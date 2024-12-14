@@ -3,6 +3,7 @@ package org.craftinginterpreters.lox;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.craftinginterpreters.lox.Expr.AnonFunction;
 import org.craftinginterpreters.lox.Expr.Assign;
 import org.craftinginterpreters.lox.Expr.Binary;
 import org.craftinginterpreters.lox.Expr.Call;
@@ -36,6 +37,12 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
 		});
 
+	}
+
+	@Override
+	public Object visitAnonFunctionExpr(AnonFunction expr) {
+		System.out.println("Anon func with params " + expr.params + " containing " + expr.body);
+		return new LoxAnonFunction(expr, environment);
 	}
 
 	void interpret(Lox lox, List<Stmt> statements) {

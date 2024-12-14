@@ -1,5 +1,6 @@
 package org.craftinginterpreters.lox;
 
+import org.craftinginterpreters.lox.Expr.AnonFunction;
 import org.craftinginterpreters.lox.Expr.Assign;
 import org.craftinginterpreters.lox.Expr.Call;
 import org.craftinginterpreters.lox.Expr.Logical;
@@ -60,6 +61,12 @@ class AstPrinter implements Expr.Visitor<String> {
 	@Override
 	public String visitCallExpr(Call expr) {
 		return parenthesize(expr.callee.toString(), expr.arguments.toArray(new Expr[0]));
+	}
+
+	@Override
+	public String visitAnonFunctionExpr(AnonFunction expr) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	private String parenthesize(String name, Expr... exprs) {

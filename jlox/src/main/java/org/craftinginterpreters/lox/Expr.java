@@ -10,6 +10,7 @@ abstract class Expr {
     R visitGroupingExpr(Grouping expr);
     R visitLiteralExpr(Literal expr);
     R visitLogicalExpr(Logical expr);
+    R visitAnonFunctionExpr(AnonFunction expr);
     R visitUnaryExpr(Unary expr);
     R visitVariableExpr(Variable expr);
   }
@@ -98,6 +99,20 @@ abstract class Expr {
     final Expr left;
     final Token operator;
     final Expr right;
+  }
+  static class AnonFunction extends Expr{
+    AnonFunction(List<Token> params, List<Stmt> body) {
+      this.params = params;
+      this.body = body;
+    }
+
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+      return visitor.visitAnonFunctionExpr(this);
+    }
+
+    final List<Token> params;
+    final List<Stmt> body;
   }
   static class Unary extends Expr{
     Unary(Token operator, Expr right) {
