@@ -7,6 +7,8 @@ class Token {
     final int line;
     final Object literal;
     final String lexeme;
+	  int var_declaration_index = -1;
+	  int var_reference_index = -1;
 
     Token(TokenType type, String lexeme, Object literal, int line) {
         this.type = type;

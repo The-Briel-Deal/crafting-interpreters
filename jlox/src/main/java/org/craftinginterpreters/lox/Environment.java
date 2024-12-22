@@ -1,11 +1,12 @@
 package org.craftinginterpreters.lox;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 class Environment {
 	final Environment enclosing;
-	private final Map<String, Object> values = new HashMap<>();
+	private final ArrayList<Object> values = new ArrayList<>();
 
 	Environment() {
 		enclosing = null;
@@ -15,8 +16,10 @@ class Environment {
 		this.enclosing = enclosing;
 	}
 
-	void define(String name, Object value) {
-		values.put(name, value);
+	void define(Token token, Object value) {
+		int index = values.size();
+		values.add(value);
+		token.var_declaration_index = index;
 	}
 
 	Object getAt(int distance, String name) {
