@@ -32,7 +32,7 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 	private final Map<Expr, LocalInfo> locals = new HashMap<>();
 
 	Interpreter() {
-		globals.define("clock", new LoxCallable() {
+		globals.define(new LoxCallable() {
 			@Override
 			public int arity() {
 				return 0;
@@ -210,7 +210,7 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 	@Override
 	public Void visitFunctionStmt(Stmt.Function stmt) {
 		LoxFunction function = new LoxFunction(stmt, environment);
-		environment.define(stmt.name.lexeme, function);
+		environment.define(function);
 		return null;
 
 	}
@@ -248,7 +248,7 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 			value = evaluate(stmt.initializer);
 		}
 
-		environment.define(stmt.name.lexeme, value);
+		environment.define(value);
 		return null;
 	}
 
@@ -266,11 +266,13 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 		Object value = evaluate(expr.value);
 
 		// Look up resolved distance to make sure we are resolving the right local.
-		Integer distance = locals.get(expr).depth;
+		var localInfo = locals.get(expr);
+		var distance = localInfo.depth;
+		var index = localInfo.index;
 		if (distance != null) {
-			environment.assignAt(distance, expr.name, value);
+			environment.assignAt(distance, index, value);
 		} else {
-      globals.assign(expr.name, value);
+      globals.assign(expr.name, index, value);
 		}
 
 		return value;
@@ -283,11 +285,13 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
 	private Object lookUpVariable(Token name, Expr expr) {
 		// Look up Resolved distance in Map, null means its a global or undefined.
-		Integer distance = locals.get(expr).depth;
+		var localInfo = locals.get(expr);
+		var distance = localInfo.depth;
+		var index = localInfo.index;
 		if (distance != null) {
-			return environment.getAt(distance, name.lexeme);
+			return environment.getAt(distance, index);
 		} else {
-			return globals.get(name);
+			return globals.get(name, index);
 		}
 	}
 

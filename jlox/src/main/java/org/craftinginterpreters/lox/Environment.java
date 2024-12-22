@@ -1,11 +1,11 @@
 package org.craftinginterpreters.lox;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 class Environment {
 	final Environment enclosing;
-	private final Map<String, Object> values = new HashMap<>();
+	private final List<Object> values = new ArrayList<>();
 
 	Environment() {
 		enclosing = null;
@@ -15,16 +15,16 @@ class Environment {
 		this.enclosing = enclosing;
 	}
 
-	void define(String name, Object value) {
-		values.put(name, value);
+	void define(Object value) {
+		values.add(value);
 	}
 
-	Object getAt(int distance, String name) {
-		return ancestor(distance).values.get(name);
+	Object getAt(int distance, int index) {
+		return ancestor(distance).values.get(index);
 	}
 
-	void assignAt(int distance, Token name, Object value) {
-		ancestor(distance).values.put(name.lexeme, value);
+	void assignAt(int distance, int index, Object value) {
+		ancestor(distance).values.set(index, value);
 	}
 
 	Environment ancestor(int distance) {
@@ -36,25 +36,25 @@ class Environment {
 		return environment;
 	}
 
-	Object get(Token name) {
-		if (values.containsKey(name.lexeme)) {
-			return values.get(name.lexeme);
+	Object get(Token name, int index) {
+		if (values.get(index) != null) {
+			return values.get(index);
 		}
 
 		if (enclosing != null)
-			return enclosing.get(name);
+			return enclosing.get(name, index);
 
-		throw new RuntimeError(name, "Undefined variable '" + name.lexeme + "'.");
+		throw new RuntimeError(name, "Could not find item at index: " + index);
 	}
 
-	void assign(Token name, Object value) {
-		if (values.containsKey(name.lexeme)) {
-			values.put(name.lexeme, value);
+	void assign(Token name, int index, Object value) {
+		if (values.get(index) != null) {
+			values.set(index, value);
 			return;
 		}
 
 		if (enclosing != null) {
-			enclosing.assign(name, value);
+			enclosing.assign(name, index, value);
 			return;
 		}
 
