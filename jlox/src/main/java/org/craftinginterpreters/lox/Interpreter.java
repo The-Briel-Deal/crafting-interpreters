@@ -18,7 +18,18 @@ import org.craftinginterpreters.lox.Stmt.If;
 class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 	final Environment globals = new Environment();
 	private Environment environment = globals;
-	private final Map<Expr, Integer> locals = new HashMap<>();
+
+	class LocalInfo {
+		final Integer depth;
+		final Integer index;
+
+		LocalInfo(Integer depth, Integer index) {
+			this.depth = depth;
+			this.index = index;
+		}
+	}
+
+	private final Map<Expr, LocalInfo> locals = new HashMap<>();
 
 	Interpreter() {
 		globals.define("clock", new LoxCallable() {
@@ -54,8 +65,8 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 		stmt.accept(this);
 	}
 
-	void resolve(Expr expr, int depth) {
-		locals.put(expr, depth);
+	void resolve(Expr expr, int depth, int index) {
+		locals.put(expr, new LocalInfo(depth, index));
 	}
 
 	void executeBlock(List<Stmt> statements, Environment environment) {
@@ -255,7 +266,7 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 		Object value = evaluate(expr.value);
 
 		// Look up resolved distance to make sure we are resolving the right local.
-		Integer distance = locals.get(expr);
+		Integer distance = locals.get(expr).depth;
 		if (distance != null) {
 			environment.assignAt(distance, expr.name, value);
 		} else {
@@ -272,7 +283,7 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
 	private Object lookUpVariable(Token name, Expr expr) {
 		// Look up Resolved distance in Map, null means its a global or undefined.
-		Integer distance = locals.get(expr);
+		Integer distance = locals.get(expr).depth;
 		if (distance != null) {
 			return environment.getAt(distance, name.lexeme);
 		} else {
