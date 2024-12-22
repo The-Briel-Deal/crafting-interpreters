@@ -26,18 +26,24 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 	private final Lox lox;
 	private final Interpreter interpreter;
 
-	private final Stack<Map<String, Boolean>> scopes = new Stack<>();
+	class VarState {
+		boolean defined = false;
+		boolean used = false;
+	}
+
+	private final Stack<Map<String, VarState>> scopes = new Stack<>();
+
 	private enum FunctionType {
 		NONE,
 		FUNCTION
-	} 
+	}
+
 	private FunctionType currentFunction = FunctionType.NONE;
 
 	Resolver(Interpreter interpreter, Lox lox) {
 		this.interpreter = interpreter;
 		this.lox = lox;
 	}
-	
 
 	@Override
 	public Void visitBlockStmt(Block stmt) {
@@ -118,7 +124,7 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 	}
 
 	private void beginScope() {
-		scopes.push(new HashMap<String, Boolean>());
+		scopes.push(new HashMap<String, VarState>());
 	}
 
 	private void endScope() {
@@ -129,24 +135,31 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 		if (scopes.isEmpty())
 			return;
 
-		Map<String, Boolean> scope = scopes.peek();
+		Map<String, VarState> scope = scopes.peek();
 		if (scope.containsKey(name.lexeme)) {
 			lox.error(name, "Already a variable with this name in this scope.");
 		}
 
-		scope.put(name.lexeme, false);
+		scope.put(name.lexeme, new VarState());
 	}
 
 	private void define(Token name) {
 		if (scopes.isEmpty())
 			return;
-		scopes.peek().put(name.lexeme, true);
+		var varState = scopes.peek().get(name.lexeme);
+		if (varState != null) {
+			varState.defined = true;
+		}
 	}
 
 	private void resolveLocal(Expr expr, Token name) {
 		for (int i = scopes.size() - 1; i >= 0; i--) {
 			if (scopes.get(i).containsKey(name.lexeme)) {
 				interpreter.resolve(expr, scopes.size() - 1 - i);
+				var varState = scopes.peek().get(name.lexeme);
+				if (varState != null) {
+					varState.used = true;
+				}
 			}
 		}
 	}
