@@ -1,0 +1,4 @@
+var dog = "cute";
+var cat = "silly";
+
+print cat;

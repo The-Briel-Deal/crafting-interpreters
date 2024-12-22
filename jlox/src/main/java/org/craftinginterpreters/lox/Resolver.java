@@ -29,9 +29,14 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 	class VarState {
 		boolean defined = false;
 		boolean used = false;
+		Token token;
+
+		VarState(Token token) {
+			this.token = token;
+		}
 	}
 
-	private final Stack<Map<String, VarState>> scopes = new Stack<>();
+	final Stack<Map<String, VarState>> scopes = new Stack<>();
 
 	private enum FunctionType {
 		NONE,
@@ -140,7 +145,7 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 			lox.error(name, "Already a variable with this name in this scope.");
 		}
 
-		scope.put(name.lexeme, new VarState());
+		scope.put(name.lexeme, new VarState(name));
 	}
 
 	private void define(Token name) {
@@ -233,7 +238,7 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
 	@Override
 	public Void visitVariableExpr(Variable expr) {
-		if (!scopes.isEmpty() && scopes.peek().get(expr.name.lexeme) == Boolean.FALSE) {
+		if (!scopes.isEmpty() && scopes.peek().get(expr.name.lexeme).defined == false) {
 			lox.error(expr.name, "Can't read local variable in its own initializer.");
 		}
 

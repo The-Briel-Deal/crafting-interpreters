@@ -61,6 +61,15 @@ public class Lox {
 
 		Resolver resolver = new Resolver(interpreter, this);
 		resolver.resolve(statements);
+		for (var scope : resolver.scopes) {
+			for (var variable : scope.entrySet()) {
+				var varState = variable.getValue();
+				if (varState.used == false) {
+					this.error(varState.token, "Unused variable.");
+					
+				}
+			}
+		}
 
 		if (hadError)
 			return;
