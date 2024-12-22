@@ -1,4 +1,12 @@
-var dog = "cute";
-var cat = "silly";
+fun dog() { 
+  var cute_dog = "cute";
+	var cat = "silly";
+	{
+	  var egg = 1;
 
-print cat;
+	}
+
+  print cat; 
+}
+
+dog();

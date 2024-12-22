@@ -54,6 +54,12 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 	public Void visitBlockStmt(Block stmt) {
 		beginScope();
 		resolve(stmt.statements);
+		for (var variable : scopes.peek().entrySet()) {
+			var varState = variable.getValue();
+			if (varState.used == false) {
+				lox.error(varState.token, "Unused variable.");
+			}
+		}
 		endScope();
 		return null;
 	}
@@ -124,6 +130,12 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 			define(param);
 		}
 		resolve(function.body);
+		for (var variable : scopes.peek().entrySet()) {
+			var varState = variable.getValue();
+			if (varState.used == false) {
+				lox.error(varState.token, "Unused variable.");
+			}
+		}
 		endScope();
 		currentFunction = enclosingFunction;
 	}
