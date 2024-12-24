@@ -14,6 +14,7 @@ import org.craftinginterpreters.lox.Expr.Logical;
 import org.craftinginterpreters.lox.Expr.Unary;
 import org.craftinginterpreters.lox.Expr.Variable;
 import org.craftinginterpreters.lox.Stmt.Block;
+import org.craftinginterpreters.lox.Stmt.Class;
 import org.craftinginterpreters.lox.Stmt.Expression;
 import org.craftinginterpreters.lox.Stmt.Function;
 import org.craftinginterpreters.lox.Stmt.If;
@@ -27,23 +28,31 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 	private final Interpreter interpreter;
 
 	private final Stack<Map<String, Boolean>> scopes = new Stack<>();
+
 	private enum FunctionType {
 		NONE,
 		FUNCTION
-	} 
+	}
+
 	private FunctionType currentFunction = FunctionType.NONE;
 
 	Resolver(Interpreter interpreter, Lox lox) {
 		this.interpreter = interpreter;
 		this.lox = lox;
 	}
-	
 
 	@Override
 	public Void visitBlockStmt(Block stmt) {
 		beginScope();
 		resolve(stmt.statements);
 		endScope();
+		return null;
+	}
+
+	@Override
+	public Void visitClassStmt(Class stmt) {
+		declare(stmt.name);
+		define(stmt.name);
 		return null;
 	}
 

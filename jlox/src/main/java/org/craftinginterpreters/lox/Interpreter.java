@@ -13,6 +13,7 @@ import org.craftinginterpreters.lox.Expr.Literal;
 import org.craftinginterpreters.lox.Expr.Logical;
 import org.craftinginterpreters.lox.Expr.Unary;
 import org.craftinginterpreters.lox.Stmt.Block;
+import org.craftinginterpreters.lox.Stmt.Class;
 import org.craftinginterpreters.lox.Stmt.If;
 
 class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
@@ -77,6 +78,14 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 	@Override
 	public Void visitBlockStmt(Block stmt) {
 		executeBlock(stmt.statements, new Environment(environment));
+		return null;
+	}
+
+	@Override
+	public Void visitClassStmt(Class stmt) {
+		environment.define(stmt.name.lexeme, null);
+		LoxClass klass = new LoxClass(stmt.name.lexeme);
+		environment.assign(stmt.name, klass);
 		return null;
 	}
 
@@ -259,7 +268,7 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 		if (distance != null) {
 			environment.assignAt(distance, expr.name, value);
 		} else {
-      globals.assign(expr.name, value);
+			globals.assign(expr.name, value);
 		}
 
 		return value;
