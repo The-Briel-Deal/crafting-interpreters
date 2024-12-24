@@ -16,12 +16,16 @@ import org.craftinginterpreters.lox.Stmt.Block;
 import org.craftinginterpreters.lox.Stmt.If;
 
 class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
-	final Environment globals = new Environment();
-	private Environment environment = globals;
-	private final Map<Expr, Integer> locals = new HashMap<>();
+	final Map<String, Object> globals = new HashMap<>();
+	private Environment environment;
+
+	record VarPos(int depth, int slot) {
+	}
+
+	private final Map<Expr, VarPos> locals = new HashMap<>();
 
 	Interpreter() {
-		globals.define("clock", new LoxCallable() {
+		globals.put("clock", new LoxCallable() {
 			@Override
 			public int arity() {
 				return 0;
@@ -36,9 +40,7 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 			public String toString() {
 				return "<native fn>";
 			}
-
 		});
-
 	}
 
 	void interpret(Lox lox, List<Stmt> statements) {
@@ -54,8 +56,8 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 		stmt.accept(this);
 	}
 
-	void resolve(Expr expr, int depth) {
-		locals.put(expr, depth);
+	void resolve(Expr expr, int depth, int slot) {
+		locals.put(expr, new VarPos(depth, slot));
 	}
 
 	void executeBlock(List<Stmt> statements, Environment environment) {
@@ -199,9 +201,17 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 	@Override
 	public Void visitFunctionStmt(Stmt.Function stmt) {
 		LoxFunction function = new LoxFunction(stmt, environment);
-		environment.define(stmt.name.lexeme, function);
+		define(stmt.name, function);
 		return null;
 
+	}
+
+	private void define(Token name, Object value) {
+		if (environment != null) {
+			environment.define(name.lexeme, value);
+		} else {
+			globals.put(name.lexeme, value);
+		}
 	}
 
 	@Override
@@ -255,11 +265,11 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 		Object value = evaluate(expr.value);
 
 		// Look up resolved distance to make sure we are resolving the right local.
-		Integer distance = locals.get(expr);
-		if (distance != null) {
-			environment.assignAt(distance, expr.name, value);
+		var varPos = locals.get(expr);
+		if (varPos != null) {
+			environment.assignAt(varPos.depth, varPos.slot, value);
 		} else {
-      globals.assign(expr.name, value);
+			globals.put(expr.name.lexeme, value);
 		}
 
 		return value;
@@ -272,11 +282,11 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
 	private Object lookUpVariable(Token name, Expr expr) {
 		// Look up Resolved distance in Map, null means its a global or undefined.
-		Integer distance = locals.get(expr);
-		if (distance != null) {
-			return environment.getAt(distance, name.lexeme);
+		var varPos = locals.get(expr);
+		if (varPos != null) {
+			return environment.getAt(varPos.depth, varPos.slot);
 		} else {
-			return globals.get(name);
+			return globals.get(name.lexeme);
 		}
 	}
 
