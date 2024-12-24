@@ -247,7 +247,11 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 			value = evaluate(stmt.initializer);
 		}
 
-		environment.define(stmt.name.lexeme, value);
+		if (environment != null) {
+			environment.define(stmt.name.lexeme, value);
+		} else {
+			globals.put(stmt.name.lexeme, value);
+		}
 		return null;
 	}
 

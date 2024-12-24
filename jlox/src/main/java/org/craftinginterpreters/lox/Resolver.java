@@ -29,6 +29,7 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 	class VariableInfo {
 		boolean isDefined;
 		final int slot;
+
 		VariableInfo(boolean isDefined, int slot) {
 			this.isDefined = isDefined;
 			this.slot = slot;
@@ -231,8 +232,13 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
 	@Override
 	public Void visitVariableExpr(Variable expr) {
-		if (!scopes.isEmpty() && scopes.peek().get(expr.name.lexeme).isDefined == Boolean.FALSE) {
-			lox.error(expr.name, "Can't read local variable in its own initializer.");
+		if (!scopes.isEmpty()) {
+			var scope = scopes.peek();
+
+			var varInfo = scopes.peek().get(expr.name.lexeme);
+			if (varInfo != null && varInfo.isDefined == Boolean.FALSE) {
+				lox.error(expr.name, "Can't read local variable in its own initializer.");
+			}
 		}
 
 		resolveLocal(expr, expr.name);
