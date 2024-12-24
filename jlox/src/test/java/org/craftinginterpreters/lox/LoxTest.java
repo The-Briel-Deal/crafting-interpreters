@@ -229,8 +229,6 @@ class LoxTest {
 				.toString();
 
 		var result = output.get();
-		System.out.println(result);
-
 		assertEquals(expect, result);
 	}
 
@@ -275,9 +273,32 @@ class LoxTest {
 				.toString();
 
 		var result = output.get();
-		System.out.println(result);
 
 		assertEquals(expect, result);
+	}
+
+	@org.junit.jupiter.api.Test
+	void parseClass() {
+		var lox = new Lox();
+		var output = new CapturedOutput();
+		var script = new StringBuilder()
+				.append("class DevonshireCream {                             \n")
+				.append("  serveOn() {                                       \n")
+				.append("    return \"Scones\";                                \n")
+				.append("  }                                                 \n")
+				.append("}                                                   \n")
+				.append("                                                    \n")
+				.append("print DevonshireCream; // Prints \"DevonshireCream\". \n")
+				.toString();
+
+		lox.run(script);
+
+		var expect = "DevonshireCream\n";
+
+		var result = output.get();
+		
+		assertEquals(expect, result);
+
 	}
 
 	class CapturedOutput {
