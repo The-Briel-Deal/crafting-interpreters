@@ -1,21 +1,22 @@
 program        = declaration* EOF ;
-declaration    = funDecl | varDecl | statement ;
+declaration    = classDecl | funDecl | varDecl | statement ;
+classDecl      = "class" IDENTIFIER "{" function* "}" ;
 funDecl        = "fun" function ;
-function       = IDENTIFIER "(" [parameters] ")" block ;
+function       = IDENTIFIER "(" [ parameters ] ")" block ;
 parameters     = IDENTIFIER ( "," IDENTIFIER )* ;
 statement      = exprStmt 
                | forStmt 
-			   | ifStmt 
-			   | printStmt 
-			   | returnStmt 
-			   | whileStmt 
-			   | block ;
-returnStmt     = "return" [expression] ";" ;
+               | ifStmt 
+               | printStmt 
+               | returnStmt 
+               | whileStmt 
+               | block ;
+returnStmt     = "return" [ expression ] ";" ;
 forStmt        = "for" "(" ( varDecl | exprStmt | ";") [ expression ] ";" [ expression ] ")"
                  statement ;
 whileStmt      = "while" "(" expression ")" statement ;
 ifStmt         = "if" "(" expression ")" statement
-				 [ "else" statement ] ;
+               [ "else" statement ] ;
 block          = "{" declaration* "}" ;
 exprStmt       = expression ";" ;
 printStmt      = "print" expression ";" ;
