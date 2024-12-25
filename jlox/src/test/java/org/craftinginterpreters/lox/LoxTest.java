@@ -340,6 +340,30 @@ class LoxTest {
 	}
 
 	@org.junit.jupiter.api.Test
+	void simpleMethod() {
+		// Methods should always use members from the declared variable.
+		var lox = new Lox();
+		var output = new CapturedOutput();
+		var script = new StringBuilder()
+				.append("class Bacon {\n")
+				.append("  eat() {\n")
+				.append("    print \"Crunch crunch crunch!\";\n")
+				.append("  }\n")
+				.append("}\n")
+				.append("\n")
+				.append("Bacon().eat(); // Prints \"Crunch crunch crunch!\".\n")
+				.toString();
+
+		lox.run(script);
+
+		var expect = "Crunch crunch crunch!\n";
+
+		var result = output.get();
+
+		assertEquals(expect, result);
+	}
+
+	@org.junit.jupiter.api.Test
 	void setBindMethod() {
 		// Methods should always use members from the declared variable.
 		var lox = new Lox();
