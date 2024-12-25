@@ -8,6 +8,7 @@ import java.util.Map;
 import org.craftinginterpreters.lox.Expr.Assign;
 import org.craftinginterpreters.lox.Expr.Binary;
 import org.craftinginterpreters.lox.Expr.Call;
+import org.craftinginterpreters.lox.Expr.Get;
 import org.craftinginterpreters.lox.Expr.Grouping;
 import org.craftinginterpreters.lox.Expr.Literal;
 import org.craftinginterpreters.lox.Expr.Logical;
@@ -193,6 +194,15 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 		}
 
 		return function.call(this, arguments);
+	}
+
+	@Override
+	public Object visitGetExpr(Get expr) {
+		Object object = evaluate(expr.object);
+		if (object instanceof LoxInstance) {
+			return ((LoxInstance) object).get(expr.name);
+		}
+		throw new RuntimeError(expr.name, "Only instances have properties.");
 	}
 
 	private Object evaluate(Expr expr) {

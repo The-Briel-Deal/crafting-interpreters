@@ -3,7 +3,6 @@ package tool;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.List;
 
 public class GenerateAst {
@@ -17,12 +16,13 @@ public class GenerateAst {
 				List.of("Assign   : Token name, Expr value",
 						"Binary   : Expr left, Token operator, Expr right",
 						"Call     : Expr callee, Token paren, List<Expr> arguments",
+				    "Get      : Expr object, Token name",
 						"Grouping : Expr expression",
 						"Literal  : Object value",
 						"Logical  : Expr left, Token operator, Expr right",
 						"Unary    : Token operator, Expr right",
 						"Variable : Token name"));
-		defineAst(outputDir, "Stmt", Arrays.asList(
+		defineAst(outputDir, "Stmt", List.of(
 				"Block		  : List<Stmt> statements",
 			  "Class      : Token name, List<Stmt.Function> methods",
 				"Expression : Expr expression",

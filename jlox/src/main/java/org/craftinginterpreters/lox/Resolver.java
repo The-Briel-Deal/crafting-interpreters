@@ -8,6 +8,7 @@ import java.util.Stack;
 import org.craftinginterpreters.lox.Expr.Assign;
 import org.craftinginterpreters.lox.Expr.Binary;
 import org.craftinginterpreters.lox.Expr.Call;
+import org.craftinginterpreters.lox.Expr.Get;
 import org.craftinginterpreters.lox.Expr.Grouping;
 import org.craftinginterpreters.lox.Expr.Literal;
 import org.craftinginterpreters.lox.Expr.Logical;
@@ -199,6 +200,12 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 			resolve(argument);
 		}
 
+		return null;
+	}
+
+	@Override
+	public Void visitGetExpr(Get expr) {
+		resolve(expr.object);
 		return null;
 	}
 
