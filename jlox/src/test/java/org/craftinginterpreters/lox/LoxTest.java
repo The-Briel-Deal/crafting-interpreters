@@ -339,6 +339,37 @@ class LoxTest {
 		assertEquals(expect, result);
 	}
 
+	@org.junit.jupiter.api.Test
+	void setBindMethod() {
+		// Methods should always use members from the declared variable.
+		var lox = new Lox();
+		var output = new CapturedOutput();
+		var script = new StringBuilder()
+				.append("class Person {\n")
+				.append("  sayName() {\n")
+				.append("    print this.name;\n")
+				.append("  }\n")
+				.append("}\n")
+				.append("\n")
+				.append("var jane = Person();\n")
+				.append("jane.name = \"Jane\";\n")
+				.append("\n")
+				.append("var bill = Person();\n")
+				.append("bill.name = \"Bill\";\n")
+				.append("\n")
+				.append("bill.sayName = jane.sayName;\n")
+				.append("bill.sayName(); // ?\n")
+				.toString();
+
+		lox.run(script);
+
+		var expect = "Jane\n";
+
+		var result = output.get();
+
+		assertEquals(expect, result);
+	}
+
 	class CapturedOutput {
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 
