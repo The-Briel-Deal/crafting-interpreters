@@ -296,9 +296,27 @@ class LoxTest {
 		var expect = "DevonshireCream\n";
 
 		var result = output.get();
-		
-		assertEquals(expect, result);
 
+		assertEquals(expect, result);
+	}
+
+	@org.junit.jupiter.api.Test
+	void printInstance() {
+		var lox = new Lox();
+		var output = new CapturedOutput();
+		var script = new StringBuilder()
+				.append("class Bagel {}\n")
+				.append("var bagel = Bagel();\n")
+				.append("print bagel;\n")
+				.toString();
+
+		lox.run(script);
+
+		var expect = "Bagel instance\n";
+
+		var result = output.get();
+
+		assertEquals(expect, result);
 	}
 
 	class CapturedOutput {
