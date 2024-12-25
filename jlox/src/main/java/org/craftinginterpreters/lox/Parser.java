@@ -30,7 +30,8 @@ class Parser {
 
 	private Stmt declaration() {
 		try {
-			if (match(CLASS)) return classDeclaration();
+			if (match(CLASS))
+				return classDeclaration();
 			if (match(FUN))
 				return function("function");
 
