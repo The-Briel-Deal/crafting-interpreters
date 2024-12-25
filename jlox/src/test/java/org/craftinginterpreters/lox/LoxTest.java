@@ -319,6 +319,26 @@ class LoxTest {
 		assertEquals(expect, result);
 	}
 
+	@org.junit.jupiter.api.Test
+	void setAndGetMember() {
+		var lox = new Lox();
+		var output = new CapturedOutput();
+		var script = new StringBuilder()
+				.append("class Dog {}\n")
+				.append("var dog = Dog();\n")
+				.append("dog.color = \"black\";\n")
+				.append("print dog.color;\n")
+				.toString();
+
+		lox.run(script);
+
+		var expect = "black\n";
+
+		var result = output.get();
+
+		assertEquals(expect, result);
+	}
+
 	class CapturedOutput {
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 

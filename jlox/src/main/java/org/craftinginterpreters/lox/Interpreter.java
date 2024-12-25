@@ -12,6 +12,7 @@ import org.craftinginterpreters.lox.Expr.Get;
 import org.craftinginterpreters.lox.Expr.Grouping;
 import org.craftinginterpreters.lox.Expr.Literal;
 import org.craftinginterpreters.lox.Expr.Logical;
+import org.craftinginterpreters.lox.Expr.Set;
 import org.craftinginterpreters.lox.Expr.Unary;
 import org.craftinginterpreters.lox.Stmt.Block;
 import org.craftinginterpreters.lox.Stmt.Class;
@@ -108,6 +109,19 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 		}
 
 		return evaluate(expr.right);
+	}
+
+	@Override
+	public Object visitSetExpr(Set expr) {
+		Object object = evaluate(expr.object);
+
+		if (!(object instanceof LoxInstance)) {
+			throw new RuntimeError(expr.name, "Only instances have fields.");
+		}
+
+		Object value = evaluate(expr.value);
+		((LoxInstance) object).set(expr.name, value);
+		return value;
 	}
 
 	@Override
