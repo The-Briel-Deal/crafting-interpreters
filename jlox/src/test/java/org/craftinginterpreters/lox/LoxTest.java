@@ -394,11 +394,37 @@ class LoxTest {
 		assertEquals(expect, result);
 	}
 
+	@org.junit.jupiter.api.Test
+	void useThisOutsideMethod() {
+		var lox = new Lox();
+		var output = new CapturedErrOutput();
+		var script = new StringBuilder().append("print this.test;").toString();
+
+		lox.run(script);
+		
+		var expect = "[line 1] at 'this' Error: Can't use 'this' outside of a class.'";
+
+		var result = output.get();
+
+		assertEquals(expect, result);
+	}
+
 	class CapturedOutput {
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 
 		CapturedOutput() {
 			System.setOut(new PrintStream(output));
+		}
+
+		public String get() {
+			return output.toString();
+		}
+	}
+	class CapturedErrOutput {
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+
+		CapturedErrOutput() {
+			System.setErr(new PrintStream(output));
 		}
 
 		public String get() {
