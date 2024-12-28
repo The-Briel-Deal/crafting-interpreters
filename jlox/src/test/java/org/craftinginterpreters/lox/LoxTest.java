@@ -478,6 +478,34 @@ class LoxTest {
 		assertEquals(expect, result);
 	}
 
+	@org.junit.jupiter.api.Test
+	void useGetterChap12Chal2() {
+		var lox = new Lox();
+		var output = new CapturedOutput();
+		var script = new StringBuilder()
+				.append("class Circle {\n")
+				.append("  init(radius) {\n")
+				.append("    this.radius = radius;\n")
+				.append("  }\n")
+				.append("\n")
+				.append("  area {\n")
+				.append("    return 3.141592653 * this.radius * this.radius;\n")
+				.append("  }\n")
+				.append("}\n")
+				.append("\n")
+				.append("var circle = Circle(4);\n")
+				.append("print circle.area; // Prints roughly \"50.2655\".\n")
+				.toString();
+
+		lox.run(script);
+
+		var expect = "50.2655\n";
+
+		var result = output.get();
+
+		assertEquals(expect, result);
+	}
+
 	class CapturedOutput {
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 
