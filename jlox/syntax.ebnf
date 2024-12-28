@@ -1,7 +1,8 @@
 program        = declaration* EOF ;
 declaration    = classDecl | funDecl | varDecl | statement ;
-classDecl      = "class" IDENTIFIER "{" function* "}" ;
+classDecl      = "class" IDENTIFIER "{" ( function | getter )* "}" ;
 funDecl        = "fun" function ;
+getter         = IDENTIFIER block ;
 function       = IDENTIFIER "(" [ parameters ] ")" block ;
 parameters     = IDENTIFIER ( "," IDENTIFIER )* ;
 statement      = exprStmt 
