@@ -478,6 +478,29 @@ class LoxTest {
 		assertEquals(expect, result);
 	}
 
+	@org.junit.jupiter.api.Test
+	void chap12Chal1Test() {
+		var lox = new Lox();
+		var output = new CapturedOutput();
+		var script = new StringBuilder()
+				.append("class Math {\n")
+				.append("  class square(n) {\n")
+				.append("    return n * n;\n")
+				.append("  }\n")
+				.append("}\n")
+				.append("\n")
+				.append("print Math.square(3); // Prints \"9\".\n")
+				.toString();
+
+		lox.run(script);
+
+		var expect = "9\n";
+
+		var result = output.get();
+
+		assertEquals(expect, result);
+	}
+
 	class CapturedOutput {
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 
