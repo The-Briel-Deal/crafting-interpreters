@@ -13,6 +13,7 @@ import org.craftinginterpreters.lox.Expr.Grouping;
 import org.craftinginterpreters.lox.Expr.Literal;
 import org.craftinginterpreters.lox.Expr.Logical;
 import org.craftinginterpreters.lox.Expr.Set;
+import org.craftinginterpreters.lox.Expr.This;
 import org.craftinginterpreters.lox.Expr.Unary;
 import org.craftinginterpreters.lox.Stmt.Block;
 import org.craftinginterpreters.lox.Stmt.Class;
@@ -129,6 +130,11 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 		Object value = evaluate(expr.value);
 		((LoxInstance) object).set(expr.name, value);
 		return value;
+	}
+
+	@Override
+	public Object visitThisExpr(This expr) {
+		return lookUpVariable(expr.keyword, expr);
 	}
 
 	@Override
