@@ -39,6 +39,13 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
 	private FunctionType currentFunction = FunctionType.NONE;
 
+	private enum ClassType {
+		NONE,
+		CLASS
+	}
+
+	private ClassType currentClass = ClassType.NONE;
+
 	Resolver(Interpreter interpreter, Lox lox) {
 		this.interpreter = interpreter;
 		this.lox = lox;
@@ -54,6 +61,9 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
 	@Override
 	public Void visitClassStmt(Class stmt) {
+		ClassType enclosingClass = currentClass;
+		currentClass = ClassType.CLASS;
+
 		declare(stmt.name);
 		define(stmt.name);
 
@@ -66,6 +76,7 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 		}
 
 		endScope();
+		currentClass = enclosingClass;
 
 		return null;
 	}
