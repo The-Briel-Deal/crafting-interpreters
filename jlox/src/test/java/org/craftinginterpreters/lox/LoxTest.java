@@ -402,7 +402,7 @@ class LoxTest {
 
 		lox.run(script);
 		
-		var expect = "[line 1] at 'this' Error: Can't use 'this' outside of a class.'";
+		var expect = "[line 1] at 'this' Error: Can't use 'this' outside of a class.\n";
 
 		var result = output.get();
 

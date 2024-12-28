@@ -86,12 +86,12 @@ public class Lox {
 	}
 
 	private void report(int line, String message) {
-		System.err.printf("[line %d] Error: %s", line, message);
+		System.err.printf("[line %d] Error: %s\n", line, message);
 		hadError = true;
 	}
 
 	private void report(int line, String at, String message) {
-		System.err.printf("[line %d] %s Error: %s", line, at, message);
+		System.err.printf("[line %d] %s Error: %s\n", line, at, message);
 		hadError = true;
 	}
 }
