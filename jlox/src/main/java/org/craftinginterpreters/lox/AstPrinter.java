@@ -2,9 +2,13 @@ package org.craftinginterpreters.lox;
 
 import org.craftinginterpreters.lox.Expr.Assign;
 import org.craftinginterpreters.lox.Expr.Call;
+import org.craftinginterpreters.lox.Expr.Get;
 import org.craftinginterpreters.lox.Expr.Logical;
+import org.craftinginterpreters.lox.Expr.Set;
+import org.craftinginterpreters.lox.Expr.This;
 
 class AstPrinter implements Expr.Visitor<String> {
+
 	public static void main(String[] args) {
 		var unary = new Expr.Unary(
 				new Token(TokenType.MINUS, "-", null, 1),
@@ -18,6 +22,24 @@ class AstPrinter implements Expr.Visitor<String> {
 
 	String print(Expr expr) {
 		return expr.accept(this);
+	}
+
+	@Override
+	public String visitGetExpr(Get expr) {
+		// Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String visitSetExpr(Set expr) {
+		// Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String visitThisExpr(This expr) {
+		// Auto-generated method stub
+		return null;
 	}
 
 	@Override
