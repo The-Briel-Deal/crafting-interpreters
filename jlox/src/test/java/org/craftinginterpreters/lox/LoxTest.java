@@ -439,6 +439,45 @@ class LoxTest {
 		assertEquals(expect, result);
 	}
 
+	@org.junit.jupiter.api.Test
+	void useConstructorWithReturn() {
+		var lox = new Lox();
+		var output = new CapturedOutput();
+		var script = new StringBuilder()
+				.append("class FoodWithTopping {\n")
+				.append("	init(food, topping) {\n")
+				.append("		this.hasTopping = false;\n")
+				.append("	  this.food = food;\n")
+				.append("		if (topping == nil) {\n")
+				.append("		  return;\n")
+				.append("		}\n")
+				.append("		this.hasTopping = true;\n")
+				.append("		this.topping = topping;\n")
+				.append("	} \n")
+				.append("\n")
+				.append("	describe() {\n")
+				.append("		if (this.hasTopping) {\n")
+				.append("	    print \"This delectable delicacy is \" + this.topping + \" on \" + this.food + \".\";\n")
+				.append("			return;\n")
+				.append("		}\n")
+				.append("	  print \"This delectable delicacy is \" + this.food + \".\";\n")
+				.append("	}\n")
+				.append("}\n")
+				.append("\n")
+				.append("var food = FoodWithTopping(\"toast\", nil);\n")
+				.append("\n")
+				.append("food.describe();\n")
+				.toString();
+
+		lox.run(script);
+
+		var expect = "This delectable delicacy is toast.\n";
+
+		var result = output.get();
+
+		assertEquals(expect, result);
+	}
+
 	class CapturedOutput {
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 
