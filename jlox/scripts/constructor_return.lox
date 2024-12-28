@@ -1,0 +1,23 @@
+class FoodWithTopping {
+	init(food, topping) {
+		this.hasTopping = false;
+	  this.food = food;
+		if (topping == nil) {
+		  return;
+		}
+		this.hasTopping = true;
+		this.topping = topping;
+	} 
+
+	describe() {
+		if (this.hasTopping) {
+	    print "This delectable delicacy is " + this.topping + " on " + this.food + ".";
+			return;
+		}
+	  print "This delectable delicacy is " + this.food + ".";
+	}
+}
+
+var food = FoodWithTopping("toast", nil);
+
+food.describe();
