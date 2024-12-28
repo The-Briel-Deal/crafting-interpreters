@@ -401,8 +401,38 @@ class LoxTest {
 		var script = new StringBuilder().append("print this.test;").toString();
 
 		lox.run(script);
-		
+
 		var expect = "[line 1] at 'this' Error: Can't use 'this' outside of a class.\n";
+
+		var result = output.get();
+
+		assertEquals(expect, result);
+	}
+
+	@org.junit.jupiter.api.Test
+	void useConstructor() {
+		var lox = new Lox();
+		var output = new CapturedOutput();
+		var script = new StringBuilder()
+				.append("class FoodWithTopping {\n")
+				.append("	init(food, topping) {\n")
+				.append("	  this.food = food;\n")
+				.append("		this.topping = topping;\n")
+				.append("	} \n")
+				.append("\n")
+				.append("	describe() {\n")
+				.append("	  print \"This delectable delicacy is \" + this.topping + \" on \" + this.food + \".\";\n")
+				.append("	}\n")
+				.append("}\n")
+				.append("\n")
+				.append("var food = FoodWithTopping(\"toast\", \"beans\");\n")
+				.append("\n")
+				.append("food.describe();\n")
+				.toString();
+
+		lox.run(script);
+
+		var expect = "This delectable delicacy is beans on toast.\n";
 
 		var result = output.get();
 
@@ -420,6 +450,7 @@ class LoxTest {
 			return output.toString();
 		}
 	}
+
 	class CapturedErrOutput {
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 

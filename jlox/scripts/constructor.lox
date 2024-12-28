@@ -1,0 +1,14 @@
+class FoodWithTopping {
+	init(food, topping) {
+	  this.food = food;
+		this.topping = topping;
+	} 
+
+	describe() {
+	  print "This delectable delicacy is " + this.topping + " on " + this.food + ".";
+	}
+}
+
+var food = FoodWithTopping("toast", "beans");
+
+food.describe();
