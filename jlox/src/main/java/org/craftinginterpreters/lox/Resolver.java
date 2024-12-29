@@ -19,6 +19,7 @@ import org.craftinginterpreters.lox.Stmt.Block;
 import org.craftinginterpreters.lox.Stmt.Class;
 import org.craftinginterpreters.lox.Stmt.Expression;
 import org.craftinginterpreters.lox.Stmt.Function;
+import org.craftinginterpreters.lox.Stmt.Getter;
 import org.craftinginterpreters.lox.Stmt.If;
 import org.craftinginterpreters.lox.Stmt.Print;
 import org.craftinginterpreters.lox.Stmt.Return;
@@ -35,7 +36,8 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 		NONE,
 		FUNCTION,
 		INITIALIZER,
-		METHOD
+		METHOD,
+		GETTER,
 	}
 
 	private FunctionType currentFunction = FunctionType.NONE;
@@ -71,12 +73,14 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 		beginScope();
 		scopes.peek().put("this", true);
 
-		for (Stmt.Function method : stmt.methods) {
-			FunctionType declaration = FunctionType.METHOD;
-			if (method.name.lexeme.equals("init")) {
-				declaration = FunctionType.INITIALIZER;
+		for (Stmt method : stmt.methods) {
+			if (method instanceof Function) {
+				FunctionType declaration = FunctionType.METHOD;
+				if (method.name.lexeme.equals("init")) {
+					declaration = FunctionType.INITIALIZER;
+				}
+				resolveFunction(method, declaration);
 			}
-			resolveFunction(method, declaration);
 		}
 
 		endScope();
@@ -129,6 +133,14 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 		define(stmt.name);
 
 		resolveFunction(stmt, FunctionType.FUNCTION);
+		return null;
+	}
+
+	@Override
+	public Void visitGetterStmt(Getter stmt) {
+		declare(stmt.name);
+		define(stmt.name);
+
 		return null;
 	}
 
