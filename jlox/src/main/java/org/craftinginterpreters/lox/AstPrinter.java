@@ -130,23 +130,27 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
 		return parenthesize("exprStmt", stmt.expression);
 	}
 
+	private void indent(StringBuilder builder) {
+		for (var i = 0; i < indentation; i++)
+			builder.append("  ");
+	}
 	private String parenthesize(String name, Object... visitors) {
 		StringBuilder builder = new StringBuilder();
 
-		builder.append("(\n");
 		indentation += 1;
-		for (var i = 0; i < indentation; i++)
-		builder.append("  ");
+		builder.append("(\n");
+		indent(builder);
 		builder.append(name);
 		for (Object visitor : visitors) {
-			builder.append(" ");
 			if (visitor instanceof Expr expr)
-				builder.append(expr.accept(this));
+				builder.append(" ").append(expr.accept(this));
 			if (visitor instanceof Stmt stmt)
-				builder.append(stmt.accept(this));
+				builder.append(" ").append(stmt.accept(this));
 		}
 		indentation -= 1;
-		builder.append("\n)");
+		builder.append("\n");
+		indent(builder);
+		builder.append(")");
 
 		return builder.toString();
 	}
