@@ -50,13 +50,20 @@ class Parser {
 		consume(LEFT_BRACE, "Expect '{' before class body.");
 
 		List<Stmt.Function> methods = new ArrayList<>();
+		List<Stmt.Getter> getters = new ArrayList<>();
 		while (!check(RIGHT_BRACE) && !isAtEnd()) {
-			methods.add(function("method"));
+			var identifier = consume(IDENTIFIER, "Functions and Getters should start with an identifier.");
+			if (check(LEFT_PAREN))
+				methods.add(function(identifier, "method"));
+			else if (check(LEFT_BRACE))
+				getters.add(getter(identifier));
+			else
+				throw error(peek(), "Identifier in class not followed by '{' for getter or '(' for function.");
 		}
 
 		consume(RIGHT_BRACE, "Expect '}' after class body.");
 
-		return new Stmt.Class(name, methods);
+		return new Stmt.Class(name, methods, getters);
 	}
 
 	private Stmt varDeclaration() {
@@ -180,6 +187,10 @@ class Parser {
 
 	private Stmt.Function function(String kind) {
 		Token name = consume(IDENTIFIER, "Expect " + kind + " name.");
+		return function(name, kind);
+	}
+
+	private Stmt.Function function(Token name, String kind) {
 		List<Token> parameters = new ArrayList<>();
 		consume(LEFT_PAREN, "Expect '(' after " + kind + " name.");
 		if (!check(RIGHT_PAREN)) {
@@ -197,7 +208,13 @@ class Parser {
 		consume(LEFT_BRACE, "Expect '{' before " + kind + " body.");
 		List<Stmt> body = block();
 		return new Stmt.Function(name, parameters, body);
+	}
 
+	private Stmt.Getter getter(Token name) {
+		assert name.type == IDENTIFIER;
+		consume(LEFT_BRACE, "Expect '{' before getter body.");
+		List<Stmt> body = block();
+		return new Stmt.Getter(name, body);
 	}
 
 	private List<Stmt> block() {
