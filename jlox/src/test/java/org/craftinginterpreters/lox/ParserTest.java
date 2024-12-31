@@ -156,25 +156,29 @@ class ParserTest {
 		var expect = """
 				(
 				  class Circle (
-				    function init (
-				      list
-				    ) (
-				      list (
-				        exprStmt (
-				          setExpr radius this Var 'radius'
+				    list (
+				      function init (
+				        list
+				      ) (
+				        list (
+				          exprStmt (
+				            setExpr radius this Var 'radius'
+				          )
 				        )
 				      )
 				    )
 				  ) (
-				    getter area (
-				      list (
-				        return (
-				          * (
-				            * 3.141592653 (
+				    list (
+				      getter area (
+				        list (
+				          return (
+				            * (
+				              * 3.141592653 (
+				                getExpr radius this
+				              )
+				            ) (
 				              getExpr radius this
 				            )
-				          ) (
-				            getExpr radius this
 				          )
 				        )
 				      )

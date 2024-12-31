@@ -19,6 +19,7 @@ import org.craftinginterpreters.lox.Stmt.Block;
 import org.craftinginterpreters.lox.Stmt.Class;
 import org.craftinginterpreters.lox.Stmt.Expression;
 import org.craftinginterpreters.lox.Stmt.Function;
+import org.craftinginterpreters.lox.Stmt.Getter;
 import org.craftinginterpreters.lox.Stmt.If;
 import org.craftinginterpreters.lox.Stmt.Print;
 import org.craftinginterpreters.lox.Stmt.Return;
@@ -129,6 +130,12 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 		define(stmt.name);
 
 		resolveFunction(stmt, FunctionType.FUNCTION);
+		return null;
+	}
+
+	@Override
+	public Void visitGetterStmt(Getter stmt) {
+		// TODO This is a placeholder
 		return null;
 	}
 

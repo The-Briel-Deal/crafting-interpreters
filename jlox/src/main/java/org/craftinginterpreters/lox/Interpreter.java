@@ -17,6 +17,7 @@ import org.craftinginterpreters.lox.Expr.This;
 import org.craftinginterpreters.lox.Expr.Unary;
 import org.craftinginterpreters.lox.Stmt.Block;
 import org.craftinginterpreters.lox.Stmt.Class;
+import org.craftinginterpreters.lox.Stmt.Getter;
 import org.craftinginterpreters.lox.Stmt.If;
 
 class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
@@ -247,6 +248,12 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 		LoxFunction function = new LoxFunction(stmt, environment, false);
 		environment.define(stmt.name.lexeme, function);
 		return null;
+	}
+
+	@Override
+	public Void visitGetterStmt(Getter stmt) {
+	    // TODO This is a placeholder.
+	    return null;
 	}
 
 	@Override

@@ -10,6 +10,7 @@ import org.craftinginterpreters.lox.Stmt.Block;
 import org.craftinginterpreters.lox.Stmt.Class;
 import org.craftinginterpreters.lox.Stmt.Expression;
 import org.craftinginterpreters.lox.Stmt.Function;
+import org.craftinginterpreters.lox.Stmt.Getter;
 import org.craftinginterpreters.lox.Stmt.If;
 import org.craftinginterpreters.lox.Stmt.Print;
 import org.craftinginterpreters.lox.Stmt.Return;
@@ -104,7 +105,7 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
 
 	@Override
 	public String visitClassStmt(Class stmt) {
-		return parenthesize("class " + stmt.name.lexeme, stmt.methods.toArray());
+		return parenthesize("class " + stmt.name.lexeme, stmt.methods, stmt.getters);
 	}
 
 	@Override
@@ -125,6 +126,11 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
 	@Override
 	public String visitFunctionStmt(Function stmt) {
 		return parenthesize("function " + stmt.name.lexeme, stmt.params, stmt.body);
+	}
+
+	@Override
+	public String visitGetterStmt(Getter stmt) {
+		return parenthesize("getter " + stmt.name.lexeme, stmt.body);
 	}
 
 	@Override
