@@ -17,8 +17,11 @@ import org.craftinginterpreters.lox.Stmt.Var;
 import org.craftinginterpreters.lox.Stmt.While;
 
 class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
-	String print(Expr expr) {
-		return expr.accept(this);
+	String print(Stmt... stmts) {
+		var output = new StringBuilder();
+		for (var stmt : stmts)
+			output.append(stmt.accept(this) + "\n");
+		return output.toString();
 	}
 
 	/* Expr */
@@ -107,7 +110,7 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
 
 	@Override
 	public String visitWhileStmt(While stmt) {
-		return parenthesize("while" , stmt.condition, stmt.body);
+		return parenthesize("while", stmt.condition, stmt.body);
 	}
 
 	@Override
