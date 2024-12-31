@@ -133,7 +133,7 @@ class ParserTest {
 				    this.radius = radius;
 				  }
 
-				  area() {
+				  area {
 				    return 3.141592653 * this.radius * this.radius;
 				  }
 				}
@@ -166,9 +166,7 @@ class ParserTest {
 				      )
 				    )
 				  ) (
-				    function area (
-				      list
-				    ) (
+				    getter area (
 				      list (
 				        return (
 				          * (
