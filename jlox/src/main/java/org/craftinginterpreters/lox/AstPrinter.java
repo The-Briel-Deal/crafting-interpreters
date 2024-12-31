@@ -17,6 +17,8 @@ import org.craftinginterpreters.lox.Stmt.Var;
 import org.craftinginterpreters.lox.Stmt.While;
 
 class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
+	private int indentation = 0;
+
 	String print(Stmt... stmts) {
 		var output = new StringBuilder();
 		for (var stmt : stmts)
@@ -131,7 +133,11 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
 	private String parenthesize(String name, Object... visitors) {
 		StringBuilder builder = new StringBuilder();
 
-		builder.append("(").append(name);
+		builder.append("(\n");
+		indentation += 1;
+		for (var i = 0; i < indentation; i++)
+		builder.append("  ");
+		builder.append(name);
 		for (Object visitor : visitors) {
 			builder.append(" ");
 			if (visitor instanceof Expr expr)
@@ -139,7 +145,8 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
 			if (visitor instanceof Stmt stmt)
 				builder.append(stmt.accept(this));
 		}
-		builder.append(")");
+		indentation -= 1;
+		builder.append("\n)");
 
 		return builder.toString();
 	}
