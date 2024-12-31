@@ -16,6 +16,8 @@ import org.craftinginterpreters.lox.Stmt.Return;
 import org.craftinginterpreters.lox.Stmt.Var;
 import org.craftinginterpreters.lox.Stmt.While;
 
+import java.util.List;
+
 class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
 	private int indentation = 0;
 
@@ -147,6 +149,8 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
 				builder.append(" ").append(expr.accept(this));
 			if (visitor instanceof Stmt stmt)
 				builder.append(" ").append(stmt.accept(this));
+			if (visitor instanceof List list)
+				builder.append(" ").append(parenthesize("list", list.toArray()));
 		}
 		indentation -= 1;
 		builder.append("\n");

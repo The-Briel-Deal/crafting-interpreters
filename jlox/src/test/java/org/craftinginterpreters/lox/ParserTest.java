@@ -90,7 +90,29 @@ class ParserTest {
 				  var b 5.0
 				)
 				(
-				  blockStmt
+				  blockStmt (
+				    list (
+				      var b 10.0
+				    ) (
+				      print (
+				        + Var 'a' (
+				          * Var 'b' Var 'a'
+				        )
+				      )
+				    ) (
+				      blockStmt (
+				        list (
+				          var a 30.0
+				        ) (
+				          print (
+				            + Var 'a' (
+				              * Var 'b' Var 'a'
+				            )
+				          )
+				        )
+				      )
+				    )
+				  )
 				)
 				(
 				  print (
@@ -134,9 +156,31 @@ class ParserTest {
 		var expect = """
 				(
 				  class Circle (
-				    function init
+				    function init (
+				      list
+				    ) (
+				      list (
+				        exprStmt (
+				          setExpr radius this Var 'radius'
+				        )
+				      )
+				    )
 				  ) (
-				    function area
+				    function area (
+				      list
+				    ) (
+				      list (
+				        return (
+				          * (
+				            * 3.141592653 (
+				              getExpr radius this
+				            )
+				          ) (
+				            getExpr radius this
+				          )
+				        )
+				      )
+				    )
 				  )
 				)
 				(
