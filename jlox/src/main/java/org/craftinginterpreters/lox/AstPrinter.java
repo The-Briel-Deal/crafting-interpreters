@@ -17,17 +17,6 @@ import org.craftinginterpreters.lox.Stmt.Var;
 import org.craftinginterpreters.lox.Stmt.While;
 
 class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
-	public static void main(String[] args) {
-		var unary = new Expr.Unary(
-				new Token(TokenType.MINUS, "-", null, 1),
-				new Expr.Literal(123));
-		var grouping = new Expr.Grouping(new Expr.Literal(45.67));
-
-		var expression = new Expr.Binary(unary, new Token(TokenType.STAR, "*", null, 1), grouping);
-
-		System.out.println(new AstPrinter().print(expression));
-	}
-
 	String print(Expr expr) {
 		return expr.accept(this);
 	}
