@@ -19,17 +19,19 @@ class ParserTest {
 		var result = astPrinter.print(statements.toArray(new Stmt[0]));
 
 		var expect = """
-		(
-		  print Im a dog
-		)
-		""";
+				(
+				  print Im a dog
+				)
+				""";
 		assertEquals(expect, result);
 	}
 
 	@org.junit.jupiter.api.Test
 	void declareVar() {
-		var script = "var dog = \"Im a dog\";" +
-				"print dog;";
+		var script = """
+				var dog = "Im a dog";
+				print dog;
+				""";
 
 		var lox = new Lox();
 
