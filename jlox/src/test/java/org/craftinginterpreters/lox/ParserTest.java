@@ -39,7 +39,7 @@ class ParserTest {
         var result = astPrinter.print(statements.toArray(new Stmt[0]));
 
         var expect = "(varStmt Im a dog)\n" +
-                "(print Var 'IDENTIFIER dog null')\n";
+                "(print Var 'dog')\n";
         assertEquals(expect, result);
     }
 }

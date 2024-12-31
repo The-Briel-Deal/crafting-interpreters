@@ -49,7 +49,7 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
 
 	@Override
 	public String visitVariableExpr(Expr.Variable expr) {
-		return String.format("Var '%s'", expr.name);
+		return String.format("Var '%s'", expr.name.lexeme);
 	}
 
 	@Override
