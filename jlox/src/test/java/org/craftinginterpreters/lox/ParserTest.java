@@ -46,7 +46,7 @@ class ParserTest {
 
 		var expect = """
 				(
-				  varStmt Im a dog
+				  var dog Im a dog
 				)
 				(
 				  print Var 'dog'
@@ -84,10 +84,10 @@ class ParserTest {
 
 		var expect = """
 				(
-				  varStmt 3.0
+				  var a 3.0
 				)
 				(
-				  varStmt 5.0
+				  var b 5.0
 				)
 				(
 				  blockStmt
@@ -97,6 +97,56 @@ class ParserTest {
 				    + Var 'a' (
 				      * Var 'b' Var 'a'
 				    )
+				  )
+				)
+				""";
+		assertEquals(expect, result);
+	}
+
+	@org.junit.jupiter.api.Test
+	void withGetter() {
+		var script = """
+				class Circle {
+				  init(radius) {
+				    this.radius = radius;
+				  }
+
+				  area() {
+				    return 3.141592653 * this.radius * this.radius;
+				  }
+				}
+
+				var circle = Circle(4);
+				print circle.area;
+				""";
+
+		var lox = new Lox();
+
+		var scanner = new Scanner(lox, script);
+		var tokens = scanner.scanTokens();
+
+		var parser = new Parser(lox, tokens);
+		var statements = parser.parse();
+
+		var astPrinter = new AstPrinter();
+		var result = astPrinter.print(statements.toArray(new Stmt[0]));
+
+		var expect = """
+				(
+				  class Circle (
+				    function init
+				  ) (
+				    function area
+				  )
+				)
+				(
+				  var circle (
+				    Circle 4.0
+				  )
+				)
+				(
+				  print (
+				    getExpr area Var 'circle'
 				  )
 				)
 				""";

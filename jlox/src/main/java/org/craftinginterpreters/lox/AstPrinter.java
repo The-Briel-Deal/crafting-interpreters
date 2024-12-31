@@ -66,7 +66,7 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
 
 	@Override
 	public String visitCallExpr(Call expr) {
-		return parenthesize(expr.callee.toString(), (Object[]) expr.arguments.toArray(new Expr[0]));
+		return parenthesize(((Expr.Variable) expr.callee).name.lexeme, (Object[]) expr.arguments.toArray(new Expr[0]));
 	}
 
 	@Override
@@ -92,7 +92,7 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
 
 	@Override
 	public String visitVarStmt(Var stmt) {
-		return parenthesize("varStmt", stmt.initializer);
+		return parenthesize("var " + stmt.name.lexeme, stmt.initializer);
 	}
 
 	@Override
@@ -102,7 +102,7 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
 
 	@Override
 	public String visitClassStmt(Class stmt) {
-		return parenthesize("class " + stmt.name.lexeme, stmt.methods);
+		return parenthesize("class " + stmt.name.lexeme, stmt.methods.toArray());
 	}
 
 	@Override
@@ -134,6 +134,7 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
 		for (var i = 0; i < indentation; i++)
 			builder.append("  ");
 	}
+
 	private String parenthesize(String name, Object... visitors) {
 		StringBuilder builder = new StringBuilder();
 
