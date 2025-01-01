@@ -60,4 +60,29 @@ class ResolverTest {
 
 		assertEquals(expect, result);
 	}
+
+	@org.junit.jupiter.api.Test
+	void getter() {
+		var script = """
+				class Circle {
+				  init(radius) {
+				    this.radius = radius;
+				  }
+
+				  area {
+				    return 3.141592653 * this.radius * this.radius;
+				  }
+				}
+
+				var circle = Circle(4);
+				print circle.area;
+				""";
+
+		var expect = new ArrayList<>();
+		expect
+				.add(new MockInterpreter.ResolvedVar(new Token(TokenType.IDENTIFIER, "dog", null, 4), 1));
+		var result = resolveVars(script);
+
+		assertEquals(expect, result);
+	}
 }
