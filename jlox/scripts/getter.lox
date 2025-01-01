@@ -1,0 +1,17 @@
+class Circle {
+  init(radius) {
+    this.radius = radius;
+  }
+
+  area {
+    return 3.141592653 * this.radius * this.radius;
+  }
+
+  baked_beans {
+    return "Greasy" + " " + "Beans";
+  }
+}
+
+var circle = Circle(4);
+print circle.area; // Prints roughly "50.2655".
+print circle.baked_beans;
