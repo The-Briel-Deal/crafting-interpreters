@@ -16,9 +16,8 @@ class ResolverTest {
 
 		@Override
 		void resolve(Expr expr, int depth) {
-			assert expr instanceof Expr.Variable;
-
-			resolvedVars.add(new ResolvedVar(((Expr.Variable) expr).name, depth));
+			if (expr instanceof Expr.Variable exprVar)
+				resolvedVars.add(new ResolvedVar(exprVar.name, depth));
 			super.resolve(expr, depth);
 		}
 	}
@@ -74,13 +73,17 @@ class ResolverTest {
 				  }
 				}
 
-				var circle = Circle(4);
-				print circle.area;
+				{
+				  var circle = Circle(4);
+				  print circle.area;
+				}
 				""";
 
 		var expect = new ArrayList<>();
 		expect
-				.add(new MockInterpreter.ResolvedVar(new Token(TokenType.IDENTIFIER, "dog", null, 4), 1));
+				.add(new MockInterpreter.ResolvedVar(new Token(TokenType.IDENTIFIER, "radius", null, 3), 0));
+		expect
+				.add(new MockInterpreter.ResolvedVar(new Token(TokenType.IDENTIFIER, "circle", null, 13), 0));
 		var result = resolveVars(script);
 
 		assertEquals(expect, result);
