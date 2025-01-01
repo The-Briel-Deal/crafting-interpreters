@@ -104,7 +104,7 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
 
 	@Override
 	public String visitClassStmt(Class stmt) {
-		return parenthesize("class " + stmt.name.lexeme, stmt.methods.toArray());
+		return parenthesize("class " + stmt.name.lexeme, stmt.superclass, stmt.methods);
 	}
 
 	@Override

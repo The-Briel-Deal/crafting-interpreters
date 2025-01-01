@@ -126,20 +126,13 @@ class ParserTest {
 	}
 
 	@org.junit.jupiter.api.Test
-	void withGetter() {
+	void withSuper() {
 		var script = """
-				class Circle {
+				class Circle < Shape {
 				  init(radius) {
 				    this.radius = radius;
 				  }
-
-				  area() {
-				    return 3.141592653 * this.radius * this.radius;
-				  }
 				}
-
-				var circle = Circle(4);
-				print circle.area;
 				""";
 
 		var lox = new Lox();
@@ -155,42 +148,18 @@ class ParserTest {
 
 		var expect = """
 				(
-				  class Circle (
-				    function init (
-				      list
-				    ) (
-				      list (
-				        exprStmt (
-				          setExpr radius this Var 'radius'
-				        )
-				      )
-				    )
-				  ) (
-				    function area (
-				      list
-				    ) (
-				      list (
-				        return (
-				          * (
-				            * 3.141592653 (
-				              getExpr radius this
-				            )
-				          ) (
-				            getExpr radius this
+				  class Circle Var 'Shape' (
+				    list (
+				      function init (
+				        list
+				      ) (
+				        list (
+				          exprStmt (
+				            setExpr radius this Var 'radius'
 				          )
 				        )
 				      )
 				    )
-				  )
-				)
-				(
-				  var circle (
-				    Circle 4.0
-				  )
-				)
-				(
-				  print (
-				    getExpr area Var 'circle'
 				  )
 				)
 				""";
