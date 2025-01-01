@@ -68,6 +68,16 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 		declare(stmt.name);
 		define(stmt.name);
 
+		// This could be an edge case imo, you could have two classes with the same
+		// lexeme on two different instances.
+		if (stmt.superclass != null && stmt.name.lexeme.equals(stmt.superclass.name.lexeme)) {
+			lox.error(stmt.superclass.name, "A class can't inherit from itself.");
+		}
+
+		if (stmt.superclass != null) {
+			resolve(stmt.superclass);
+		}
+
 		beginScope();
 		scopes.peek().put("this", true);
 
