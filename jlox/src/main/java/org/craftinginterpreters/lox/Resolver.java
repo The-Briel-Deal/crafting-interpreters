@@ -36,7 +36,8 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 		NONE,
 		FUNCTION,
 		INITIALIZER,
-		METHOD
+		METHOD,
+		GETTER
 	}
 
 	private FunctionType currentFunction = FunctionType.NONE;
@@ -78,6 +79,9 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 				declaration = FunctionType.INITIALIZER;
 			}
 			resolveFunction(method, declaration);
+		}
+		for (Stmt.Getter getter : stmt.getters) {
+			resolveGetter(getter);
 		}
 
 		endScope();
@@ -135,7 +139,10 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
 	@Override
 	public Void visitGetterStmt(Getter stmt) {
-		// TODO This is a placeholder
+		declare(stmt.name);
+		define(stmt.name);
+
+		resolveGetter(stmt);
 		return null;
 	}
 
@@ -163,6 +170,15 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 			define(param);
 		}
 		resolve(function.body);
+		endScope();
+		currentFunction = enclosingFunction;
+	}
+	private void resolveGetter(Stmt.Getter getter) {
+		FunctionType enclosingFunction = currentFunction;
+		currentFunction = FunctionType.GETTER;
+
+		beginScope();
+		resolve(getter.body);
 		endScope();
 		currentFunction = enclosingFunction;
 	}

@@ -11,9 +11,14 @@ class LoxInstance {
 		this.klass = klass;
 	}
 
-	Object get(Token name) {
+	Object get(Token name, Interpreter interpreter) {
 		if (fields.containsKey(name.lexeme)) {
 			return fields.get(name.lexeme);
+		}
+
+		LoxGetter getter = klass.findGetter(name.lexeme);
+		if (getter != null) {
+			return getter.bind(this).get(interpreter);
 		}
 
 		LoxFunction method = klass.findMethod(name.lexeme);

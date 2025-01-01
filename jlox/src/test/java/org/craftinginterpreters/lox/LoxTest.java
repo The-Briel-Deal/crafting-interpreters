@@ -478,6 +478,36 @@ class LoxTest {
 		assertEquals(expect, result);
 	}
 
+	@org.junit.jupiter.api.Test
+	void getter() {
+		var lox = new Lox();
+		var output = new CapturedOutput();
+		var script = """
+				class Circle {
+				  init(radius) {
+				    this.radius = radius;
+				  }
+
+				  area {
+				    return 3.141592653 * this.radius * this.radius;
+				  }
+				}
+
+				{
+				  var circle = Circle(4);
+				  print circle.area;
+				}
+				""";
+
+		lox.run(script);
+
+		var expect = "50.265482448\n";
+
+		var result = output.get();
+
+		assertEquals(expect, result);
+	}
+
 	class CapturedOutput {
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 
