@@ -478,6 +478,100 @@ class LoxTest {
 		assertEquals(expect, result);
 	}
 
+	@org.junit.jupiter.api.Test
+	void inheritMethodsFromSuperclass() {
+		var lox = new Lox();
+		var output = new CapturedOutput();
+		var script = """
+				class Doughnut {
+				  cook() {
+				    print "Fry until golden brown.";
+				  }
+				}
+
+				class BostonCream < Doughnut {}
+
+				BostonCream().cook();
+				""";
+
+		lox.run(script);
+
+		var expect = "Fry until golden brown.\n";
+
+		var result = output.get();
+
+		assertEquals(expect, result);
+	}
+
+	@org.junit.jupiter.api.Test
+	void inheritMethodsWithAdditional() {
+		var lox = new Lox();
+		var output = new CapturedOutput();
+		var script = """
+				class Doughnut {
+				  cook() {
+				    print "Fry until golden brown.";
+				  }
+				}
+
+				class BostonCream < Doughnut {
+				  fill() {
+				    print "With lots of creme.";
+				  }
+				}
+
+				BostonCream().cook();
+				BostonCream().fill();
+				""";
+
+		lox.run(script);
+
+		var expect = """
+				Fry until golden brown.
+				With lots of creme.
+				""";
+
+		var result = output.get();
+
+		assertEquals(expect, result);
+	}
+
+	@org.junit.jupiter.api.Test
+	void overrideInheritedMethod() {
+		var lox = new Lox();
+		var output = new CapturedOutput();
+		var script = """
+				class Doughnut {
+				  cook() {
+				    print "Fry until golden brown.";
+				  }
+				}
+
+				class BostonCream < Doughnut {
+				  cook() {
+						print "Fry until crispy.";
+				  }
+				  fill() {
+				    print "With lots of creme.";
+				  }
+				}
+
+				BostonCream().cook();
+				BostonCream().fill();
+				""";
+
+		lox.run(script);
+
+		var expect = """
+				Fry until crispy.
+				With lots of creme.
+				""";
+
+		var result = output.get();
+
+		assertEquals(expect, result);
+	}
+
 	class CapturedOutput {
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 
