@@ -691,6 +691,36 @@ class LoxTest {
 		assertEquals(expect, result);
 	}
 
+	@org.junit.jupiter.api.Test
+	void MethodStubs() {
+		var lox = new Lox();
+		var output = new CapturedOutput();
+		var script = """
+				class Doughnut {
+				  cook()
+				}
+
+				class BostonCream < Doughnut {
+				  cook() {
+						print "Pipe full of custard and coat with chocolate."
+				  }
+				}
+
+				var bostonCream = BostonCream();
+				bostonCream.cook();
+				""";
+
+		lox.run(script);
+
+		var expect = """
+				Pipe full of custard and coat with chocolate.
+				""";
+
+		var result = output.get();
+
+		assertEquals(expect, result);
+	}
+
 	class CapturedOutput {
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 
