@@ -31,6 +31,7 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 	private final Interpreter interpreter;
 
 	private final Stack<Map<String, Boolean>> scopes = new Stack<>();
+	private final Stack<Map<String, Stmt.Class>> classScopes = new Stack<>();
 
 	private enum FunctionType {
 		NONE,
@@ -52,6 +53,7 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 	Resolver(Interpreter interpreter, Lox lox) {
 		this.interpreter = interpreter;
 		this.lox = lox;
+		classScopes.push(new HashMap<>());
 	}
 
 	@Override
@@ -69,6 +71,7 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
 		declare(stmt.name);
 		define(stmt.name);
+		defineClass(stmt.name.lexeme, stmt);
 
 		// This could be an edge case imo, you could have two classes with the same
 		// lexeme on two different instances.
@@ -79,6 +82,33 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 		if (stmt.superclass != null) {
 			currentClass = ClassType.SUBCLASS;
 			resolve(stmt.superclass);
+			var superclass = getClass(stmt.superclass.name.lexeme);
+			if (superclass == null) {
+				lox.error(stmt.superclass.name, "Could not find class.");
+			}
+			for (var supermethod : superclass.methods) {
+				if (supermethod.body == null) {
+					var foundOverride = false;
+
+					for (var method : stmt.methods) {
+						if (method.name == supermethod.name) {
+
+							if (method.body == null) {
+								lox.error(method.name, "Can't override method stub with another method stub.");
+							} else {
+								foundOverride = true;
+								break;
+							}
+
+						}
+					}
+
+					if (!foundOverride) {
+						lox.error(stmt.superclass.name, "Method stub not overridden in subclass.");
+					}
+
+				}
+			}
 		}
 
 		if (stmt.superclass != null) {
@@ -183,10 +213,12 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
 	private void beginScope() {
 		scopes.push(new HashMap<String, Boolean>());
+		classScopes.push(new HashMap<String, Stmt.Class>());
 	}
 
 	private void endScope() {
 		scopes.pop();
+		classScopes.pop();
 	}
 
 	private void declare(Token name) {
@@ -205,6 +237,19 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 		if (scopes.isEmpty())
 			return;
 		scopes.peek().put(name.lexeme, true);
+	}
+
+	private void defineClass(String name, Stmt.Class klass) {
+		classScopes.peek().put(name, klass);
+	}
+
+	private Stmt.Class getClass(String name) {
+		for (int i = classScopes.size() - 1; i >= 0; i--) {
+			if (classScopes.get(i).containsKey(name)) {
+				return classScopes.get(i).get(name);
+			}
+		}
+		return null;
 	}
 
 	private void resolveLocal(Expr expr, Token name) {
