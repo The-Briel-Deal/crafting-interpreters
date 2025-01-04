@@ -646,6 +646,51 @@ class LoxTest {
 		assertEquals(expect, result);
 	}
 
+	@org.junit.jupiter.api.Test
+	void ShareParentState() {
+		var lox = new Lox();
+		var output = new CapturedOutput();
+		var script = """
+				class FriedFood {
+				  cook() {
+				    this.instructions = this.instructions + "Submerge in hot oil.\n";
+				  }
+				}
+
+				class Doughnut < FriedFood {
+				  cook() {
+				    super.cook();
+				    this.instructions = this.instructions + "Fry until golden brown.\n";
+				  }
+				}
+
+				class BostonCream < Doughnut {
+				  cook() {
+				    this.instructions = "Instructions to make Boston Cream doughnut.\n";
+				    super.cook();
+				    this.instructions = this.instructions + "Pipe full of custard and coat with chocolate.";
+				  }
+				}
+
+				var bostonCream = BostonCream();
+				bostonCream.cook();
+				print bostonCream.instructions;
+				""";
+
+		lox.run(script);
+
+		var expect = """
+				Instructions to make Boston Cream doughnut.
+				Submerge in hot oil.
+				Fry until golden brown.
+				Pipe full of custard and coat with chocolate.
+				""";
+
+		var result = output.get();
+
+		assertEquals(expect, result);
+	}
+
 	class CapturedOutput {
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 
