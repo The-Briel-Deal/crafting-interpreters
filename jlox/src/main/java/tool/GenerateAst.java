@@ -22,6 +22,7 @@ public class GenerateAst {
 						"Logical  : Expr left, Token operator, Expr right",
 						"Set      : Expr object, Token name, Expr value",
 						"This     : Token keyword",
+			      "Inner    : Token keyword",
 						"Unary    : Token operator, Expr right",
 						"Variable : Token name"));
 		defineAst(outputDir, "Stmt", List.of(
@@ -31,7 +32,6 @@ public class GenerateAst {
 				"Function   : Token name, List<Token> params, List<Stmt> body",
 				"If         : Expr condition, Stmt thenBranch, Stmt elseBranch",
 				"Print      : Expr expression",
-			  "Inner      : Token keyword",
 				"Return     : Token keyword, Expr value",
 				"Var        : Token name, Expr initializer",
 				"While      : Expr condition, Stmt body"));

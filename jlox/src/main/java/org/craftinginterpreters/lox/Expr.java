@@ -13,6 +13,7 @@ abstract class Expr {
     R visitLogicalExpr(Logical expr);
     R visitSetExpr(Set expr);
     R visitThisExpr(This expr);
+    R visitInnerExpr(Inner expr);
     R visitUnaryExpr(Unary expr);
     R visitVariableExpr(Variable expr);
   }
@@ -140,6 +141,18 @@ abstract class Expr {
     @Override
     <R> R accept(Visitor<R> visitor) {
       return visitor.visitThisExpr(this);
+    }
+
+    final Token keyword;
+  }
+  static class Inner extends Expr{
+    Inner(Token keyword) {
+      this.keyword = keyword;
+    }
+
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+      return visitor.visitInnerExpr(this);
     }
 
     final Token keyword;
