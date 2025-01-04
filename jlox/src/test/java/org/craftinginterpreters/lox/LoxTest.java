@@ -721,6 +721,37 @@ class LoxTest {
 		assertEquals(expect, result);
 	}
 
+	@org.junit.jupiter.api.Test
+	void MethodStubsBad() {
+		var lox = new Lox();
+		var output = new CapturedErrOutput();
+		var script = """
+				class Doughnut {
+				  cook()
+					lick()
+				}
+
+				class BostonCream < Doughnut {
+				  cook() {
+						print "Pipe full of custard and coat with chocolate.";
+				  }
+				}
+
+				var bostonCream = BostonCream();
+				bostonCream.cook();
+				""";
+
+		lox.run(script);
+
+		var expect = """
+				[line 3] at 'lick' Error: Method stub not overridden in subclass.
+				""";
+
+		var result = output.get();
+
+		assertEquals(expect, result);
+	}
+
 	class CapturedOutput {
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 
