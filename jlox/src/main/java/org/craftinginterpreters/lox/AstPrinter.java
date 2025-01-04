@@ -5,6 +5,7 @@ import org.craftinginterpreters.lox.Expr.Call;
 import org.craftinginterpreters.lox.Expr.Get;
 import org.craftinginterpreters.lox.Expr.Logical;
 import org.craftinginterpreters.lox.Expr.Set;
+import org.craftinginterpreters.lox.Expr.Super;
 import org.craftinginterpreters.lox.Expr.This;
 import org.craftinginterpreters.lox.Stmt.Block;
 import org.craftinginterpreters.lox.Stmt.Class;
@@ -44,6 +45,11 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
 		if (expr.value == null)
 			return "nil";
 		return expr.value.toString();
+	}
+
+	@Override
+	public String visitSuperExpr(Super expr) {
+		return null;
 	}
 
 	@Override
