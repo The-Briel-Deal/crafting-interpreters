@@ -605,6 +605,47 @@ class LoxTest {
 		assertEquals(expect, result);
 	}
 
+	@org.junit.jupiter.api.Test
+	void callMultiInheritanceSuperMethod() {
+		var lox = new Lox();
+		var output = new CapturedOutput();
+		var script = """
+				class FriedFood {
+				  cook() {
+				    print "Submerge in hot oil.";
+				  }
+				}
+
+				class Doughnut < FriedFood {
+				  cook() {
+				    super.cook();
+				    print "Fry until golden brown.";
+				  }
+				}
+
+				class BostonCream < Doughnut {
+				  cook() {
+				    super.cook();
+				    print "Pipe full of custard and coat with chocolate.";
+				  }
+				}
+
+				BostonCream().cook();
+				""";
+
+		lox.run(script);
+
+		var expect = """
+				Submerge in hot oil.
+				Fry until golden brown.
+				Pipe full of custard and coat with chocolate.
+				""";
+
+		var result = output.get();
+
+		assertEquals(expect, result);
+	}
+
 	class CapturedOutput {
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 
