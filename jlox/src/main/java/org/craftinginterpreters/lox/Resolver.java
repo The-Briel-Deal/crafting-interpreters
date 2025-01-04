@@ -12,7 +12,6 @@ import org.craftinginterpreters.lox.Expr.Get;
 import org.craftinginterpreters.lox.Expr.Grouping;
 import org.craftinginterpreters.lox.Expr.Literal;
 import org.craftinginterpreters.lox.Expr.Logical;
-import org.craftinginterpreters.lox.Expr.Super;
 import org.craftinginterpreters.lox.Expr.This;
 import org.craftinginterpreters.lox.Expr.Unary;
 import org.craftinginterpreters.lox.Expr.Variable;
@@ -286,17 +285,6 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 	public Void visitSetExpr(Expr.Set expr) {
 		resolve(expr.value);
 		resolve(expr.object);
-		return null;
-	}
-
-	@Override
-	public Void visitSuperExpr(Super expr) {
-		if (currentClass == ClassType.NONE) {
-			lox.error(expr.keyword, "Can't use super outside of a class.");
-		} else if (currentClass != ClassType.SUBCLASS) {
-			lox.error(expr.keyword, "Can't use 'super' in a class with no superclass.");
-		}
-		resolveLocal(expr, expr.keyword);
 		return null;
 	}
 
