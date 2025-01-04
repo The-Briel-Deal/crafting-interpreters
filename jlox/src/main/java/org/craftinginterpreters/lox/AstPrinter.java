@@ -3,6 +3,7 @@ package org.craftinginterpreters.lox;
 import org.craftinginterpreters.lox.Expr.Assign;
 import org.craftinginterpreters.lox.Expr.Call;
 import org.craftinginterpreters.lox.Expr.Get;
+import org.craftinginterpreters.lox.Expr.Inner;
 import org.craftinginterpreters.lox.Expr.Logical;
 import org.craftinginterpreters.lox.Expr.Set;
 import org.craftinginterpreters.lox.Expr.This;
@@ -32,6 +33,11 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
 	@Override
 	public String visitBinaryExpr(Expr.Binary expr) {
 		return parenthesize(expr.operator.lexeme, expr.left, expr.right);
+	}
+
+	@Override
+	public String visitInnerExpr(Inner expr) {
+		return null;
 	}
 
 	@Override

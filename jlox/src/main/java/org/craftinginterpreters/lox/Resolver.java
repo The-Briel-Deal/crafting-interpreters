@@ -10,6 +10,7 @@ import org.craftinginterpreters.lox.Expr.Binary;
 import org.craftinginterpreters.lox.Expr.Call;
 import org.craftinginterpreters.lox.Expr.Get;
 import org.craftinginterpreters.lox.Expr.Grouping;
+import org.craftinginterpreters.lox.Expr.Inner;
 import org.craftinginterpreters.lox.Expr.Literal;
 import org.craftinginterpreters.lox.Expr.Logical;
 import org.craftinginterpreters.lox.Expr.This;
@@ -80,10 +81,8 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 			resolve(stmt.superclass);
 		}
 
-		if (stmt.superclass != null) {
-			beginScope();
-			scopes.peek().put("super", true);
-		}
+		beginScope();
+		scopes.peek().put("inner", true);
 
 		beginScope();
 		scopes.peek().put("this", true);
@@ -292,6 +291,16 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 	public Void visitThisExpr(This expr) {
 		if (currentClass == ClassType.NONE) {
 			lox.error(expr.keyword, "Can't use 'this' outside of a class.");
+			return null;
+		}
+		resolveLocal(expr, expr.keyword);
+		return null;
+	}
+
+	@Override
+	public Void visitInnerExpr(Inner expr) {
+		if (currentClass == ClassType.NONE) {
+			lox.error(expr.keyword, "Can't use 'inner' outside of a class.");
 			return null;
 		}
 		resolveLocal(expr, expr.keyword);
