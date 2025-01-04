@@ -12,6 +12,7 @@ import org.craftinginterpreters.lox.Expr.Get;
 import org.craftinginterpreters.lox.Expr.Grouping;
 import org.craftinginterpreters.lox.Expr.Literal;
 import org.craftinginterpreters.lox.Expr.Logical;
+import org.craftinginterpreters.lox.Expr.Super;
 import org.craftinginterpreters.lox.Expr.This;
 import org.craftinginterpreters.lox.Expr.Unary;
 import org.craftinginterpreters.lox.Expr.Variable;
@@ -78,6 +79,11 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 			resolve(stmt.superclass);
 		}
 
+		if (stmt.superclass != null) {
+			beginScope();
+			scopes.peek().put("super", true);
+		}
+
 		beginScope();
 		scopes.peek().put("this", true);
 
@@ -90,6 +96,9 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 		}
 
 		endScope();
+		if (stmt.superclass != null)
+			endScope();
+
 		currentClass = enclosingClass;
 
 		return null;
@@ -275,6 +284,12 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 	public Void visitSetExpr(Expr.Set expr) {
 		resolve(expr.value);
 		resolve(expr.object);
+		return null;
+	}
+
+	@Override
+	public Void visitSuperExpr(Super expr) {
+		resolveLocal(expr, expr.keyword);
 		return null;
 	}
 
