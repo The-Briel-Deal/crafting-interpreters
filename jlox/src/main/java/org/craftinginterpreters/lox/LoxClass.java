@@ -23,11 +23,13 @@ class LoxClass implements LoxCallable {
 		while (loxClass != null) {
 			if (loxClass.methods.containsKey(name)) {
 				inner = method;
-				method = methods.get(name);
+				method = loxClass.methods.get(name);
 			}
 			loxClass = loxClass.superclass;
 		}
-		return method.bind(instance, inner);
+		if (method != null)
+			return method.bind(instance, inner);
+		return null;
 	}
 
 	@Override
