@@ -35,6 +35,11 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
 	}
 
 	@Override
+	public String visitSuperExpr(Expr.Super expr) {
+		return "";
+	}
+
+	@Override
 	public String visitGroupingExpr(Expr.Grouping expr) {
 		return parenthesize("group", expr.expression);
 	}

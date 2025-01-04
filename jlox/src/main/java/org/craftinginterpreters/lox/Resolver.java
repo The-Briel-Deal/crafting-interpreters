@@ -91,7 +91,7 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 					var foundOverride = false;
 
 					for (var method : stmt.methods) {
-						if (method.name == supermethod.name) {
+						if (method.name.lexeme.equals(supermethod.name.lexeme)) {
 
 							if (method.body == null) {
 								lox.error(method.name, "Can't override method stub with another method stub.");
@@ -104,7 +104,7 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 					}
 
 					if (!foundOverride) {
-						lox.error(stmt.superclass.name, "Method stub not overridden in subclass.");
+						lox.error(supermethod.name, "Method stub not overridden in subclass.");
 					}
 
 				}
@@ -206,7 +206,9 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 			declare(param);
 			define(param);
 		}
-		resolve(function.body);
+		if (function.body != null) {
+			resolve(function.body);
+		}
 		endScope();
 		currentFunction = enclosingFunction;
 	}

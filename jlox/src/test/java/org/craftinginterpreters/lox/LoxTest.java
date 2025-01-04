@@ -702,7 +702,7 @@ class LoxTest {
 
 				class BostonCream < Doughnut {
 				  cook() {
-						print "Pipe full of custard and coat with chocolate."
+						print "Pipe full of custard and coat with chocolate.";
 				  }
 				}
 
