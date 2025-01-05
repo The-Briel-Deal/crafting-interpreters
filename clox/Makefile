@@ -1,14 +1,15 @@
+CFLAGS  := -std=c99 -Iinclude
 HEADERS := $(wildcard include/*.h)
 SOURCES := $(wildcard src/*.c)
 OBJECTS := $(addprefix build/, $(notdir $(SOURCES:.c=.o)))
 
 # Compile Executable
 build/clox: $(OBJECTS)
-	gcc $^ -std=c99 -Iinclude -o build/clox
+	gcc $^ $(CFLAGS) -o $@
 
 # Compile Object Files
 build/%.o: src/%.c $(HEADERS) | build/
-	gcc $< -c -std=c99 -Iinclude -o $@
+	gcc $< -c $(CFLAGS) -o $@
 
 build/:
 	mkdir -p build
