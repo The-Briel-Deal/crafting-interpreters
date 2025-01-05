@@ -12,6 +12,10 @@ build/:
 build/%.o: src/%.c $(HEADERS) | build/
 	gcc $< -c -std=c99 -Iinclude -o $@
 
-.PHONY: clean
+.PHONY: clean run
 clean:
 	rm build/*.o build/clox 
+
+run: build/clox
+	exec build/clox
+
