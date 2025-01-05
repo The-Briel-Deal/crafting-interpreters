@@ -16,7 +16,7 @@ build/:
 
 .PHONY: clean run
 clean:
-	rm build/*.o build/clox 
+	rm -r ./build 
 
 run: build/clox
 	exec build/clox
