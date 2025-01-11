@@ -15,10 +15,18 @@ build/:
 	mkdir -p build
 
 
-.PHONY: clean run
+# Janky Test Setup
+build/test: build/
+	gcc test/main.c $(filter-out %/main.c, $(SOURCES)) $(CFLAGS) -o build/test
+
+.PHONY: clean run test
 clean:
 	rm -r ./build 
 
 run: build/clox
 	exec build/clox
+
+test: build/test
+	exec build/test
+
 
