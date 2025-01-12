@@ -1,4 +1,4 @@
-CFLAGS  := -std=gnu99 -Iinclude
+CFLAGS  := -std=gnu99 -Iinclude -g
 HEADERS := $(wildcard include/*.h)
 SOURCES := $(wildcard src/*.c)
 OBJECTS := $(addprefix build/, $(notdir $(SOURCES:.c=.o)))
@@ -17,7 +17,7 @@ build/:
 
 # Janky Test Setup
 build/test: build/ test/main.c $(SOURCES)
-	gcc test/main.c $(filter-out %/main.c, $(SOURCES)) $(CFLAGS) -o build/test
+	gcc test/main.c $(filter-out %/main.c, $(SOURCES)) $(CFLAGS)  -o build/test
 
 .PHONY: clean run test
 clean:
