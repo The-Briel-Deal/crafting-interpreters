@@ -1,9 +1,9 @@
 #include <assert.h>
-#include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 
+#include "common.h"
 #include "chunk.h"
 #include "debug.h"
 
@@ -69,6 +69,5 @@ static bool runTest(char *testName, void (*testCase)(), char *expect) {
 
     return false;
   }
-
   return true;
 }
