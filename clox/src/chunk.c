@@ -30,11 +30,26 @@ void writeChunk(Chunk *chunk, uint8_t byte, int line) {
   }
 
   chunk->code[chunk->count] = byte;
-	chunk->lines[chunk->count] = line;
+  chunk->lines[chunk->count] = line;
   chunk->count++;
 }
 
 int addConstant(Chunk *chunk, Value value) {
   writeValueArray(&chunk->constants, value);
   return chunk->constants.count - 1;
+}
+
+void writeConstant(Chunk *chunk, Value value, int line) {
+  int constant = addConstant(chunk, value);
+
+	// If constant is greater than 255 then we need to use a long constant.
+  if (constant > 255) {
+    writeChunk(chunk, OP_CONSTANT_LONG, line);
+    writeChunk(chunk, (uint8_t)(constant >> 16), line);
+    writeChunk(chunk, (uint8_t)(constant >> 8), line);
+    writeChunk(chunk, (uint8_t)(constant >> 0), line);
+  } else {
+    writeChunk(chunk, OP_CONSTANT, line);
+    writeChunk(chunk, (uint8_t)(constant), line);
+  }
 }
