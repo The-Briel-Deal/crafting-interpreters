@@ -36,7 +36,7 @@ static int simpleInstruction(const char *name, int offset) {
 
 int disassembleInstruction(Chunk *chunk, int offset) {
   printf("%04d ", offset);
-  if (offset > 0 && getLine(chunk, offset) == getLine(chunk, offset)) {
+  if (offset > 0 && getLine(chunk, offset) == getLine(chunk, offset- 1)) {
     printf("   | ");
   } else {
     printf("%4d ", getLine(chunk, offset));
