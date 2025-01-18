@@ -45,9 +45,7 @@ static void testConstantLong() {
 
   // Just running this an arbitrary number of times over 256
   for (int i = 0; i < 260; i++) {
-    int constant = addConstant(&chunk, 1.2);
-    writeChunk(&chunk, OP_CONSTANT, 123);
-    writeChunk(&chunk, constant, 123);
+		writeConstant(&chunk, 1.2, 123);
   }
 
   writeChunk(&chunk, OP_RETURN, 123);
@@ -349,8 +347,8 @@ static char TEST_CONSTANT_LONG_EXPECTATION[] =
     "0506    | OP_CONSTANT       253 '1.2'\n"
     "0508    | OP_CONSTANT       254 '1.2'\n"
     "0510    | OP_CONSTANT       255 '1.2'\n"
-    "0512    | OP_CONSTANT       256 '1.2'\n"
-    "0514    | OP_CONSTANT       257 '1.2'\n"
-    "0516    | OP_CONSTANT       257 '1.2'\n"
-    "0518    | OP_CONSTANT       258 '1.2'\n"
-    "0520    | OP_RETURN\n";
+    "0512    | OP_CONSTANT_LONG  256 '1.2'\n"
+    "0516    | OP_CONSTANT_LONG  257 '1.2'\n"
+    "0520    | OP_CONSTANT_LONG  258 '1.2'\n"
+    "0524    | OP_CONSTANT_LONG  259 '1.2'\n"
+    "0528    | OP_RETURN\n";

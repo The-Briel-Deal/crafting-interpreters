@@ -42,7 +42,7 @@ int addConstant(Chunk *chunk, Value value) {
 void writeConstant(Chunk *chunk, Value value, int line) {
   int constant = addConstant(chunk, value);
 
-	// If constant is greater than 255 then we need to use a long constant.
+  // If constant is greater than 255 then we need to use a long constant.
   if (constant > 255) {
     writeChunk(chunk, OP_CONSTANT_LONG, line);
     writeChunk(chunk, (uint8_t)(constant >> 16), line);
