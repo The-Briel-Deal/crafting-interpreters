@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
                                 "0002    | OP_RETURN\n";
   assert(runTest("testWriteChunk", testWriteChunk, testWriteChunkExpect));
 
-	char testArithmeticExpect[] = "-0.821429\n";
+  char testArithmeticExpect[] = "-0.821429\n";
   assert(runTest("testArithmetic", testArithmetic, testArithmeticExpect));
 
   printf("Tests Succeeded!\n");
@@ -103,7 +103,7 @@ static bool runTest(char *testName, void (*testCase)(), char *expect) {
   char *result = buf;
 
   if (strcmp(result, expect)) {
-    printf("Test '%s' failed.\nExpect: '%s'\nResult: '%s'", testName, expect,
+    printf("Test '%s' failed.\nExpect: '%s'\nResult: '%s'\n", testName, expect,
            result);
 
     return false;
