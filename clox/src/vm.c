@@ -1,8 +1,10 @@
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdio.h>
 
 #include "chunk.h"
 #include "debug.h"
+#include "memory.h"
 #include "value.h"
 #include "vm.h"
 
@@ -10,11 +12,24 @@ VM vm;
 
 static void resetStack() { vm.stackTop = vm.stack; };
 
-void initVM() { resetStack(); }
+void initVM() {
+  vm.stackSize = 0;
+  vm.stackCapacity = 0;
+
+  resetStack();
+}
 
 void freeVM() {}
 
 void push(Value value) {
+  int offsetFromStart = vm.stackTop - vm.stack;
+  if (offsetFromStart + 1 >= vm.stackCapacity) {
+    printf("\ncapacity: %i\nsize: %i\n", vm.stackCapacity, offsetFromStart);
+    int oldCapacity = vm.stackCapacity;
+    vm.stackCapacity = GROW_CAPACITY(vm.stackCapacity);
+    vm.stack = GROW_ARRAY(Value, vm.stack, oldCapacity, vm.stackCapacity);
+    vm.stackTop = vm.stack + offsetFromStart;
+  }
   *vm.stackTop = value;
   vm.stackTop++;
 }

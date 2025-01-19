@@ -29,8 +29,8 @@ static void testStackOverflow();
 int main(int argc, char *argv[]) {
   printf("Starting Tests (:\n");
 
-  //assert(runTest("testWriteChunk", testWriteChunk, TEST_WRITE_CHUNK_EXPECT));
-  //assert(runTest("testArithmetic", testArithmetic, TEST_ARITHMETIC_EXPECT));
+  // assert(runTest("testWriteChunk", testWriteChunk, TEST_WRITE_CHUNK_EXPECT));
+  // assert(runTest("testArithmetic", testArithmetic, TEST_ARITHMETIC_EXPECT));
   testStackOverflow();
 
   printf("Tests Succeeded!\n");
@@ -55,15 +55,15 @@ static char TEST_STACK_OVERFLOW_EXPECT[] =
     "0000  123 OP_CONSTANT         0 '1.2'\n"
     "0002    | OP_RETURN\n";
 static void testStackOverflow() {
-	initVM();
+  initVM();
   Chunk chunk;
   initChunk(&chunk);
 
-  for (int i = 0; i < 1000; i++) {
+  for (int i = 0; i < 10000000; i++) {
     CONSTANT(1.2, 123);
   }
 
-  // writeChunk(&chunk, OP_RETURN, 123);
+  writeChunk(&chunk, OP_RETURN, 123);
   interpret(&chunk);
   freeChunk(&chunk);
 }
