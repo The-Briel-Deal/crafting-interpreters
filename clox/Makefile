@@ -1,9 +1,14 @@
-CFLAGS  := -std=gnu99 -Iinclude -g
+CFLAGS  := -std=gnu99 -Iinclude
 HEADERS := $(wildcard include/*.h)
 SOURCES := $(wildcard src/*.c)
 OBJECTS := $(addprefix build/, $(notdir $(SOURCES:.c=.o)))
 
+ifeq (${DEBUG}, 1)
+	CFLAGS += "-DDEBUG_TRACE_EXECUTION -g"
+endif
+
 # Compile Executable
+clox: build/clox
 build/clox: $(OBJECTS)
 	gcc $^ $(CFLAGS) -o $@
 
@@ -14,19 +19,18 @@ build/%.o: src/%.c $(HEADERS) | build/
 build/:
 	mkdir -p build
 
-
-# Janky Test Setup
+test: build/test
 build/test: build/ test/main.c $(SOURCES)
 	gcc test/main.c $(filter-out %/main.c, $(SOURCES)) $(CFLAGS)  -o build/test
 
-.PHONY: clean run test
+.PHONY: clean run run-test
 clean:
 	rm -r ./build 
 
-run: build/clox
+run-clox: build/clox
 	exec build/clox
 
-test: build/test
+run-test: build/test
 	exec build/test
 
 
