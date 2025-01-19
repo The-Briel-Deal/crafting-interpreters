@@ -13,6 +13,9 @@ static bool runTest(char *testName, void (*testCase)(), char *expect);
 static void testWriteChunk();
 static void testArithmetic();
 
+static char TEST_ARITHMETIC_C15_1_1_EXPECT[];
+static void testArithmeticC15_1_1();
+
 int main(int argc, char *argv[]) {
   printf("Starting Tests (:\n");
 
@@ -21,8 +24,11 @@ int main(int argc, char *argv[]) {
                                 "0002    | OP_RETURN\n";
   assert(runTest("testWriteChunk", testWriteChunk, testWriteChunkExpect));
 
-	char testArithmeticExpect[] = "-0.821429\n";
+  char testArithmeticExpect[] = "-0.821429\n";
   assert(runTest("testArithmetic", testArithmetic, testArithmeticExpect));
+
+  assert(runTest("testArithmeticC15_1_1", testArithmeticC15_1_1,
+                 TEST_ARITHMETIC_C15_1_1_EXPECT));
 
   printf("Tests Succeeded!\n");
 }
@@ -73,6 +79,40 @@ static void testArithmetic() {
   writeChunk(&chunk, OP_RETURN, 123);
   assert(interpret(&chunk) == INTERPRET_OK);
 }
+
+
+#define ADD_CONSTANT(val, line)                                                \
+  do {                                                                         \
+    int constant = addConstant(&chunk, val);                                   \
+    writeChunk(&chunk, OP_CONSTANT, line);                                     \
+    writeChunk(&chunk, constant, line);                                        \
+  } while (false)
+
+static char TEST_ARITHMETIC_C15_1_1_EXPECT[] = "5\n";
+
+static void testArithmeticC15_1_1() {
+  // 1 * 2 + 3
+
+  initVM();
+
+  Chunk chunk;
+  initChunk(&chunk);
+
+  // 1 * 2
+  ADD_CONSTANT(1, 123);
+  ADD_CONSTANT(2, 123);
+  writeChunk(&chunk, OP_MULTIPLY, 123);
+
+  // 2 + 3
+  ADD_CONSTANT(3, 123);
+  writeChunk(&chunk, OP_ADD, 123);
+
+  writeChunk(&chunk, OP_RETURN, 123);
+
+  assert(interpret(&chunk) == INTERPRET_OK);
+}
+
+#undef ADD_CONSTANT
 
 /***
  * Takes in a functionPtr test case and checks if the stdout output is equal to
