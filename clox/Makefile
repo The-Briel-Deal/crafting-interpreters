@@ -4,7 +4,7 @@ SOURCES := $(wildcard src/*.c)
 OBJECTS := $(addprefix build/, $(notdir $(SOURCES:.c=.o)))
 
 ifeq (${DEBUG}, 1)
-	CFLAGS += "-DDEBUG_TRACE_EXECUTION -g"
+	CFLAGS += -DDEBUG_TRACE_EXECUTION -g
 endif
 
 # Compile Executable
