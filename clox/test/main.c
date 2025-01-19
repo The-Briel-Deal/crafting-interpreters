@@ -128,12 +128,12 @@ static void testArithmeticC15_1_2() {
   initChunk(&chunk);
 
   // 1 * 2
-  ADD_CONSTANT(1, 123);
   ADD_CONSTANT(2, 123);
+  ADD_CONSTANT(3, 123);
   writeChunk(&chunk, OP_MULTIPLY, 123);
 
   // 2 + 3
-  ADD_CONSTANT(3, 123);
+  ADD_CONSTANT(1, 123);
   writeChunk(&chunk, OP_ADD, 123);
 
   writeChunk(&chunk, OP_RETURN, 123);
