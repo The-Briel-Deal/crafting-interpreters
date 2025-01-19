@@ -27,7 +27,6 @@ int main(int argc, char *argv[]) {
   printf("Starting Tests (:\n");
 
   assert(runTest("testWriteChunk", testWriteChunk, TEST_WRITE_CHUNK_EXPECT));
-
   assert(runTest("testArithmetic", testArithmetic, TEST_ARITHMETIC_EXPECT));
 
   printf("Tests Succeeded!\n");
