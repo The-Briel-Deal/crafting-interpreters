@@ -13,8 +13,8 @@ int main(int argc, char *argv[]) {
   writeChunk(&chunk, constant, 123);
 
   writeChunk(&chunk, OP_RETURN, 123);
-  interpret(&chunk);
   disassembleChunk(&chunk, "test chunk");
+	interpret(&chunk);
   freeVM();
   freeChunk(&chunk);
   return 0;
