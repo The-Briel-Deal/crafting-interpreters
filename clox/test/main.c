@@ -8,68 +8,63 @@
 #include "debug.h"
 #include "vm.h"
 
+#define CONSTANT(val, line)                                                    \
+  do {                                                                         \
+    int constant = addConstant(&chunk, val);                                   \
+    writeChunk(&chunk, OP_CONSTANT, line);                                     \
+    writeChunk(&chunk, constant, line);                                        \
+  } while (false)
+
 static bool runTest(char *testName, void (*testCase)(), char *expect);
 
+static char TEST_WRITE_CHUNK_EXPECT[];
 static void testWriteChunk();
+
+static char TEST_ARITHMETIC_EXPECT[];
 static void testArithmetic();
 
 int main(int argc, char *argv[]) {
   printf("Starting Tests (:\n");
 
-  char testWriteChunkExpect[] = "== test chunk ==\n"
-                                "0000  123 OP_CONSTANT         0 '1.2'\n"
-                                "0002    | OP_RETURN\n";
-  assert(runTest("testWriteChunk", testWriteChunk, testWriteChunkExpect));
+  assert(runTest("testWriteChunk", testWriteChunk, TEST_WRITE_CHUNK_EXPECT));
 
-  char testArithmeticExpect[] = "-0.821429\n";
-  assert(runTest("testArithmetic", testArithmetic, testArithmeticExpect));
+  assert(runTest("testArithmetic", testArithmetic, TEST_ARITHMETIC_EXPECT));
 
   printf("Tests Succeeded!\n");
 }
 
+static char TEST_WRITE_CHUNK_EXPECT[] =
+    "== test chunk ==\n"
+    "0000  123 OP_CONSTANT         0 '1.2'\n"
+    "0002    | OP_RETURN\n";
 static void testWriteChunk() {
   Chunk chunk;
   initChunk(&chunk);
 
-  int constant = addConstant(&chunk, 1.2);
-  writeChunk(&chunk, OP_CONSTANT, 123);
-  writeChunk(&chunk, constant, 123);
+  CONSTANT(1.2, 123);
 
   writeChunk(&chunk, OP_RETURN, 123);
   disassembleChunk(&chunk, "test chunk");
   freeChunk(&chunk);
 }
 
+static char TEST_ARITHMETIC_EXPECT[] = "-0.821429\n";
 static void testArithmetic() {
   initVM();
 
   Chunk chunk;
   initChunk(&chunk);
 
-  // Constant 1 = 1.2
-  int constant = addConstant(&chunk, 1.2);
-  writeChunk(&chunk, OP_CONSTANT, 123);
-  writeChunk(&chunk, constant, 123);
-
-  // Constant 2 = 3.4
-  constant = addConstant(&chunk, 3.4);
-  writeChunk(&chunk, OP_CONSTANT, 123);
-  writeChunk(&chunk, constant, 123);
-
+  CONSTANT(1.2, 123);
+  CONSTANT(3.4, 123);
   // Pops Const 1 and Const 2, then pushes the sum of 4.6
   writeChunk(&chunk, OP_ADD, 123);
 
-  // Constant 3 = 5.6
-  constant = addConstant(&chunk, 5.6);
-  writeChunk(&chunk, OP_CONSTANT, 123);
-  writeChunk(&chunk, constant, 123);
-
+  CONSTANT(5.6, 123);
   // (C1 + C2) / C3 = .821~ish
   writeChunk(&chunk, OP_DIVIDE, 123);
-
   // -((C1 + C2) / C3) = -.821~ish
   writeChunk(&chunk, OP_NEGATE, 123);
-
   writeChunk(&chunk, OP_RETURN, 123);
   assert(interpret(&chunk) == INTERPRET_OK);
 }
