@@ -22,6 +22,9 @@ static void testArithmeticC15_1_2();
 static char TEST_ARITHMETIC_C15_1_3_EXPECT[];
 static void testArithmeticC15_1_3();
 
+static char TEST_ARITHMETIC_C15_1_4_EXPECT[];
+static void testArithmeticC15_1_4();
+
 int main(int argc, char *argv[]) {
   printf("Starting Tests (:\n");
 
@@ -41,6 +44,9 @@ int main(int argc, char *argv[]) {
 
   assert(runTest("testArithmeticC15_1_3", testArithmeticC15_1_3,
                  TEST_ARITHMETIC_C15_1_3_EXPECT));
+
+  assert(runTest("testArithmeticC15_1_4", testArithmeticC15_1_4,
+                 TEST_ARITHMETIC_C15_1_4_EXPECT));
 
   printf("Tests Succeeded!\n");
 }
@@ -164,6 +170,34 @@ static void testArithmeticC15_1_3() {
 
   // -1 - 3
   ADD_CONSTANT(3, 123);
+  writeChunk(&chunk, OP_SUBTRACT, 123);
+
+  writeChunk(&chunk, OP_RETURN, 123);
+
+  assert(interpret(&chunk) == INTERPRET_OK);
+}
+
+static char TEST_ARITHMETIC_C15_1_4_EXPECT[] = "7.8\n";
+
+static void testArithmeticC15_1_4() {
+  // 1 + 2 * 3 - 4 / -5
+  // Grouped as:
+  // 1 + (2 * 3) - (4 / -5)
+
+  initVM();
+
+  Chunk chunk;
+  initChunk(&chunk);
+
+  ADD_CONSTANT(1, 123);
+  ADD_CONSTANT(2, 123);
+  ADD_CONSTANT(3, 123);
+  writeChunk(&chunk, OP_MULTIPLY, 123);
+  writeChunk(&chunk, OP_ADD, 123);
+  ADD_CONSTANT(4, 123);
+  ADD_CONSTANT(5, 123);
+  writeChunk(&chunk, OP_NEGATE, 123);
+  writeChunk(&chunk, OP_DIVIDE, 123);
   writeChunk(&chunk, OP_SUBTRACT, 123);
 
   writeChunk(&chunk, OP_RETURN, 123);
