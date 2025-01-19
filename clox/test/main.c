@@ -23,11 +23,16 @@ static void testWriteChunk();
 static char TEST_ARITHMETIC_EXPECT[];
 static void testArithmetic();
 
+static char TEST_ARITHMETIC_C15_2_EXPECT[];
+static void testArithmetic_C15_2();
+
 int main(int argc, char *argv[]) {
   printf("Starting Tests (:\n");
 
   assert(runTest("testWriteChunk", testWriteChunk, TEST_WRITE_CHUNK_EXPECT));
   assert(runTest("testArithmetic", testArithmetic, TEST_ARITHMETIC_EXPECT));
+  assert(runTest("testArithmetic_C15_2", testArithmetic_C15_2,
+                 TEST_ARITHMETIC_C15_2_EXPECT));
 
   printf("Tests Succeeded!\n");
 }
@@ -68,6 +73,47 @@ static void testArithmetic() {
   assert(interpret(&chunk) == INTERPRET_OK);
 }
 
+static char TEST_ARITHMETIC_C15_2_EXPECT[] = "10\n10\n";
+static void testArithmetic_C15_2() {
+  initVM();
+
+  Chunk chunk;
+  initChunk(&chunk);
+
+  // 4 - 3 * -2 - No Negate
+  CONSTANT(4, 123);
+  CONSTANT(3, 123);
+
+  // To make -2
+  CONSTANT(0, 123);
+  CONSTANT(2, 123);
+  writeChunk(&chunk, OP_SUBTRACT, 123);
+
+  // 3 * -2
+  writeChunk(&chunk, OP_MULTIPLY, 123);
+
+  // 4 - -6 = 10
+  writeChunk(&chunk, OP_SUBTRACT, 123);
+  writeChunk(&chunk, OP_RETURN, 123);
+
+  assert(interpret(&chunk) == INTERPRET_OK);
+  // 4 - 3 * -2 - No Subtract
+  CONSTANT(4, 123);
+  CONSTANT(3, 123);
+
+  CONSTANT(2, 123);
+  writeChunk(&chunk, OP_NEGATE, 123);
+
+  // 3 * -2
+  writeChunk(&chunk, OP_MULTIPLY, 123);
+
+
+  // 4 - -6 = 10
+  writeChunk(&chunk, OP_NEGATE, 123);
+  writeChunk(&chunk, OP_ADD, 123);
+  writeChunk(&chunk, OP_RETURN, 123);
+  assert(interpret(&chunk) == INTERPRET_OK);
+}
 /***
  * Takes in a functionPtr test case and checks if the stdout output is equal to
  * the expect string.
