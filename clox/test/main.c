@@ -80,7 +80,7 @@ static char TEST_SCANNER_EXPECT[] = "   1 31 'print'\n"
                                     "   2 39 ''\n";
 static void testScanner() {
   initVM();
-  char source[] = "print 1 + 2;";
+  char source[] = "print 1 + 2;\n";
   InterpretResult result = interpret(source);
 }
 
