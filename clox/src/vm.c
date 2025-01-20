@@ -30,8 +30,7 @@ static InterpretResult run() {
 #define BINARY_OP(op)                                                          \
   do {                                                                         \
     double b = pop();                                                          \
-    double a = pop();                                                          \
-    push(a op b);                                                              \
+    vm.stackTop[-1] = vm.stackTop[-1] op b;                                    \
   } while (false)
 
   for (;;) {
