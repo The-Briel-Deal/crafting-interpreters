@@ -23,11 +23,15 @@ static void testWriteChunk();
 static char TEST_ARITHMETIC_EXPECT[];
 static void testArithmetic();
 
+static char TEST_SCANNER_EXPECT[];
+static void testScanner();
+
 int main(int argc, char *argv[]) {
   printf("Starting Tests (:\n");
 
   assert(runTest("testWriteChunk", testWriteChunk, TEST_WRITE_CHUNK_EXPECT));
   assert(runTest("testArithmetic", testArithmetic, TEST_ARITHMETIC_EXPECT));
+  assert(runTest("testScanner", testScanner, TEST_SCANNER_EXPECT));
 
   printf("Tests Succeeded!\n");
 }
@@ -66,6 +70,18 @@ static void testArithmetic() {
   writeChunk(&chunk, OP_NEGATE, 123);
   writeChunk(&chunk, OP_RETURN, 123);
   assert(TEST_interpretChunk(&chunk) == INTERPRET_OK);
+}
+
+static char TEST_SCANNER_EXPECT[] = "   1 31 'print'\n"
+                                    "   | 21 '1'\n"
+                                    "   |  7 '+'\n"
+                                    "   | 21 '2'\n"
+                                    "   |  8 ';'\n"
+                                    "   2 39 ''\n";
+static void testScanner() {
+  initVM();
+  char source[] = "print 1 + 2;";
+  InterpretResult result = interpret(source);
 }
 
 /***
