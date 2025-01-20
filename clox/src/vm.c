@@ -80,15 +80,18 @@ static InterpretResult run() {
 #undef BINARY_OP
 }
 
-/* This is my old interpret impl, I'll probably need this to fix my tests.
- * InterpretResult interpret(Chunk *chunk) {
- *   vm.chunk = chunk;
- *   vm.ip = vm.chunk->code;
- *   return run();
- * }
- */
 
 InterpretResult interpret(const char *source) {
   compile(source);
   return INTERPRET_OK;
+}
+
+
+/// TEST HELPERS
+
+// TODO: I need this to run my tests rn, but I'm going to remove this once I can run expressions.
+InterpretResult TEST_interpretChunk(Chunk *chunk) {
+  vm.chunk = chunk;
+  vm.ip = vm.chunk->code;
+  return run();
 }

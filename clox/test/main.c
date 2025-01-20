@@ -65,7 +65,7 @@ static void testArithmetic() {
   // -((C1 + C2) / C3) = -.821~ish
   writeChunk(&chunk, OP_NEGATE, 123);
   writeChunk(&chunk, OP_RETURN, 123);
-  assert(interpret(&chunk) == INTERPRET_OK);
+  assert(TEST_interpretChunk(&chunk) == INTERPRET_OK);
 }
 
 /***
