@@ -3,6 +3,8 @@
 
 #include "chunk.h"
 
-void compile(const char *source, Chunk *chunk);
+#include <stdbool.h>
+
+bool compile(const char *source, Chunk *chunk);
 
 #endif
