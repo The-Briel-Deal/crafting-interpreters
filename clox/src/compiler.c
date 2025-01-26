@@ -14,7 +14,9 @@ typedef struct {
 
 Parser parser;
 Chunk *compilingChunk;
-static Chunk *currentChunk() { return compilingChunk; }
+static Chunk *currentChunk() {
+  return compilingChunk;
+}
 
 static void errorAt(Token *token, const char *message) {
   if (parser.panicMode)
@@ -38,7 +40,9 @@ static void errorAtCurrent(const char *message) {
   errorAt(&parser.current, message);
 }
 
-static void error(const char *message) { errorAt(&parser.previous, message); }
+static void error(const char *message) {
+  errorAt(&parser.previous, message);
+}
 
 static void advance() {
   parser.previous = parser.current;
@@ -69,9 +73,13 @@ static void emitBytes(uint8_t byte1, uint8_t byte2) {
   emitByte(byte2);
 }
 
-static void emitReturn() { emitByte(OP_RETURN); }
+static void emitReturn() {
+  emitByte(OP_RETURN);
+}
 
-static void endCompiler() { emitReturn(); }
+static void endCompiler() {
+  emitReturn();
+}
 
 bool compile(const char *source, Chunk *chunk) {
   initScanner(source);

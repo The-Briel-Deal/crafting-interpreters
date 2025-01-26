@@ -9,11 +9,16 @@
 
 VM vm;
 
-static void resetStack() { vm.stackTop = vm.stack; };
+static void resetStack() {
+  vm.stackTop = vm.stack;
+};
 
-void initVM() { resetStack(); }
+void initVM() {
+  resetStack();
+}
 
-void freeVM() {}
+void freeVM() {
+}
 
 void push(Value value) {
   *vm.stackTop = value;

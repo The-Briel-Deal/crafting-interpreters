@@ -17,20 +17,26 @@ void initScanner(const char *source) {
   scanner.line = 1;
 }
 
-static bool isDigit(char c) { return c >= '0' && c <= '9'; }
+static bool isDigit(char c) {
+  return c >= '0' && c <= '9';
+}
 
 static bool isAlpha(char c) {
   return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
 }
 
-static bool isAtEnd() { return *scanner.current == '\0'; }
+static bool isAtEnd() {
+  return *scanner.current == '\0';
+}
 
 static char advance() {
   scanner.current++;
   return scanner.current[-1];
 }
 
-static char peek() { return *scanner.current; }
+static char peek() {
+  return *scanner.current;
+}
 
 static char peekNext() {
   if (isAtEnd())
