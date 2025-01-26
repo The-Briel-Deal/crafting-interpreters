@@ -28,8 +28,12 @@ static void errorAt(Token *token, const char *message) {
     fprintf(stderr, " at '%.*s'", token->length, token->start);
   }
 
-  fprintf(stderr, ": %s\n");
+  fprintf(stderr, ": %s\n", message);
   parser.hadError = true;
+}
+
+static void errorAtCurrent(const char *message) {
+  errorAt(&parser.current, message);
 }
 
 static void error(const char *message) { errorAt(&parser.previous, message); }
@@ -52,6 +56,10 @@ static void consume(TokenType type, const char *message) {
   }
 
   errorAtCurrent(message);
+}
+
+static void emitByte(uint8_t byte) {
+  writeChunk(currentChunk(), byte, parser.previous.line);
 }
 
 bool compile(const char *source, Chunk *chunk) {
