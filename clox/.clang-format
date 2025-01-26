@@ -1,1 +1,3 @@
 AllowShortFunctionsOnASingleLine: None
+AlignConsecutiveAssignments: true
+AlignArrayOfStructures: Left
