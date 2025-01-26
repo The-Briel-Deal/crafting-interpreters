@@ -80,16 +80,28 @@ static InterpretResult run() {
 #undef BINARY_OP
 }
 
-
 InterpretResult interpret(const char *source) {
-  compile(source);
-  return INTERPRET_OK;
-}
+  Chunk chunk;
+  initChunk(&chunk);
 
+  if (!compile(source, &chunk)) {
+    freeChunk(&chunk);
+    return INTERPRET_COMPILE_ERROR;
+  }
+
+  vm.chunk = &chunk;
+  vm.ip = vm.chunk->code;
+
+  InterpretResult result = run();
+
+  freeChunk(&chunk);
+	return result;
+}
 
 /// TEST HELPERS
 
-// TODO: I need this to run my tests rn, but I'm going to remove this once I can run expressions.
+// TODO: I need this to run my tests rn, but I'm going to remove this once I can
+// run expressions.
 InterpretResult TEST_interpretChunk(Chunk *chunk) {
   vm.chunk = chunk;
   vm.ip = vm.chunk->code;
