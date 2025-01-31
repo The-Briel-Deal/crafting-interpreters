@@ -4,13 +4,13 @@ SOURCES := $(wildcard src/*.c)
 OBJECTS := $(addprefix build/, $(notdir $(SOURCES:.c=.o)))
 
 ifeq (${DEBUG_SYM}, 1)
-	CFLAGS += "-g"
+	CFLAGS += -g
 endif
 ifeq (${DEBUG_TRACE_EXECUTION}, 1)
-	CFLAGS += "-DDEBUG_TRACE_EXECUTION"
+	CFLAGS += -DDEBUG_TRACE_EXECUTION
 endif
 ifeq (${DEBUG_PRINT_CODE}, 1)
-	CFLAGS += "-DDEBUG_PRINT_CODE"
+	CFLAGS += -DDEBUG_PRINT_CODE
 endif
 
 # Compile Executable
