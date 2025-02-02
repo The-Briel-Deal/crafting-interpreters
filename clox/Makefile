@@ -34,9 +34,9 @@ clean:
 	rm -r ./build 
 
 run-clox: build/clox
-	exec build/clox
+	exec $<
 
 run-test: build/test
-	exec build/test
+	exec $<
 
 
