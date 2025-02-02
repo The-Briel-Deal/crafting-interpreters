@@ -1,3 +1,9 @@
 AllowShortFunctionsOnASingleLine: None
 AlignConsecutiveAssignments: true
+AlignConsecutiveDeclarations:
+  Enabled: true
+AlignConsecutiveMacros:
+  Enabled: true
+  AlignCompound: true
 AlignArrayOfStructures: Left
+AlignAfterOpenBracket: Align

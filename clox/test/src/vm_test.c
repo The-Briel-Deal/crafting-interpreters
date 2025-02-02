@@ -4,7 +4,7 @@
 #include "vm.h"
 
 const char TEST_ARITHMETIC_EXPECT[] = "-0.821429\n";
-void testArithmetic() {
+void       testArithmetic() {
   initVM();
 
   Chunk chunk;

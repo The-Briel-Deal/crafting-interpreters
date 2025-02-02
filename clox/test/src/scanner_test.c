@@ -11,7 +11,7 @@ const char TEST_SCANNER_EXPECT[] = "   1 31 'print'\n"
                                    "   | 21 '2'\n"
                                    "   |  8 ';'\n"
                                    "   2 39 ''\n";
-void testScanner() {
+void       testScanner() {
   initVM();
   char source[] = "print 1 + 2;\n";
   scanAndPrintTokens(source);

@@ -13,8 +13,8 @@
 typedef struct {
   Token current;
   Token previous;
-  bool hadError;
-  bool panicMode;
+  bool  hadError;
+  bool  panicMode;
 } Parser;
 
 typedef enum {
@@ -34,13 +34,13 @@ typedef enum {
 typedef void (*ParseFn)();
 
 typedef struct {
-  ParseFn prefix;
-  ParseFn infix;
+  ParseFn    prefix;
+  ParseFn    infix;
   Precedence precedence;
 } ParseRule;
 
-Parser parser;
-Chunk *compilingChunk;
+Parser        parser;
+Chunk        *compilingChunk;
 static Chunk *currentChunk() {
   return compilingChunk;
 }
@@ -128,13 +128,13 @@ static void endCompiler() {
 #endif
 }
 
-static void expression();
+static void       expression();
 static ParseRule *getRule(TokenType type);
-static void parsePrecedence(Precedence precedence);
+static void       parsePrecedence(Precedence precedence);
 
 static void binary() {
-  TokenType operatorType = parser.previous.type;
-  ParseRule *rule        = getRule(operatorType);
+  TokenType  operatorType = parser.previous.type;
+  ParseRule *rule         = getRule(operatorType);
   parsePrecedence((Precedence)(rule->precedence + 1));
 
   switch (operatorType) {

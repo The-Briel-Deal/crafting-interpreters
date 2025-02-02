@@ -3,10 +3,10 @@
 #include <stdio.h>
 #include <unistd.h>
 
+#include "chunk_test.h"
 #include "helper_test.h"
 #include "scanner_test.h"
 #include "vm_test.h"
-#include "chunk_test.h"
 
 int main(int argc, char *argv[]) {
   printf("Starting Tests (:\n");
