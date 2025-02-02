@@ -27,7 +27,7 @@ build/:
 
 test: build/test
 build/test: test/*.c $(filter-out %/main.o, $(OBJECTS)) | build/
-	gcc $^ $(CFLAGS)  -o build/test
+	gcc $^ $(CFLAGS) -o build/test
 
 .PHONY: clean run run-test
 clean:
