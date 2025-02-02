@@ -26,8 +26,8 @@ build/:
 	mkdir -p build
 
 test: build/test
-build/test: build/ test/main.c $(SOURCES)
-	gcc test/main.c $(filter-out %/main.c, $(SOURCES)) $(CFLAGS)  -o build/test
+build/test: test/*.c $(filter-out %/main.o, $(OBJECTS)) | build/
+	gcc $^ $(CFLAGS)  -o build/test
 
 .PHONY: clean run run-test
 clean:
