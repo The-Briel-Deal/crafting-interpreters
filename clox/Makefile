@@ -4,7 +4,7 @@ SOURCES := $(wildcard src/*.c)
 OBJECTS := $(addprefix build/, $(notdir $(SOURCES:.c=.o)))
 
 TEST_CFLAGS := $(CFLAGS) -Itest/include
-TEST_HEADERS := $(wildcard test/include/*.h)
+TEST_HEADERS := $(HEADERS) $(wildcard test/include/*.h)
 TEST_SOURCES := $(wildcard test/src/*.c)
 TEST_OBJECTS := $(filter-out %/main.o, $(OBJECTS)) $(addprefix build/test/, $(notdir $(TEST_SOURCES:.c=.o)))
 
@@ -32,11 +32,11 @@ build/:
 
 test: build/test/test
 build/test/test: $(TEST_OBJECTS)
-	gcc $^ $(CFLAGS) -o build/test/test
+	gcc $^ $(TEST_CFLAGS) -o build/test/test
 
 # Compile Object Files
-build/test/%.o: test/src/%.c $(HEADERS) $(TEST_HEADERS) | build/ build/test/
-	gcc $< -c $(CFLAGS) -o $@
+build/test/%.o: test/src/%.c $(TEST_HEADERS) | build/ build/test/
+	gcc $< -c $(TEST_CFLAGS) -o $@
 
 build/test/:
 	mkdir -p build/test
