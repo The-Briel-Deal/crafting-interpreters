@@ -6,6 +6,11 @@ AlignConsecutiveMacros:
   AlignCompound: true
   AcrossEmptyLines: true
   AcrossComments: true
+AlignConsecutiveShortCaseStatements:
+  Enabled: true
+  AcrossEmptyLines: true
+  AcrossComments: true
+  AlignCaseColons: true
 AlignArrayOfStructures: Left
 AlignAfterOpenBracket: Align
 AllowShortCaseLabelsOnASingleLine: true
