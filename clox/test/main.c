@@ -6,6 +6,7 @@
 
 #include "chunk.h"
 #include "debug.h"
+#include "scanner.h"
 #include "vm.h"
 
 #define CONSTANT(val, line)                                                    \
@@ -72,6 +73,8 @@ static void testArithmetic() {
   assert(TEST_interpretChunk(&chunk) == INTERPRET_OK);
 }
 
+static void scanAndPrintTokens(char *source);
+
 static char TEST_SCANNER_EXPECT[] = "   1 31 'print'\n"
                                     "   | 21 '1'\n"
                                     "   |  7 '+'\n"
@@ -81,7 +84,7 @@ static char TEST_SCANNER_EXPECT[] = "   1 31 'print'\n"
 static void testScanner() {
   initVM();
   char source[] = "print 1 + 2;\n";
-  InterpretResult result = interpret(source);
+  scanAndPrintTokens(source);
 }
 
 /***
@@ -100,7 +103,7 @@ static bool runTest(char *testName, void (*testCase)(), char *expect) {
   FILE *membufstdout = fmemopen(buf, sizeof(buf), "w");
 
   FILE *prev_stdout = stdout;
-  stdout = membufstdout;
+  stdout            = membufstdout;
 
   testCase();
 
@@ -119,4 +122,23 @@ static bool runTest(char *testName, void (*testCase)(), char *expect) {
     return false;
   }
   return true;
+}
+
+// Helper
+static void scanAndPrintTokens(char *source) {
+  initScanner(source);
+  int line = -1;
+  for (;;) {
+    Token token = scanToken();
+    if (token.line != line) {
+      printf("%4d ", token.line);
+      line = token.line;
+    } else {
+      printf("   | ");
+    }
+    printf("%2d '%.*s'\n", token.type, token.length, token.start);
+
+    if (token.type == TOKEN_EOF)
+      break;
+  }
 }
