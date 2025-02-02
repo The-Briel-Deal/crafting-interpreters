@@ -5,5 +5,7 @@ AlignConsecutiveDeclarations:
 AlignConsecutiveMacros:
   Enabled: true
   AlignCompound: true
+  AcrossEmptyLines: true
+  AcrossComments: true
 AlignArrayOfStructures: Left
 AlignAfterOpenBracket: Align
