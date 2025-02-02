@@ -6,24 +6,15 @@
 
 #include "chunk.h"
 #include "debug.h"
-#include "vm.h"
 
+#include "helper_test.h"
 #include "scanner_test.h"
-
-#define CONSTANT(val, line)                                                    \
-  do {                                                                         \
-    int constant = addConstant(&chunk, val);                                   \
-    writeChunk(&chunk, OP_CONSTANT, line);                                     \
-    writeChunk(&chunk, constant, line);                                        \
-  } while (false)
+#include "vm_test.h"
 
 static bool runTest(char *testName, void (*testCase)(), const char *expect);
 
 static char TEST_WRITE_CHUNK_EXPECT[];
 static void testWriteChunk();
-
-static char TEST_ARITHMETIC_EXPECT[];
-static void testArithmetic();
 
 int main(int argc, char *argv[]) {
   printf("Starting Tests (:\n");
@@ -48,27 +39,6 @@ static void testWriteChunk() {
   writeChunk(&chunk, OP_RETURN, 123);
   disassembleChunk(&chunk, "test chunk");
   freeChunk(&chunk);
-}
-
-static char TEST_ARITHMETIC_EXPECT[] = "-0.821429\n";
-static void testArithmetic() {
-  initVM();
-
-  Chunk chunk;
-  initChunk(&chunk);
-
-  CONSTANT(1.2, 123);
-  CONSTANT(3.4, 123);
-  // Pops Const 1 and Const 2, then pushes the sum of 4.6
-  writeChunk(&chunk, OP_ADD, 123);
-
-  CONSTANT(5.6, 123);
-  // (C1 + C2) / C3 = .821~ish
-  writeChunk(&chunk, OP_DIVIDE, 123);
-  // -((C1 + C2) / C3) = -.821~ish
-  writeChunk(&chunk, OP_NEGATE, 123);
-  writeChunk(&chunk, OP_RETURN, 123);
-  assert(TEST_interpretChunk(&chunk) == INTERPRET_OK);
 }
 
 /***
