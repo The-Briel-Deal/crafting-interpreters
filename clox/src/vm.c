@@ -138,13 +138,3 @@ InterpretResult interpret(const char *source) {
   freeChunk(&chunk);
   return result;
 }
-
-/// TEST HELPERS
-
-// TODO: I need this to run my tests rn, but I'm going to remove this once I can
-// run expressions.
-InterpretResult TEST_interpretChunk(Chunk *chunk) {
-  vm.chunk = chunk;
-  vm.ip    = vm.chunk->code;
-  return run();
-}
