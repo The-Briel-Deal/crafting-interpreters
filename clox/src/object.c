@@ -14,7 +14,7 @@ static Obj *allocateObject(size_t size, ObjType type) {
   object->type = type;
 
   object->next = vm.objects;
-  vm.object    = object;
+  vm.objects   = object;
   return object;
 }
 
