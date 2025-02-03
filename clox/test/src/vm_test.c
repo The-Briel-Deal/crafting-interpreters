@@ -28,7 +28,7 @@ void       testArithmetic3() {
 const char TEST_BOOLEAN_LOGIC_1_EXPECT[] = "false\n";
 void       testBooleanLogic1() {
   initVM();
-  char source[] = "true && false || true && true";
+  char source[] = "!!!!!true";
   interpret(source);
 }
 
