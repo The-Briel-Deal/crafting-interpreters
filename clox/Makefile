@@ -41,6 +41,19 @@ build/test/%.o: test/src/%.c $(TEST_HEADERS) | build/ build/test/
 build/test/:
 	mkdir -p build/test
 
+# Benchmarking
+
+benchmark: build/benchmark/benchmark
+build/benchmark/benchmark: $(filter-out %/main.o, $(OBJECTS)) build/benchmark/main.o
+	gcc $^ $(CFLAGS) -o build/benchmark/benchmark
+
+# Compile Object Files
+build/benchmark/%.o: benchmark/src/%.c $(HEADERS) | build/ build/benchmark/
+	gcc $< -c $(CFLAGS) -o $@
+
+build/benchmark/:
+	mkdir -p build/benchmark
+
 .PHONY: clean run run-test
 clean:
 	rm -r ./build 
