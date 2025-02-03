@@ -15,7 +15,8 @@ typedef enum {
 } ObjType;
 
 struct Obj {
-  ObjType type;
+  ObjType     type;
+  struct Obj *next;
 };
 
 struct ObjString {
@@ -24,7 +25,7 @@ struct ObjString {
   char *chars;
 };
 
-ObjString *takeString(char* chars, int length);
+ObjString *takeString(char *chars, int length);
 ObjString *copyString(const char *chars, int length);
 void       printObject(Value value);
 
