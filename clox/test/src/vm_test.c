@@ -31,11 +31,19 @@ void       testBooleanLogic1() {
   interpret(source);
 }
 
+const char TEST_BOOLEAN_LOGIC_2_EXPECT[] = "true\n";
+void       testBooleanLogic2() {
+  initVM();
+  char source[] = "!(5 - 4 > 3 * 2 == !nil)";
+  interpret(source);
+}
+
 const TestCase VM_TESTS[] = {
     {"testArithmetic1",   testArithmetic1,   TEST_ARITHMETIC_1_EXPECT   },
     {"testArithmetic2",   testArithmetic2,   TEST_ARITHMETIC_2_EXPECT   },
     {"testArithmetic3",   testArithmetic3,   TEST_ARITHMETIC_3_EXPECT   },
     {"testBooleanLogic1", testBooleanLogic1, TEST_BOOLEAN_LOGIC_1_EXPECT},
+    {"testBooleanLogic2", testBooleanLogic2, TEST_BOOLEAN_LOGIC_2_EXPECT},
 };
 
 const int VM_TESTS_COUNT = sizeof(VM_TESTS) / sizeof(TestCase);
