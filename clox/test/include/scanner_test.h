@@ -4,6 +4,6 @@
 #include "helper_test.h"
 
 extern const TestCase SCANNER_TESTS[];
-extern const int SCANNER_TESTS_COUNT;
+extern const int      SCANNER_TESTS_COUNT;
 
 #endif

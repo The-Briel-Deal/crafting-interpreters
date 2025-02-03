@@ -1,6 +1,5 @@
 #include <assert.h>
 
-#include "compiler.h"
 #include "helper_test.h"
 #include "vm.h"
 
