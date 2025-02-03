@@ -1,7 +1,9 @@
 #ifndef clox_vm_test_h
 #define clox_vm_test_h
 
-extern const char TEST_ARITHMETIC_EXPECT[];
-void              testArithmetic();
+#include "helper_test.h"
+
+extern const TestCase VM_TESTS[];
+extern const int      VM_TESTS_COUNT;
 
 #endif

@@ -1,5 +1,6 @@
 #include <stdio.h>
 
+#include "helper_test.h"
 #include "scanner.h"
 #include "vm.h"
 
@@ -35,3 +36,9 @@ static void scanAndPrintTokens(char *source) {
       break;
   }
 }
+
+const TestCase SCANNER_TESTS[] = {
+    {"testScanner", testScanner, TEST_SCANNER_EXPECT},
+};
+
+const int SCANNER_TESTS_COUNT = sizeof(SCANNER_TESTS) / sizeof(TestCase);

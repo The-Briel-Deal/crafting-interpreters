@@ -8,12 +8,18 @@
 #include "scanner_test.h"
 #include "vm_test.h"
 
+#define RUN_TESTS(TESTS, TEST_COUNT)                                           \
+  for (int i = 0; i < TEST_COUNT; i++) {                                       \
+    TestCase test = TESTS[i];                                                  \
+    assert(runTest(test.name, test.fn, test.expect));                          \
+  }
+
 int main(int argc, char *argv[]) {
   printf("Starting Tests (:\n");
 
-  assert(runTest("testWriteChunk", testWriteChunk, TEST_WRITE_CHUNK_EXPECT));
-  assert(runTest("testArithmetic", testArithmetic, TEST_ARITHMETIC_EXPECT));
-  assert(runTest("testScanner", testScanner, TEST_SCANNER_EXPECT));
+  RUN_TESTS(CHUNK_TESTS, CHUNK_TESTS_COUNT);
+  RUN_TESTS(VM_TESTS, VM_TESTS_COUNT);
+  RUN_TESTS(SCANNER_TESTS, SCANNER_TESTS_COUNT);
 
   printf("Tests Succeeded!\n");
 }

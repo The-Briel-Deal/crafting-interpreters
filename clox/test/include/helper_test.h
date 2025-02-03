@@ -49,4 +49,10 @@ static bool runTest(char *testName, void (*testCase)(), const char *expect) {
   return true;
 }
 
+typedef struct {
+  char *name;
+  void (*fn)();
+  const char *expect;
+} TestCase;
+
 #endif

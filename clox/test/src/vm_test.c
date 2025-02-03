@@ -24,3 +24,9 @@ void       testArithmetic() {
   writeChunk(&chunk, OP_RETURN, 123);
   assert(TEST_interpretChunk(&chunk) == INTERPRET_OK);
 }
+
+const TestCase VM_TESTS[] = {
+    {"testArithmetic", testArithmetic, TEST_ARITHMETIC_EXPECT},
+};
+
+const int VM_TESTS_COUNT = sizeof(VM_TESTS) / sizeof(TestCase);

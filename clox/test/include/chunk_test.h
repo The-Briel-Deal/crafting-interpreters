@@ -1,7 +1,9 @@
 #ifndef clox_chunk_test_h
 #define clox_chunk_test_h
 
-extern const char TEST_WRITE_CHUNK_EXPECT[];
-void              testWriteChunk();
+#include "helper_test.h"
+
+extern const TestCase CHUNK_TESTS[];
+extern const int CHUNK_TESTS_COUNT;
 
 #endif

@@ -1,7 +1,9 @@
 #ifndef clox_scanner_test_h
 #define clox_scanner_test_h
 
-extern const char TEST_SCANNER_EXPECT[];
-void              testScanner();
+#include "helper_test.h"
+
+extern const TestCase SCANNER_TESTS[];
+extern const int SCANNER_TESTS_COUNT;
 
 #endif

@@ -18,3 +18,9 @@ void       testWriteChunk() {
   disassembleChunk(&chunk, "test chunk");
   freeChunk(&chunk);
 }
+
+const TestCase CHUNK_TESTS[] = {
+    {"testWriteChunk", testWriteChunk, TEST_WRITE_CHUNK_EXPECT},
+};
+
+const int CHUNK_TESTS_COUNT = sizeof(CHUNK_TESTS) / sizeof(TestCase);
