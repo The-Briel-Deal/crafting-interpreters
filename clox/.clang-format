@@ -15,4 +15,5 @@ AlignArrayOfStructures: Left
 AlignAfterOpenBracket: Align
 AllowShortCaseLabelsOnASingleLine: true
 AllowShortFunctionsOnASingleLine: None
+IndentCaseLabels: true
 
