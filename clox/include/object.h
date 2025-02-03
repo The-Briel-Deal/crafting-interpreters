@@ -20,9 +20,9 @@ struct Obj {
 };
 
 struct ObjString {
-  Obj   obj;
-  int   length;
-  char *chars;
+  Obj  obj;
+  int  length;
+  char chars[];
 };
 
 ObjString *takeString(char *chars, int length);
