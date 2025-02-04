@@ -61,16 +61,15 @@ static bool isFalsey(Value value) {
 
 static void concatenate() {
   ObjString *b = AS_STRING(pop());
-  ObjString *a = AS_STRING(pop());
+  ObjString *a = AS_STRING(peek(0));
 
-  int   length = a->length + b->length;
-  char *chars  = ALLOCATE(char, length + 1);
-  memcpy(chars, a->chars, a->length);
-  memcpy(chars + a->length, b->chars, b->length);
-  chars[length] = '\0';
-
-  ObjString *result = takeString(chars, length);
-  push(OBJ_VAL(result));
+  int length = a->length + b->length;
+  a          = (ObjString *)reallocate(a, sizeof(ObjString) + a->length,
+                                       sizeof(ObjString) + length + 1);
+  vm.stackTop[-1].as.obj = (Obj *)a;
+  memcpy(a->chars + a->length, b->chars, b->length);
+  a->chars[length] = '\0';
+  a->length        = length;
 }
 
 static InterpretResult run() {
