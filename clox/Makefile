@@ -3,7 +3,6 @@ HEADERS := $(wildcard include/*.h)
 SOURCES := $(wildcard src/*.c)
 OBJECTS := $(addprefix build/, $(notdir $(SOURCES:.c=.o)))
 
-TEST_CFLAGS := $(CFLAGS) -Itest/include
 TEST_HEADERS := $(HEADERS) $(wildcard test/include/*.h)
 TEST_SOURCES := $(wildcard test/src/*.c)
 TEST_OBJECTS := $(filter-out %/main.o, $(OBJECTS)) $(addprefix build/test/, $(notdir $(TEST_SOURCES:.c=.o)))
@@ -17,6 +16,9 @@ endif
 ifeq (${DEBUG_PRINT_CODE}, 1)
 	CFLAGS += -DDEBUG_PRINT_CODE
 endif
+
+# This needs to be below the above modifications to CFLAGS or this var won't contain the changes.
+TEST_CFLAGS := $(CFLAGS) -Itest/include
 
 # Compile Executable
 clox: build/clox
