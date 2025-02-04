@@ -2,6 +2,7 @@
 #define clox_object_h
 
 #include "value.h"
+#include <stdint.h>
 
 #define OBJ_TYPE(value)   (AS_OBJ(value)->type)
 
@@ -20,9 +21,10 @@ struct Obj {
 };
 
 struct ObjString {
-  Obj   obj;
-  int   length;
-  char *chars;
+  Obj      obj;
+  int      length;
+  char    *chars;
+  uint32_t hash;
 };
 
 ObjString *takeString(char *chars, int length);
