@@ -19,11 +19,11 @@ void       testTable1() {
   char       val[]  = "testVal";
   ObjString *valObj = copyString(val, sizeof(val));
 
-  bool isNewKey = tableSet(&table, keyObj, OBJ_VAL(valObj));
+  bool isNewKey = tableSet(&table, OBJ_VAL(keyObj), OBJ_VAL(valObj));
   assert(isNewKey == true);
 
   Value resultVal;
-  bool  foundKey = tableGet(&table, keyObj, &resultVal);
+  bool  foundKey = tableGet(&table, OBJ_VAL(keyObj), &resultVal);
   assert(foundKey == true);
 
   assert(resultVal.type == VAL_OBJ);
@@ -85,7 +85,7 @@ void testTable2() {
     char      *val    = TEST_TABLE_2_KEY_VAL_PAIRS[i].val;
     ObjString *valObj = copyString(val, strlen(val));
 
-    bool isNewKey = tableSet(&table, keyObj, OBJ_VAL(valObj));
+    bool isNewKey = tableSet(&table, OBJ_VAL(keyObj), OBJ_VAL(valObj));
     assert(isNewKey == true);
   }
 
@@ -98,7 +98,7 @@ void testTable2() {
     char      *val    = TEST_TABLE_2_KEY_VAL_PAIRS[i].val;
 
     Value resultVal;
-    bool  foundKey = tableGet(&table, keyObj, &resultVal);
+    bool  foundKey = tableGet(&table, OBJ_VAL(keyObj), &resultVal);
     assert(foundKey == true);
 
     assert(resultVal.type == VAL_OBJ);
