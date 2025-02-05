@@ -1,4 +1,5 @@
 #include <limits.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <time.h>
@@ -7,27 +8,32 @@
 
 #define BENCH_RUN_COUNT 2000
 
+#define RUN_BENCH(benchName)                                                   \
+  do {                                                                         \
+    int results[BENCH_RUN_COUNT] = {0};                                        \
+    for (int i = 0; i < BENCH_RUN_COUNT; i++) {                                \
+      results[i] = benchName();                                                \
+    }                                                                          \
+    int   max = INT_MIN;                                                       \
+    int   min = INT_MAX;                                                       \
+    float avg = 0;                                                             \
+    for (int i = 0; i < BENCH_RUN_COUNT; i++) {                                \
+      avg += results[i] / (float)BENCH_RUN_COUNT;                              \
+      if (results[i] < min) {                                                  \
+        min = results[i];                                                      \
+      }                                                                        \
+      if (results[i] > max) {                                                  \
+        max = results[i];                                                      \
+      }                                                                        \
+    }                                                                          \
+                                                                               \
+    printf("benchStrConcat:\n\nMin: %i\nMax: %i\nAvg: %f\n", min, max, avg);   \
+  } while (false)
+
 long benchStrConcat();
 
 int main(int argc, char *argv[]) {
-  int results[BENCH_RUN_COUNT] = {0};
-  for (int i = 0; i < BENCH_RUN_COUNT; i++) {
-    results[i] = benchStrConcat();
-  }
-  int   max = INT_MIN;
-  int   min = INT_MAX;
-  float avg = 0;
-  for (int i = 0; i < BENCH_RUN_COUNT; i++) {
-    avg += results[i] / (float)BENCH_RUN_COUNT;
-    if (results[i] < min) {
-      min = results[i];
-    }
-    if (results[i] > max) {
-      max = results[i];
-    }
-  }
-
-  printf("benchStrConcat:\n\nMin: %i\nMax: %i\nAvg: %f\n", min, max, avg);
+  RUN_BENCH(benchStrConcat);
 }
 
 const char VERY_LONG_STR_CONCAT_SCRIPT[];
