@@ -16,6 +16,9 @@ endif
 ifeq (${DEBUG_PRINT_CODE}, 1)
 	CFLAGS += -DDEBUG_PRINT_CODE
 endif
+ifeq (${OPTIMIZE}, 1)
+	CFLAGS += -O3
+endif
 
 # This needs to be below the above modifications to CFLAGS or this var won't contain the changes.
 TEST_CFLAGS := $(CFLAGS) -Itest/include
