@@ -45,15 +45,34 @@ struct KeyValPair {
 };
 
 const struct KeyValPair TEST_TABLE_2_KEY_VAL_PAIRS[] = {
-    {.key = "Boogie",    .val = "Woogie" },
-    {.key = "Schmoogie", .val = "Doogie" },
-    {.key = "Googie",    .val = "Boingle"},
+    {.key = "Boogie",       .val = "Woogie"    },
+    {.key = "Schmoogie",    .val = "Doogie"    },
+    {.key = "Googie",       .val = "Boingle"   },
+    {.key = "Boogiee",      .val = "Woogiee"   },
+    {.key = "Schmoogiee",   .val = "Doogiee"   },
+    {.key = "Googiee",      .val = "Boinglee"  },
+    {.key = "Boogieee",     .val = "Woogieee"  },
+    {.key = "Schmoogieee",  .val = "Doogieee"  },
+    {.key = "Googieee",     .val = "Boingleee" },
+    {.key = "Boogieeee",    .val = "Woogieeee" },
+    {.key = "Schmoogieeee", .val = "Doogieeee" },
+    {.key = "Googieeee",    .val = "Boingleeee"},
 };
 
 const char TEST_TABLE_2_EXPECT[] = "Boogie -> Woogie\n"
                                    "Schmoogie -> Doogie\n"
-                                   "Googie -> Boingle\n";
-void       testTable2() {
+                                   "Googie -> Boingle\n"
+                                   "Boogiee -> Woogiee\n"
+                                   "Schmoogiee -> Doogiee\n"
+                                   "Googiee -> Boinglee\n"
+                                   "Boogieee -> Woogieee\n"
+                                   "Schmoogieee -> Doogieee\n"
+                                   "Googieee -> Boingleee\n"
+                                   "Boogieeee -> Woogieeee\n"
+                                   "Schmoogieeee -> Doogieeee\n"
+                                   "Googieeee -> Boingleeee\n";
+
+void testTable2() {
   Table table;
   initTable(&table);
 
