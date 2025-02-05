@@ -61,6 +61,26 @@ static Entry *findEntry(Entry *entries, int capacity, Value key) {
         index = (index + 1) % capacity;
       }
     }
+    case VAL_BOOL: {
+      int    keyBool   = key.as.boolean;
+      int    index     = keyBool % capacity;
+      Entry *tombstone = NULL;
+      for (;;) {
+        Entry *entry = &entries[index];
+        if (IS_NIL(entry->key)) {
+          if (IS_NIL(entry->value)) {
+            return tombstone != NULL ? tombstone : entry;
+          } else {
+            if (tombstone == NULL)
+              tombstone = entry;
+          }
+        } else if (IS_BOOL(entry->key) && AS_BOOL(entry->key) == keyBool) {
+          return entry;
+        }
+
+        index = (index + 1) % capacity;
+      }
+    }
   }
 }
 

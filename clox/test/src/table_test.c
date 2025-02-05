@@ -58,7 +58,8 @@ const char TEST_TABLE_2_EXPECT[] = "Boogie -> Woogie\n"
                                    "Boogieeee -> Woogieeee\n"
                                    "Schmoogieeee -> Doogieeee\n"
                                    "Googieeee -> Boingleeee\n"
-																	 "2.0 -> Boogie\n";
+                                   "2.0 -> Boogie\n"
+                                   "false -> Woogie\n";
 
 void testTable2() {
 
@@ -76,6 +77,7 @@ void testTable2() {
       {.key = OBJ_VAL(COPY_LITERAL("Schmoogieeee")), .val = "Doogieeee" },
       {.key = OBJ_VAL(COPY_LITERAL("Googieeee")),    .val = "Boingleeee"},
       {.key = NUMBER_VAL(2),                         .val = "Boogie"    },
+      {.key = BOOL_VAL(false),                       .val = "Woogie"    },
   };
   Table table;
   initTable(&table);
@@ -117,6 +119,8 @@ void testTable2() {
       printf("%s -> %s\n", AS_CSTRING(key), resultObjString->chars);
     } else if (IS_NUMBER(key)) {
       printf("%.1f -> %s\n", AS_NUMBER(key), resultObjString->chars);
+    } else if (IS_BOOL(key)) {
+      printf("%s -> %s\n", AS_BOOL(key) ? "true" : "false", resultObjString->chars);
     }
   }
 }
