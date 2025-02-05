@@ -6,42 +6,42 @@
 const char TEST_ARITHMETIC_1_EXPECT[] = "-0.821429\n";
 void       testArithmetic1() {
   initVM();
-  char source[] = "-((1.2 + 3.4) / 5.6)";
+  char source[] = "print(-((1.2 + 3.4) / 5.6));";
   interpret(source);
 }
 
 const char TEST_ARITHMETIC_2_EXPECT[] = "9\n";
 void       testArithmetic2() {
   initVM();
-  char source[] = "3 + 3 * 2";
+  char source[] = "print(3 + 3 * 2);";
   interpret(source);
 }
 
 const char TEST_ARITHMETIC_3_EXPECT[] = "1363.79\n";
 void       testArithmetic3() {
   initVM();
-  char source[] = "10000 / 1.9 * 6 / 24 + 48";
+  char source[] = "print(10000 / 1.9 * 6 / 24 + 48);";
   interpret(source);
 }
 
 const char TEST_BOOLEAN_LOGIC_1_EXPECT[] = "false\n";
 void       testBooleanLogic1() {
   initVM();
-  char source[] = "!!!!!true";
+  char source[] = "print(!!!!!true);";
   interpret(source);
 }
 
 const char TEST_BOOLEAN_LOGIC_2_EXPECT[] = "true\n";
 void       testBooleanLogic2() {
   initVM();
-  char source[] = "!(5 - 4 > 3 * 2 == !nil)";
+  char source[] = "print(!(5 - 4 > 3 * 2 == !nil));";
   interpret(source);
 }
 
 const char TEST_STRING_CONCAT_1_EXPECT[] = "Boogie Woogie Woohoo\n";
 void       testStringConcat1() {
   initVM();
-  char source[] = "\"Boogie \" + \"Woogie \" + \"Woohoo\"";
+  char source[] = "print(\"Boogie \" + \"Woogie \" + \"Woohoo\");";
   interpret(source);
 }
 const TestCase VM_TESTS[] = {
