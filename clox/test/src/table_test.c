@@ -88,7 +88,7 @@ void       testTable2() {
     assert(resultObj->type == OBJ_STRING);
     ObjString *resultObjString = (ObjString *)resultObj;
 
-    assert(resultObjString->length == sizeof(val));
+    assert(resultObjString->length == strlen(val));
 
     assert(memcmp(resultObjString->chars, val, resultObjString->length) == 0);
 
