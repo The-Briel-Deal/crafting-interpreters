@@ -36,11 +36,69 @@ void       testTable1() {
 
   assert(memcmp(resultObjString->chars, val, resultObjString->length) == 0);
 
-	printf("%s", resultObjString->chars);
+  printf("%s", resultObjString->chars);
+}
+
+struct KeyValPair {
+  char *key;
+  char *val;
+};
+
+const struct KeyValPair TEST_TABLE_2_KEY_VAL_PAIRS[] = {
+    {.key = "Boogie",    .val = "Woogie" },
+    {.key = "Schmoogie", .val = "Doogie" },
+    {.key = "Googie",    .val = "Boingle"},
+};
+
+const char TEST_TABLE_2_EXPECT[] = "Boogie -> Woogie\n"
+                                   "Schmoogie -> Doogie\n"
+                                   "Googie -> Boingle\n";
+void       testTable2() {
+  Table table;
+  initTable(&table);
+
+  // Set Key-Val Pairs
+  for (int i = 0;
+       i < (sizeof(TEST_TABLE_2_KEY_VAL_PAIRS) / sizeof(struct KeyValPair));
+       i++) {
+    char      *key    = TEST_TABLE_2_KEY_VAL_PAIRS[i].key;
+    ObjString *keyObj = copyString(key, strlen(key));
+    char      *val    = TEST_TABLE_2_KEY_VAL_PAIRS[i].val;
+    ObjString *valObj = copyString(val, strlen(val));
+
+    bool isNewKey = tableSet(&table, keyObj, OBJ_VAL(valObj));
+    assert(isNewKey == true);
+  }
+
+  // Get Vals
+  for (int i = 0;
+       i < (sizeof(TEST_TABLE_2_KEY_VAL_PAIRS) / sizeof(struct KeyValPair));
+       i++) {
+    char      *key    = TEST_TABLE_2_KEY_VAL_PAIRS[i].key;
+    ObjString *keyObj = copyString(key, strlen(key));
+    char      *val    = TEST_TABLE_2_KEY_VAL_PAIRS[i].val;
+
+    Value resultVal;
+    bool  foundKey = tableGet(&table, keyObj, &resultVal);
+    assert(foundKey == true);
+
+    assert(resultVal.type == VAL_OBJ);
+    Obj *resultObj = AS_OBJ(resultVal);
+
+    assert(resultObj->type == OBJ_STRING);
+    ObjString *resultObjString = (ObjString *)resultObj;
+
+    assert(resultObjString->length == sizeof(val));
+
+    assert(memcmp(resultObjString->chars, val, resultObjString->length) == 0);
+
+    printf("%s -> %s\n", key, resultObjString->chars);
+  }
 }
 
 const TestCase TABLE_TESTS[] = {
     {"testTable1", testTable1, TEST_TABLE_1_EXPECT},
+    {"testTable2", testTable2, TEST_TABLE_2_EXPECT},
 };
 
 const int TABLE_TESTS_COUNT = sizeof(TABLE_TESTS) / sizeof(TestCase);
