@@ -69,4 +69,6 @@ run-clox: build/clox
 run-test: build/test/test
 	exec $<
 
+run-bench: build/benchmark/benchmark
+	exec $<
 
