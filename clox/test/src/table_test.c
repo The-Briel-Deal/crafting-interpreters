@@ -14,16 +14,16 @@ const char TEST_TABLE_1_EXPECT[] = "testVal";
 void       testTable1() {
   Table table;
   initTable(&table);
-  char       key[]  = "testKey";
-  ObjString *keyObj = copyString(key, sizeof(key));
-  char       val[]  = "testVal";
-  ObjString *valObj = copyString(val, sizeof(val));
+  int        key      = 1;
+  Value      keyValue = NUMBER_VAL(key);
+  char       val[]    = "testVal";
+  ObjString *valObj   = copyString(val, sizeof(val));
 
-  bool isNewKey = tableSet(&table, OBJ_VAL(keyObj), OBJ_VAL(valObj));
+  bool isNewKey = tableSet(&table, keyValue, OBJ_VAL(valObj));
   assert(isNewKey == true);
 
   Value resultVal;
-  bool  foundKey = tableGet(&table, OBJ_VAL(keyObj), &resultVal);
+  bool  foundKey = tableGet(&table, keyValue, &resultVal);
   assert(foundKey == true);
 
   assert(resultVal.type == VAL_OBJ);

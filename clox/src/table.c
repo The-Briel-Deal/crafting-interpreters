@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
@@ -34,6 +35,26 @@ static Entry *findEntry(Entry *entries, int capacity, Value key) {
               tombstone = entry;
           }
         } else if (AS_STRING(entry->key) == keyStr) {
+          return entry;
+        }
+
+        index = (index + 1) % capacity;
+      }
+    }
+    case VAL_NUMBER: {
+      int    keyNum    = key.as.number;
+      int    index     = keyNum % capacity;
+      Entry *tombstone = NULL;
+      for (;;) {
+        Entry *entry = &entries[index];
+        if (IS_NIL(entry->key)) {
+          if (IS_NIL(entry->value)) {
+            return tombstone != NULL ? tombstone : entry;
+          } else {
+            if (tombstone == NULL)
+              tombstone = entry;
+          }
+        } else if (IS_NUMBER(entry->key) && AS_NUMBER(entry->key) == keyNum) {
           return entry;
         }
 
