@@ -40,24 +40,11 @@ void       testTable1() {
 }
 
 struct KeyValPair {
-  char *key;
+  Value key;
   char *val;
 };
 
-const struct KeyValPair TEST_TABLE_2_KEY_VAL_PAIRS[] = {
-    {.key = "Boogie",       .val = "Woogie"    },
-    {.key = "Schmoogie",    .val = "Doogie"    },
-    {.key = "Googie",       .val = "Boingle"   },
-    {.key = "Boogiee",      .val = "Woogiee"   },
-    {.key = "Schmoogiee",   .val = "Doogiee"   },
-    {.key = "Googiee",      .val = "Boinglee"  },
-    {.key = "Boogieee",     .val = "Woogieee"  },
-    {.key = "Schmoogieee",  .val = "Doogieee"  },
-    {.key = "Googieee",     .val = "Boingleee" },
-    {.key = "Boogieeee",    .val = "Woogieeee" },
-    {.key = "Schmoogieeee", .val = "Doogieeee" },
-    {.key = "Googieeee",    .val = "Boingleeee"},
-};
+#define COPY_LITERAL(str) copyString(str, sizeof(str))
 
 const char TEST_TABLE_2_EXPECT[] = "Boogie -> Woogie\n"
                                    "Schmoogie -> Doogie\n"
@@ -70,9 +57,26 @@ const char TEST_TABLE_2_EXPECT[] = "Boogie -> Woogie\n"
                                    "Googieee -> Boingleee\n"
                                    "Boogieeee -> Woogieeee\n"
                                    "Schmoogieeee -> Doogieeee\n"
-                                   "Googieeee -> Boingleeee\n";
+                                   "Googieeee -> Boingleeee\n"
+																	 "2.0 -> Boogie\n";
 
 void testTable2() {
+
+  const struct KeyValPair TEST_TABLE_2_KEY_VAL_PAIRS[] = {
+      {.key = OBJ_VAL(COPY_LITERAL("Boogie")),       .val = "Woogie"    },
+      {.key = OBJ_VAL(COPY_LITERAL("Schmoogie")),    .val = "Doogie"    },
+      {.key = OBJ_VAL(COPY_LITERAL("Googie")),       .val = "Boingle"   },
+      {.key = OBJ_VAL(COPY_LITERAL("Boogiee")),      .val = "Woogiee"   },
+      {.key = OBJ_VAL(COPY_LITERAL("Schmoogiee")),   .val = "Doogiee"   },
+      {.key = OBJ_VAL(COPY_LITERAL("Googiee")),      .val = "Boinglee"  },
+      {.key = OBJ_VAL(COPY_LITERAL("Boogieee")),     .val = "Woogieee"  },
+      {.key = OBJ_VAL(COPY_LITERAL("Schmoogieee")),  .val = "Doogieee"  },
+      {.key = OBJ_VAL(COPY_LITERAL("Googieee")),     .val = "Boingleee" },
+      {.key = OBJ_VAL(COPY_LITERAL("Boogieeee")),    .val = "Woogieeee" },
+      {.key = OBJ_VAL(COPY_LITERAL("Schmoogieeee")), .val = "Doogieeee" },
+      {.key = OBJ_VAL(COPY_LITERAL("Googieeee")),    .val = "Boingleeee"},
+      {.key = NUMBER_VAL(2),                         .val = "Boogie"    },
+  };
   Table table;
   initTable(&table);
 
@@ -80,12 +84,11 @@ void testTable2() {
   for (int i = 0;
        i < (sizeof(TEST_TABLE_2_KEY_VAL_PAIRS) / sizeof(struct KeyValPair));
        i++) {
-    char      *key    = TEST_TABLE_2_KEY_VAL_PAIRS[i].key;
-    ObjString *keyObj = copyString(key, strlen(key));
+    Value      key    = TEST_TABLE_2_KEY_VAL_PAIRS[i].key;
     char      *val    = TEST_TABLE_2_KEY_VAL_PAIRS[i].val;
     ObjString *valObj = copyString(val, strlen(val));
 
-    bool isNewKey = tableSet(&table, OBJ_VAL(keyObj), OBJ_VAL(valObj));
+    bool isNewKey = tableSet(&table, key, OBJ_VAL(valObj));
     assert(isNewKey == true);
   }
 
@@ -93,12 +96,11 @@ void testTable2() {
   for (int i = 0;
        i < (sizeof(TEST_TABLE_2_KEY_VAL_PAIRS) / sizeof(struct KeyValPair));
        i++) {
-    char      *key    = TEST_TABLE_2_KEY_VAL_PAIRS[i].key;
-    ObjString *keyObj = copyString(key, strlen(key));
-    char      *val    = TEST_TABLE_2_KEY_VAL_PAIRS[i].val;
+    Value key = TEST_TABLE_2_KEY_VAL_PAIRS[i].key;
+    char *val = TEST_TABLE_2_KEY_VAL_PAIRS[i].val;
 
     Value resultVal;
-    bool  foundKey = tableGet(&table, OBJ_VAL(keyObj), &resultVal);
+    bool  foundKey = tableGet(&table, key, &resultVal);
     assert(foundKey == true);
 
     assert(resultVal.type == VAL_OBJ);
@@ -111,7 +113,11 @@ void testTable2() {
 
     assert(memcmp(resultObjString->chars, val, resultObjString->length) == 0);
 
-    printf("%s -> %s\n", key, resultObjString->chars);
+    if (IS_STRING(key)) {
+      printf("%s -> %s\n", AS_CSTRING(key), resultObjString->chars);
+    } else if (IS_NUMBER(key)) {
+      printf("%.1f -> %s\n", AS_NUMBER(key), resultObjString->chars);
+    }
   }
 }
 
