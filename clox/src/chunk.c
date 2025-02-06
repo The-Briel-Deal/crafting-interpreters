@@ -34,7 +34,24 @@ void writeChunk(Chunk *chunk, uint8_t byte, int line) {
   chunk->count++;
 }
 
+static int containsValue(Chunk *chunk, Value value) {
+  for (int i = 0; i < chunk->constants.count; i++) {
+    Value currConst = chunk->constants.values[i];
+    if (valuesEqual(currConst, value)) {
+      return i;
+    }
+  }
+  // -1 means not found.
+  return -1;
+}
+
 int addConstant(Chunk *chunk, Value value) {
+  int existingValue = containsValue(chunk, value);
+
+  if (existingValue != -1) {
+    return existingValue;
+  }
+
   writeValueArray(&chunk->constants, value);
   return chunk->constants.count - 1;
 }
