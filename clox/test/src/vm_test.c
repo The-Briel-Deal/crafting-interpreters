@@ -55,6 +55,16 @@ void       testVar1() {
   interpret(source);
 }
 
+const char TEST_VAR_2_EXPECT[] = "beignets with cafe au lait\n";
+void       testVar2() {
+  initVM();
+  char source[] = "var breakfast = \"beignets\";\n"
+                        "var beverage = \"cafe au lait\";\n"
+                        "breakfast = \"beignets with \" + beverage;\n"
+                        "print breakfast;\n";
+  interpret(source);
+}
+
 const TestCase VM_TESTS[] = {
     {"testArithmetic1",   testArithmetic1,   TEST_ARITHMETIC_1_EXPECT   },
     {"testArithmetic2",   testArithmetic2,   TEST_ARITHMETIC_2_EXPECT   },
@@ -62,7 +72,8 @@ const TestCase VM_TESTS[] = {
     {"testBooleanLogic1", testBooleanLogic1, TEST_BOOLEAN_LOGIC_1_EXPECT},
     {"testBooleanLogic2", testBooleanLogic2, TEST_BOOLEAN_LOGIC_2_EXPECT},
     {"testStringConcat1", testStringConcat1, TEST_STRING_CONCAT_1_EXPECT},
-    {"testVar1", testVar1, TEST_VAR_1_EXPECT},
+    {"testVar1",          testVar1,          TEST_VAR_1_EXPECT          },
+    {"testVar2",          testVar2,          TEST_VAR_2_EXPECT          },
 };
 
 const int VM_TESTS_COUNT = sizeof(VM_TESTS) / sizeof(TestCase);
