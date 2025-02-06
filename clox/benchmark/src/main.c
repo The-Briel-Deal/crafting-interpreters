@@ -19,7 +19,9 @@ static void runBench(long (*benchFn)(), FILE *stdoutRedirect);
 
 int main(int argc, char *argv[]) {
   FILE *stdoutRedirect = fopen("./benchmark_out.txt", "w");
+  printf("benchStrConcat:\n");
   runBench(benchStrConcat, stdoutRedirect);
+  printf("benchTable:\n");
   runBench(benchTable, stdoutRedirect);
   fclose(stdoutRedirect);
 }
@@ -45,7 +47,7 @@ static void runBench(long (*benchFn)(), FILE *stdoutRedirect) {
   }
   stdout = stdoutPrev;
 
-  printf("benchStrConcat:\nMin: %i\nMax: %i\nAvg: %f\n", min, max, avg);
+  printf("Min: %i\nMax: %i\nAvg: %f\n\n", min, max, avg);
 }
 
 const char VERY_LONG_STR_CONCAT_SCRIPT[];
