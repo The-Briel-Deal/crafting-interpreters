@@ -35,7 +35,38 @@ typedef struct {
   ValueArray constants;
 } Chunk;
 
+/**
+ * Initializes a `Chunk` structure, setting its fields to their default values.
+ *
+ * This function sets the `count` and `capacity` of the chunk to 0, and
+ * initializes the `code` and `lines` arrays to `NULL`. It also initializes the
+ * `constants` array using the `initValueArray` function. This is typically
+ * called to prepare a `Chunk` for use before any bytes or data are written to
+ * it.
+ *
+ * @param chunk A pointer to the `Chunk` structure to be initialized.
+ *
+ * @note This function does not allocate memory for the chunk's arrays. It only
+ *       sets up the structure for future use. Memory allocation for arrays
+ *       typically occurs when adding data to the chunk.
+ */
 void initChunk(Chunk *chunk);
+
+/**
+ * Frees the memory allocated for the `code`, `lines`, and `constants` arrays
+ * within the given `Chunk` structure and resets the chunk to its initial state.
+ *
+ * This function ensures that any dynamically allocated memory for the chunk's
+ * `code`, `lines`, and `constants` arrays is properly released. It then calls
+ * `initChunk` to reinitialize the chunk to a clean state, ready for reuse.
+ *
+ * @param chunk A pointer to the `Chunk` structure to be freed and
+ * reinitialized.
+ *
+ * @note This function assumes that the chunk's arrays were previously allocated
+ *       using `GROW_ARRAY` and that `freeValueArray` handles the deallocation
+ *       of the `constants` array.
+ */
 void freeChunk(Chunk *chunk);
 
 /**
