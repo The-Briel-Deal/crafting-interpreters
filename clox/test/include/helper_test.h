@@ -24,7 +24,7 @@
  * @return Whether or not the test passed or failed.
  */
 static bool runTest(char *testName, void (*testCase)(), const char *expect) {
-  char  buf[1024];
+  char  buf[2048];
   FILE *membufstdout = fmemopen(buf, sizeof(buf), "w");
 
   FILE *prev_stdout = stdout;
