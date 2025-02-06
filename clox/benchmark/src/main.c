@@ -94,6 +94,7 @@ long benchTable() {
 }
 
 const char VERY_LONG_STR_CONCAT_SCRIPT[] =
+    "print(\"Boogie \" + \"Woogie \" + \"Woohoo \" +"
     "\"Boogie \" + \"Woogie \" + \"Woohoo \" +"
     "\"Boogie \" + \"Woogie \" + \"Woohoo \" +"
     "\"Boogie \" + \"Woogie \" + \"Woohoo \" +"
@@ -168,5 +169,4 @@ const char VERY_LONG_STR_CONCAT_SCRIPT[] =
     "\"Boogie \" + \"Woogie \" + \"Woohoo \" +"
     "\"Boogie \" + \"Woogie \" + \"Woohoo \" +"
     "\"Boogie \" + \"Woogie \" + \"Woohoo \" +"
-    "\"Boogie \" + \"Woogie \" + \"Woohoo \" +"
-    "\"Boogie \" + \"Woogie \" + \"Woohoo \"";
+    "\"Boogie \" + \"Woogie \" + \"Woohoo \");";
