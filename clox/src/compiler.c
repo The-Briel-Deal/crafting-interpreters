@@ -5,6 +5,7 @@
 #include <stdlib.h>
 
 #include "chunk.h"
+#include "compiler.h"
 #include "object.h"
 #include "scanner.h"
 
@@ -41,7 +42,19 @@ typedef struct {
   Precedence precedence;
 } ParseRule;
 
+typedef struct {
+  Token name;
+  int   depth;
+} Local;
+
+typedef struct {
+  Local locals[UINT8_COUNT];
+  int   localCount;
+  int   scopeDepth;
+} Compiler;
+
 Parser        parser;
+Compiler     *current = NULL;
 Chunk        *compilingChunk;
 static Chunk *currentChunk() {
   return compilingChunk;
@@ -131,6 +144,12 @@ static void emitConstant(Value value) {
   emitBytes(OP_CONSTANT, makeConstant(value));
 }
 
+static void initCompiler(Compiler *compiler) {
+  compiler->localCount = 0;
+  compiler->scopeDepth = 0;
+  current              = compiler;
+}
+
 static void endCompiler() {
   emitReturn();
 
@@ -139,6 +158,10 @@ static void endCompiler() {
     disassembleChunk(currentChunk(), "code");
   }
 #endif
+}
+
+static void endScope() {
+  current->scopeDepth--;
 }
 
 static void       expression();
@@ -151,12 +174,39 @@ static uint8_t identifierConstant(Token *name) {
   return makeConstant(OBJ_VAL(copyString(name->start, name->length)));
 }
 
+static void addLocal(Token name) {
+  if (current->localCount == UINT8_COUNT) {
+    error("Too many local variables in function.");
+    return;
+  }
+  Local *local = &current->locals[current->localCount++];
+  local->name  = name;
+  local->depth = current->scopeDepth;
+}
+
+static void declareVariable() {
+  if (current->scopeDepth == 0)
+    return;
+
+  Token *name = &parser.previous;
+  addLocal(*name);
+}
+
 static uint8_t parseVariable(const char *errorMessage) {
   consume(TOKEN_IDENTIFIER, errorMessage);
+
+  declareVariable();
+  if (current->scopeDepth > 0)
+    return 0;
+
   return identifierConstant(&parser.previous);
 }
 
 static void defineVariable(uint8_t global) {
+  if (current->scopeDepth > 0) {
+    return;
+  }
+
   emitBytes(OP_DEFINE_GLOBAL, global);
 }
 
@@ -307,6 +357,14 @@ static void expression() {
   parsePrecedence(PREC_ASSIGNMENT);
 }
 
+static void block() {
+  while (!check(TOKEN_RIGHT_BRACE) && !check(TOKEN_EOF)) {
+    declaration();
+  }
+
+  consume(TOKEN_RIGHT_BRACE, "Expect '}' after block.");
+}
+
 static void expressionStmt() {
   expression();
   consume(TOKEN_SEMICOLON, "Expect ';' after expression.");
@@ -367,6 +425,10 @@ static void declaration() {
 static void statement() {
   if (match(TOKEN_PRINT)) {
     printStatement();
+  } else if (match(TOKEN_LEFT_BRACE)) {
+    beginScope();
+    block();
+    endScope();
   } else {
     expressionStmt();
   }
@@ -374,6 +436,8 @@ static void statement() {
 
 bool compile(const char *source, Chunk *chunk) {
   initScanner(source);
+  Compiler compiler;
+  initCompiler(&compiler);
   compilingChunk = chunk;
 
   parser.hadError  = false;
