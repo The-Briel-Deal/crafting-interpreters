@@ -34,9 +34,29 @@ void testChunkDefGlobal() {
   freeChunk(&chunk);
 }
 
+const char TEST_CHUNK_SET_GLOBAL_EXPECT[] =
+    "== test chunk ==\n"
+    "0000    1 OP_CONSTANT         1 'greasy'\n"
+    "0002    | OP_DEFINE_GLOBAL    0 'beans'\n"
+    "0004    2 OP_CONSTANT         3 'stinky'\n"
+    "0006    | OP_SET_GLOBAL       2 'beans'\n"
+    "0008    | OP_POP\n"
+    "0009    3 OP_RETURN\n";
+void testChunkSetGlobal() {
+  Chunk chunk;
+  initChunk(&chunk);
+
+  compile("var beans = \"greasy\";\n"
+          "beans = \"stinky\";\n",
+          &chunk);
+
+  disassembleChunk(&chunk, "test chunk");
+  freeChunk(&chunk);
+}
 const TestCase CHUNK_TESTS[] = {
     {"testWriteChunk",     testWriteChunk,     TEST_WRITE_CHUNK_EXPECT     },
     {"testChunkDefGlobal", testChunkDefGlobal, TEST_CHUNK_DEF_GLOBAL_EXPECT},
+    {"testChunkSetGlobal", testChunkSetGlobal, TEST_CHUNK_SET_GLOBAL_EXPECT},
 };
 
 const int CHUNK_TESTS_COUNT = sizeof(CHUNK_TESTS) / sizeof(TestCase);
