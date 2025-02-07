@@ -7,6 +7,9 @@
 #include "chunk.h"
 #include "object.h"
 #include "scanner.h"
+#include "table.h"
+#include "value.h"
+#include "vm.h"
 
 #ifdef DEBUG_PRINT_CODE
 #include "debug.h"
@@ -148,7 +151,21 @@ static ParseRule *getRule(TokenType type);
 static void       parsePrecedence(Precedence precedence);
 
 static uint8_t identifierConstant(Token *name) {
-  return makeConstant(OBJ_VAL(copyString(name->start, name->length)));
+  ObjString *key              = copyString(name->start, name->length);
+  Value      foundGlobalIndex = NIL_VAL;
+  tableGet(&vm.globalIndices, key, &foundGlobalIndex);
+
+  if (!IS_NIL(foundGlobalIndex)) {
+    assert(foundGlobalIndex.type == VAL_NUMBER);
+    assert(foundGlobalIndex.as.number < UINT8_MAX);
+    return foundGlobalIndex.as.number;
+  }
+
+  int globalIndex = vm.globalValues.count;
+  writeValueArray(&vm.globalValues,
+                  (Value){.type = VAL_UNDEFINED, .as.number = 0});
+  tableSet(&vm.globalIndices, key, NUMBER_VAL(globalIndex));
+  return globalIndex;
 }
 
 static uint8_t parseVariable(const char *errorMessage) {
