@@ -36,12 +36,14 @@ static void runtimeError(const char *format, ...) {
 void initVM() {
   resetStack();
   vm.objects = NULL;
-  initTable(&vm.globals);
+  initTable(&vm.globalIndices);
+  initValueArray(&vm.globalValues);
   initTable(&vm.strings);
 }
 
 void freeVM() {
-  freeTable(&vm.globals);
+  freeTable(&vm.globalIndices);
+  freeValueArray(&vm.globalValues);
   freeTable(&vm.strings);
   freeObjects();
 }
