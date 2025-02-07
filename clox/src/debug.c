@@ -3,6 +3,7 @@
 #include "chunk.h"
 #include "debug.h"
 #include "value.h"
+#include "vm.h"
 
 void disassembleChunk(Chunk *chunk, const char *name) {
   printf("== %s ==\n", name);
@@ -32,7 +33,7 @@ static int constantInstruction(const char *name, Chunk *chunk, int offset) {
 static int globalInstruction(const char *name, Chunk *chunk, int offset) {
   uint8_t global = chunk->code[offset + 1];
   printf("%-16s %4d '", name, global);
-  printValue(chunk->constants.values[global]);
+  printValue(vm.globalValues.values[global]);
   printf("'\n");
   return offset + 2;
 }
