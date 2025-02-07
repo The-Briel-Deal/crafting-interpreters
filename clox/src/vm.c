@@ -1,5 +1,7 @@
+#include <assert.h>
 #include <stdarg.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -118,28 +120,25 @@ static InterpretResult run() {
       case OP_FALSE     : push(BOOL_VAL(false)); break;
       case OP_POP       : pop(); break;
       case OP_GET_GLOBAL: {
-        ObjString *name = READ_STRING();
-        Value      value;
-        if (!tableGet(&vm.globals, name, &value)) {
-          runtimeError("Undefined variable '%s'.", name->chars);
-          return INTERPRET_RUNTIME_ERROR;
-        }
-        push(value);
+        // Get global index out of chunk, find global index in vm and push to
+        // stack.
+        uint8_t globalIndex = READ_BYTE();
+
+        assert(globalIndex <= vm.globalValues.count);
+        push(vm.globalValues.values[globalIndex]);
         break;
       }
       case OP_DEFINE_GLOBAL: {
-        ObjString *name = READ_STRING();
-        tableSet(&vm.globals, name, peek(0));
-        pop();
+        uint8_t globalIndex = READ_BYTE();
+        assert(globalIndex <= vm.globalValues.count);
+        vm.globalValues.values[globalIndex] = pop();
         break;
       }
       case OP_SET_GLOBAL: {
-        ObjString *name = READ_STRING();
-        if (tableSet(&vm.globals, name, peek(0))) {
-          tableDelete(&vm.globals, name);
-          runtimeError("Undefined variable '%s'.", name->chars);
-          return INTERPRET_RUNTIME_ERROR;
-        }
+        uint8_t globalIndex = READ_BYTE();
+        assert(globalIndex <= vm.globalValues.count);
+        assert(vm.globalValues.values[globalIndex].type != VAL_UNDEFINED);
+        vm.globalValues.values[globalIndex] = pop();
         break;
       }
       case OP_EQUAL: {
