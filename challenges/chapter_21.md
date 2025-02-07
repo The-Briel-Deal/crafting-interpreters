@@ -29,3 +29,13 @@ OP_ADD
 CONST
 -> 1
 CONST
+
+# Chal 3
+
+I think in my ideal world, if any piece of your code contains a reference to
+something that isn't available on declaration it should by default not work or
+at the very least warn or error. In python it seems like this sort of function
+works and you can define a function where itaccesses a variable that is yet to
+be defined. It's nice because you can access different globals depending on the
+context. But in my experience that is something I've never intentionally wanted
+to do so I would probably disallow this.
