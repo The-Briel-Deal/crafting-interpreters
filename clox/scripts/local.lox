@@ -1,0 +1,11 @@
+var a = "foo";
+{
+  var b = "bar";
+	a = "boo";
+	{
+	  var c = "chong";
+	  b = "baz";
+	}
+	var d = "woahg";
+	print(a + b);
+}
