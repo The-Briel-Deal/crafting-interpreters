@@ -59,18 +59,19 @@ const struct KeyValPair TEST_TABLE_2_KEY_VAL_PAIRS[] = {
     {.key = "Googieeee",    .val = "Boingleeee"},
 };
 
-const char TEST_TABLE_2_EXPECT[] = "Boogie -> Woogie\n"
-                                   "Schmoogie -> Doogie\n"
-                                   "Googie -> Boingle\n"
-                                   "Boogiee -> Woogiee\n"
-                                   "Schmoogiee -> Doogiee\n"
-                                   "Googiee -> Boinglee\n"
-                                   "Boogieee -> Woogieee\n"
-                                   "Schmoogieee -> Doogieee\n"
-                                   "Googieee -> Boingleee\n"
-                                   "Boogieeee -> Woogieeee\n"
-                                   "Schmoogieeee -> Doogieeee\n"
-                                   "Googieeee -> Boingleeee\n";
+const char TEST_TABLE_2_EXPECT[] =
+    "Boogie -> Woogie\n"
+    "Schmoogie -> Doogie\n"
+    "Googie -> Boingle\n"
+    "Boogiee -> Woogiee\n"
+    "Schmoogiee -> Doogiee\n"
+    "Googiee -> Boinglee\n"
+    "Boogieee -> Woogieee\n"
+    "Schmoogieee -> Doogieee\n"
+    "Googieee -> Boingleee\n"
+    "Boogieeee -> Woogieeee\n"
+    "Schmoogieeee -> Doogieeee\n"
+    "Googieeee -> Boingleeee\n";
 
 void testTable2() {
   Table table;

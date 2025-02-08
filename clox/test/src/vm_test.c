@@ -48,20 +48,22 @@ void       testStringConcat1() {
 const char TEST_VAR_1_EXPECT[] = "Boogie Woogie Woohoo\n";
 void       testVar1() {
   initVM();
-  char source[] = "var boogie = \"Boogie \";"
-                        "var woogie = \"Woogie \";"
-                        "var woohoo = \"Woohoo\";"
-                        "print(boogie + woogie + woohoo);";
+  char source[] =
+      "var boogie = \"Boogie \";"
+            "var woogie = \"Woogie \";"
+            "var woohoo = \"Woohoo\";"
+            "print(boogie + woogie + woohoo);";
   interpret(source);
 }
 
 const char TEST_VAR_2_EXPECT[] = "beignets with cafe au lait\n";
 void       testVar2() {
   initVM();
-  char source[] = "var breakfast = \"beignets\";\n"
-                        "var beverage = \"cafe au lait\";\n"
-                        "breakfast = \"beignets with \" + beverage;\n"
-                        "print breakfast;\n";
+  char source[] =
+      "var breakfast = \"beignets\";\n"
+            "var beverage = \"cafe au lait\";\n"
+            "breakfast = \"beignets with \" + beverage;\n"
+            "print breakfast;\n";
   interpret(source);
 }
 
@@ -69,12 +71,13 @@ const char TEST_LOCAL_1_EXPECT[] = "beignets with cafe au lait\n";
 void       testLocal1() {
   initVM();
 
-  char source[] = "var breakfast = \"beignets\";\n"
-                        "{\n"
-                        "  var beverage = \"cafe au lait\";\n"
-                        "  breakfast = \"beignets with \" + beverage;\n"
-                        "}\n"
-                        "print breakfast;\n";
+  char source[] =
+      "var breakfast = \"beignets\";\n"
+            "{\n"
+            "  var beverage = \"cafe au lait\";\n"
+            "  breakfast = \"beignets with \" + beverage;\n"
+            "}\n"
+            "print breakfast;\n";
 
   interpret(source);
 }

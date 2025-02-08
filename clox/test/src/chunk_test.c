@@ -6,10 +6,11 @@
 
 #include "helper_test.h"
 
-const char TEST_WRITE_CHUNK_EXPECT[] = "== test chunk ==\n"
-                                       "0000  123 OP_CONSTANT         0 '1.2'\n"
-                                       "0002    | OP_RETURN\n";
-void       testWriteChunk() {
+const char TEST_WRITE_CHUNK_EXPECT[] =
+    "== test chunk ==\n"
+    "0000  123 OP_CONSTANT         0 '1.2'\n"
+    "0002    | OP_RETURN\n";
+void testWriteChunk() {
   Chunk chunk;
   initChunk(&chunk);
 
@@ -46,9 +47,10 @@ void testChunkSetGlobal() {
   Chunk chunk;
   initChunk(&chunk);
 
-  compile("var beans = \"greasy\";\n"
-          "beans = \"stinky\";\n",
-          &chunk);
+  compile(
+      "var beans = \"greasy\";\n"
+      "beans = \"stinky\";\n",
+      &chunk);
 
   disassembleChunk(&chunk, "test chunk");
   freeChunk(&chunk);
@@ -68,10 +70,11 @@ void testChunkGetGlobal() {
   Chunk chunk;
   initChunk(&chunk);
 
-  compile("var beans = \"greasy\";\n"
-          "beans = \"stinky\";\n"
-          "var dog = beans;\n",
-          &chunk);
+  compile(
+      "var beans = \"greasy\";\n"
+      "beans = \"stinky\";\n"
+      "var dog = beans;\n",
+      &chunk);
 
   disassembleChunk(&chunk, "test chunk");
   freeChunk(&chunk);
@@ -92,14 +95,15 @@ void testChunkLocal() {
   Chunk chunk;
   initChunk(&chunk);
 
-  compile("{\n"
-          "  var beans = \"greasy\";\n"
-          "  {\n"
-          "    beans = \"humungooseeee\";\n"
-          "  }\n"
-          "  print(beans);\n"
-          "}\n",
-          &chunk);
+  compile(
+      "{\n"
+      "  var beans = \"greasy\";\n"
+      "  {\n"
+      "    beans = \"humungooseeee\";\n"
+      "  }\n"
+      "  print(beans);\n"
+      "}\n",
+      &chunk);
 
   disassembleChunk(&chunk, "test chunk");
   freeChunk(&chunk);

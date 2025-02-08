@@ -282,8 +282,9 @@ static void literal(bool canAssign) {
     case TOKEN_NIL  : emitByte(OP_NIL); break;
     case TOKEN_TRUE : emitByte(OP_TRUE); break;
     default:
-      error("False, Nil, and True are the only supported literals, this should "
-            "be unreachable.");
+      error(
+          "False, Nil, and True are the only supported literals, this should "
+          "be unreachable.");
       return;
   }
 }
