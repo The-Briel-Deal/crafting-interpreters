@@ -11,19 +11,19 @@
   (type *)allocateObject(sizeof(type), objectType)
 
 const char TEST_TABLE_1_EXPECT[] = "testVal";
-void       testTable1() {
+void testTable1() {
   Table table;
   initTable(&table);
-  char       key[]  = "testKey";
+  char key[]        = "testKey";
   ObjString *keyObj = copyString(key, sizeof(key));
-  char       val[]  = "testVal";
+  char val[]        = "testVal";
   ObjString *valObj = copyString(val, sizeof(val));
 
   bool isNewKey = tableSet(&table, keyObj, OBJ_VAL(valObj));
   assert(isNewKey == true);
 
   Value resultVal;
-  bool  foundKey = tableGet(&table, keyObj, &resultVal);
+  bool foundKey = tableGet(&table, keyObj, &resultVal);
   assert(foundKey == true);
 
   assert(resultVal.type == VAL_OBJ);
@@ -81,9 +81,9 @@ void testTable2() {
   for (int i = 0;
        i < (sizeof(TEST_TABLE_2_KEY_VAL_PAIRS) / sizeof(struct KeyValPair));
        i++) {
-    char      *key    = TEST_TABLE_2_KEY_VAL_PAIRS[i].key;
+    char *key         = TEST_TABLE_2_KEY_VAL_PAIRS[i].key;
     ObjString *keyObj = copyString(key, strlen(key));
-    char      *val    = TEST_TABLE_2_KEY_VAL_PAIRS[i].val;
+    char *val         = TEST_TABLE_2_KEY_VAL_PAIRS[i].val;
     ObjString *valObj = copyString(val, strlen(val));
 
     bool isNewKey = tableSet(&table, keyObj, OBJ_VAL(valObj));
@@ -94,12 +94,12 @@ void testTable2() {
   for (int i = 0;
        i < (sizeof(TEST_TABLE_2_KEY_VAL_PAIRS) / sizeof(struct KeyValPair));
        i++) {
-    char      *key    = TEST_TABLE_2_KEY_VAL_PAIRS[i].key;
+    char *key         = TEST_TABLE_2_KEY_VAL_PAIRS[i].key;
     ObjString *keyObj = copyString(key, strlen(key));
-    char      *val    = TEST_TABLE_2_KEY_VAL_PAIRS[i].val;
+    char *val         = TEST_TABLE_2_KEY_VAL_PAIRS[i].val;
 
     Value resultVal;
-    bool  foundKey = tableGet(&table, keyObj, &resultVal);
+    bool foundKey = tableGet(&table, keyObj, &resultVal);
     assert(foundKey == true);
 
     assert(resultVal.type == VAL_OBJ);

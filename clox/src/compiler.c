@@ -17,8 +17,8 @@
 typedef struct {
   Token current;
   Token previous;
-  bool  hadError;
-  bool  panicMode;
+  bool hadError;
+  bool panicMode;
 } Parser;
 
 typedef enum {
@@ -38,25 +38,25 @@ typedef enum {
 typedef void (*ParseFn)(bool canAssign);
 
 typedef struct {
-  ParseFn    prefix;
-  ParseFn    infix;
+  ParseFn prefix;
+  ParseFn infix;
   Precedence precedence;
 } ParseRule;
 
 typedef struct {
   Token name;
-  int   depth;
+  int depth;
 } Local;
 
 typedef struct {
   Local locals[UINT8_COUNT];
-  int   localCount;
-  int   scopeDepth;
+  int localCount;
+  int scopeDepth;
 } Compiler;
 
-Parser        parser;
-Compiler     *current = NULL;
-Chunk        *compilingChunk;
+Parser parser;
+Compiler *current = NULL;
+Chunk *compilingChunk;
 static Chunk *currentChunk() {
   return compilingChunk;
 }
@@ -175,11 +175,11 @@ static void endScope() {
   }
 }
 
-static void       expression();
-static void       statement();
-static void       declaration();
+static void expression();
+static void statement();
+static void declaration();
 static ParseRule *getRule(TokenType type);
-static void       parsePrecedence(Precedence precedence);
+static void parsePrecedence(Precedence precedence);
 
 static uint8_t identifierConstant(Token *name) {
   return makeConstant(OBJ_VAL(copyString(name->start, name->length)));
@@ -257,8 +257,8 @@ static void defineVariable(uint8_t global) {
 }
 
 static void binary(bool canAssign) {
-  TokenType  operatorType = parser.previous.type;
-  ParseRule *rule         = getRule(operatorType);
+  TokenType operatorType = parser.previous.type;
+  ParseRule *rule        = getRule(operatorType);
   parsePrecedence((Precedence)(rule->precedence + 1));
 
   switch (operatorType) {
@@ -306,7 +306,7 @@ static void string(bool canAssign) {
 
 static void namedVariable(Token name, bool canAssign) {
   uint8_t getOp, setOp;
-  int     arg = resolveLocal(current, &name);
+  int arg = resolveLocal(current, &name);
   if (arg != -1) {
     getOp = OP_GET_LOCAL;
     setOp = OP_SET_LOCAL;

@@ -4,6 +4,6 @@
 #include "helper_test.h"
 
 extern const TestCase CHUNK_TESTS[];
-extern const int      CHUNK_TESTS_COUNT;
+extern const int CHUNK_TESTS_COUNT;
 
 #endif

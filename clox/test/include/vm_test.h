@@ -4,6 +4,6 @@
 #include "helper_test.h"
 
 extern const TestCase VM_TESTS[];
-extern const int      VM_TESTS_COUNT;
+extern const int VM_TESTS_COUNT;
 
 #endif

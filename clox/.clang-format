@@ -1,6 +1,5 @@
 AlignConsecutiveAssignments: true
-AlignConsecutiveDeclarations:
-  Enabled: true
+AlignConsecutiveDeclarations: false # For some reason this is very broken with multiline string literals.
 AlignConsecutiveMacros:
   Enabled: true
   AlignCompound: true

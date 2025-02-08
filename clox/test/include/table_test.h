@@ -4,6 +4,6 @@
 #include "helper_test.h"
 
 extern const TestCase TABLE_TESTS[];
-extern const int      TABLE_TESTS_COUNT;
+extern const int TABLE_TESTS_COUNT;
 
 #endif
