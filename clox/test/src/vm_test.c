@@ -82,6 +82,22 @@ void       testLocal1() {
   interpret(source);
 }
 
+const char TEST_LOCAL_2_EXPECT[] = "beignets with cafe au lait\n";
+void       testLocal2() {
+  initVM();
+
+  char source[] =
+      "{\n"
+            "  var beans = \"greasy\";\n"
+            "  {\n"
+            "    beans = \"humungooseeee\";\n"
+            "  }\n"
+            "  print(beans);\n"
+            "}\n";
+
+  interpret(source);
+}
+
 const TestCase VM_TESTS[] = {
     {"testArithmetic1",   testArithmetic1,   TEST_ARITHMETIC_1_EXPECT   },
     {"testArithmetic2",   testArithmetic2,   TEST_ARITHMETIC_2_EXPECT   },
@@ -92,6 +108,7 @@ const TestCase VM_TESTS[] = {
     {"testVar1",          testVar1,          TEST_VAR_1_EXPECT          },
     {"testVar2",          testVar2,          TEST_VAR_2_EXPECT          },
     {"testLocal1",        testLocal1,        TEST_LOCAL_1_EXPECT        },
+    {"testLocal2",        testLocal2,        TEST_LOCAL_2_EXPECT        },
 };
 
 const int VM_TESTS_COUNT = sizeof(VM_TESTS) / sizeof(TestCase);
