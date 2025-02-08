@@ -188,7 +188,7 @@ static uint8_t identifierConstant(Token *name) {
 static bool identifiersEqual(Token *a, Token *b) {
   if (a->length != b->length)
     return false;
-  return memcmp(a->start, b->start, a->length);
+  return memcmp(a->start, b->start, a->length) == 0;
 }
 
 static int resolveLocal(Compiler *compiler, Token *name) {
