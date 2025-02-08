@@ -82,7 +82,7 @@ void testLocal1() {
   interpret(source);
 }
 
-const char TEST_LOCAL_2_EXPECT[] = "beignets with cafe au lait\n";
+const char TEST_LOCAL_2_EXPECT[] = "humungooseeee\n";
 void testLocal2() {
   initVM();
 
