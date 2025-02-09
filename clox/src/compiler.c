@@ -9,6 +9,8 @@
 #include "compiler.h"
 #include "object.h"
 #include "scanner.h"
+#include "table.h"
+#include "value.h"
 
 #ifdef DEBUG_PRINT_CODE
 #include "debug.h"
@@ -52,6 +54,7 @@ typedef struct {
   Local locals[UINT8_COUNT];
   int localCount;
   int scopeDepth;
+  Table localIndices;
 } Compiler;
 
 Parser parser;
@@ -146,6 +149,7 @@ static void emitConstant(Value value) {
 }
 
 static void initCompiler(Compiler *compiler) {
+  initTable(&compiler->localIndices);
   compiler->localCount = 0;
   compiler->scopeDepth = 0;
   current              = compiler;
@@ -170,6 +174,9 @@ static void endScope() {
 
   while (current->localCount > 0 &&
          current->locals[current->localCount - 1].depth > current->scopeDepth) {
+    Token name = current->locals[current->localCount - 1].name;
+    assert(name.length > 0);
+    tableDelete(&current->localIndices, copyString(name.start, name.length));
     emitByte(OP_POP);
     current->localCount--;
   }
@@ -193,6 +200,11 @@ static bool identifiersEqual(Token *a, Token *b) {
 
 static int resolveLocal(Compiler *compiler, Token *name) {
   for (int i = compiler->localCount - 1; i >= 0; i--) {
+    Value value;
+    if (tableGet(&compiler->localIndices, copyString(name->start, name->length),
+                 &value)) {
+      return value.as.number;
+    }
     Local *local = &compiler->locals[i];
     if (identifiersEqual(name, &local->name)) {
       if (local->depth == -1) {
@@ -206,10 +218,14 @@ static int resolveLocal(Compiler *compiler, Token *name) {
 }
 
 static void addLocal(Token name) {
+  assert(name.length >= 0);
   if (current->localCount == UINT8_COUNT) {
     error("Too many local variables in function.");
     return;
   }
+  int index = current->localCount++;
+  tableSet(&current->localIndices, copyString(name.start, name.length),
+           NUMBER_VAL(index));
   Local *local = &current->locals[current->localCount++];
   local->name  = name;
   local->depth = -1;
