@@ -19,6 +19,9 @@ endif
 ifeq (${OPTIMIZE}, 1)
 	CFLAGS += -O3
 endif
+ifeq (${ASAN}, 1)
+	CFLAGS += -fsanitize=address
+endif
 
 # This needs to be below the above modifications to CFLAGS or this var won't contain the changes.
 TEST_CFLAGS := $(CFLAGS) -Itest/include
