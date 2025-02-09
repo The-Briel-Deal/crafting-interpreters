@@ -212,7 +212,7 @@ static void addLocal(Token name, bool mutable) {
     return;
   }
   Local *local   = &current->locals[current->localCount++];
-  local->mutable = true;
+  local->mutable = mutable;
   local->name    = name;
   local->depth   = -1;
 }
@@ -313,9 +313,6 @@ static void namedVariable(Token name, bool canAssign) {
   uint8_t getOp, setOp;
   int arg = resolveLocal(current, &name);
   if (arg != -1) {
-		if (!current->locals[arg].mutable && !(current->locals[arg].depth == -1)) {
-			error("Reassigning constant variable not allowed.");
-		}
     getOp = OP_GET_LOCAL;
     setOp = OP_SET_LOCAL;
   } else {
@@ -325,6 +322,9 @@ static void namedVariable(Token name, bool canAssign) {
   }
 
   if (canAssign && match(TOKEN_EQUAL)) {
+    if (!current->locals[arg].mutable && current->locals[arg].depth != -1) {
+      error("Reassigning constant variable not allowed.");
+    }
     expression();
     emitBytes(setOp, (uint8_t)arg);
   } else {
@@ -386,6 +386,7 @@ ParseRule rules[] = {
     [TOKEN_THIS]          = {NULL,     NULL,   PREC_NONE      },
     [TOKEN_TRUE]          = {literal,  NULL,   PREC_NONE      },
     [TOKEN_VAR]           = {NULL,     NULL,   PREC_NONE      },
+    [TOKEN_CONST]         = {NULL,     NULL,   PREC_NONE      },
     [TOKEN_WHILE]         = {NULL,     NULL,   PREC_NONE      },
     [TOKEN_ERROR]         = {NULL,     NULL,   PREC_NONE      },
     [TOKEN_EOF]           = {NULL,     NULL,   PREC_NONE      },
@@ -476,7 +477,7 @@ static void varDeclaration() {
 }
 
 static void declaration() {
-  if (match(TOKEN_VAR)) {
+  if (match(TOKEN_VAR) || match(TOKEN_CONST)) {
     varDeclaration();
   } else {
     statement();
