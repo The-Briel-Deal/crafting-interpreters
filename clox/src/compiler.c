@@ -46,6 +46,7 @@ typedef struct {
 typedef struct {
   Token name;
   int depth;
+  bool mutable;
 } Local;
 
 typedef struct {
@@ -205,17 +206,18 @@ static int resolveLocal(Compiler *compiler, Token *name) {
   return -1;
 }
 
-static void addLocal(Token name) {
+static void addLocal(Token name, bool mutable) {
   if (current->localCount == UINT8_COUNT) {
     error("Too many local variables in function.");
     return;
   }
-  Local *local = &current->locals[current->localCount++];
-  local->name  = name;
-  local->depth = -1;
+  Local *local   = &current->locals[current->localCount++];
+  local->mutable = true;
+  local->name    = name;
+  local->depth   = -1;
 }
 
-static void declareVariable() {
+static void declareVariable(bool mutable) {
   if (current->scopeDepth == 0)
     return;
 
@@ -230,13 +232,16 @@ static void declareVariable() {
       error("Already a variable with this name in this scope.");
     }
   }
-  addLocal(*name);
+  addLocal(*name, mutable);
 }
 
 static uint8_t parseVariable(const char *errorMessage) {
+  assert(parser.previous.type == TOKEN_VAR ||
+         parser.previous.type == TOKEN_CONST);
+  bool mutable = parser.previous.type == TOKEN_VAR;
   consume(TOKEN_IDENTIFIER, errorMessage);
 
-  declareVariable();
+  declareVariable(mutable);
   if (current->scopeDepth > 0)
     return 0;
 
@@ -308,6 +313,9 @@ static void namedVariable(Token name, bool canAssign) {
   uint8_t getOp, setOp;
   int arg = resolveLocal(current, &name);
   if (arg != -1) {
+		if (!current->locals[arg].mutable && !(current->locals[arg].depth == -1)) {
+			error("Reassigning constant variable not allowed.");
+		}
     getOp = OP_GET_LOCAL;
     setOp = OP_SET_LOCAL;
   } else {
