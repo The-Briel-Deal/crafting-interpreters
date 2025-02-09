@@ -49,7 +49,7 @@ typedef struct {
 } Local;
 
 typedef struct {
-  Local locals[UINT8_COUNT];
+  Local locals[UINT16_COUNT];
   int localCount;
   int scopeDepth;
 } Compiler;
@@ -120,6 +120,12 @@ static bool match(TokenType type) {
 
 static void emitByte(uint8_t byte) {
   writeChunk(currentChunk(), byte, parser.previous.line);
+}
+static void emitUInt16(uint16_t bytes) {
+  uint8_t byte1 = (uint8_t)(bytes >> 0);
+  uint8_t byte2 = (uint8_t)(bytes >> 8);
+  writeChunk(currentChunk(), byte1, parser.previous.line);
+  writeChunk(currentChunk(), byte2, parser.previous.line);
 }
 
 static void emitBytes(uint8_t byte1, uint8_t byte2) {
@@ -206,7 +212,7 @@ static int resolveLocal(Compiler *compiler, Token *name) {
 }
 
 static void addLocal(Token name) {
-  if (current->localCount == UINT8_COUNT) {
+  if (current->localCount == UINT16_COUNT) {
     error("Too many local variables in function.");
     return;
   }
@@ -308,19 +314,22 @@ static void namedVariable(Token name, bool canAssign) {
   uint8_t getOp, setOp;
   int arg = resolveLocal(current, &name);
   if (arg != -1) {
-    getOp = OP_GET_LOCAL;
-    setOp = OP_SET_LOCAL;
+    if (canAssign && match(TOKEN_EQUAL)) {
+      expression();
+      emitByte(OP_SET_LOCAL);
+      emitUInt16(((uint16_t)(arg)));
+    } else {
+      emitByte(OP_GET_LOCAL);
+      emitUInt16(((uint16_t)(arg)));
+    }
   } else {
-    arg   = identifierConstant(&name);
-    getOp = OP_GET_GLOBAL;
-    setOp = OP_SET_GLOBAL;
-  }
-
-  if (canAssign && match(TOKEN_EQUAL)) {
-    expression();
-    emitBytes(setOp, (uint8_t)arg);
-  } else {
-    emitBytes(getOp, (uint8_t)arg);
+    arg = identifierConstant(&name);
+    if (canAssign && match(TOKEN_EQUAL)) {
+      expression();
+      emitBytes(OP_SET_GLOBAL, (uint8_t)arg);
+    } else {
+      emitBytes(OP_GET_GLOBAL, (uint8_t)arg);
+    }
   }
 }
 
