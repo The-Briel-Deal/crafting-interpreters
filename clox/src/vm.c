@@ -19,7 +19,7 @@ VM vm;
 
 static void resetStack() {
   vm.stackTop = vm.stack;
-};
+}
 
 static void runtimeError(const char *format, ...) {
   va_list args;
