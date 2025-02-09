@@ -13,8 +13,9 @@
 #define BENCH_RUN_COUNT         2000
 #define BENCH_TABLE_ENTRY_COUNT 2000
 
-long        benchStrConcat();
-long        benchTable();
+long benchStrConcat();
+long benchTable();
+long benchVars();
 static void runBench(long (*benchFn)(), FILE *stdoutRedirect);
 
 int main(int argc, char *argv[]) {
@@ -23,6 +24,8 @@ int main(int argc, char *argv[]) {
   runBench(benchStrConcat, stdoutRedirect);
   printf("benchTable:\n");
   runBench(benchTable, stdoutRedirect);
+  printf("benchVars:\n");
+  runBench(benchVars, stdoutRedirect);
   fclose(stdoutRedirect);
 }
 
@@ -33,8 +36,8 @@ static void runBench(long (*benchFn)(), FILE *stdoutRedirect) {
   for (int i = 0; i < BENCH_RUN_COUNT; i++) {
     results[i] = benchFn();
   }
-  int   max = INT_MIN;
-  int   min = INT_MAX;
+  int max   = INT_MIN;
+  int min   = INT_MAX;
   float avg = 0;
   for (int i = 0; i < BENCH_RUN_COUNT; i++) {
     avg += results[i] / (float)BENCH_RUN_COUNT;
@@ -51,41 +54,63 @@ static void runBench(long (*benchFn)(), FILE *stdoutRedirect) {
 }
 
 const char VERY_LONG_STR_CONCAT_SCRIPT[];
-long       benchStrConcat() {
+long benchStrConcat() {
   initVM();
   long startTime = clock();
   interpret(VERY_LONG_STR_CONCAT_SCRIPT);
   long endTime = clock();
   printf("\nStart Time: %li\nEnd Time: %li\nElapsed Time: %li\n", startTime,
-               endTime, endTime - startTime);
+         endTime, endTime - startTime);
+  return endTime - startTime;
+}
+
+long benchVars() {
+  char source[] =
+      "var a = \"foo\";\n"
+      "{\n"
+      "  var b = \"bar\";\n"
+      "	 a = \"boo\";\n"
+      "	 {\n"
+      "	   var c = \"chong\";\n"
+      "	   b = \"baz\";\n"
+      "	 }\n"
+      "	 var d = \"woahg\";\n"
+      "	 print(a + b);\n"
+      "}";
+  initVM();
+  long startTime = clock();
+  interpret(source);
+  long endTime = clock();
+  printf("\nStart Time: %li\nEnd Time: %li\nElapsed Time: %li\n", startTime,
+         endTime, endTime - startTime);
   return endTime - startTime;
 }
 
 long benchTable() {
-  long  startTime = clock();
+  long startTime = clock();
   Table table;
   initTable(&table);
   for (int i = 0; i < BENCH_TABLE_ENTRY_COUNT; i++) {
-    char       key[32] = {0};
-    int        keyLen  = sprintf(key, "testKey%i", i);
-    ObjString *keyObj  = copyString(key, keyLen);
-    char       val[32] = {0};
-    int        valLen  = sprintf(val, "testVal%i", i);
-    ObjString *valObj  = copyString(val, valLen);
+    char key[32]      = {0};
+    int keyLen        = sprintf(key, "testKey%i", i);
+    ObjString *keyObj = copyString(key, keyLen);
+    char val[32]      = {0};
+    int valLen        = sprintf(val, "testVal%i", i);
+    ObjString *valObj = copyString(val, valLen);
 
     bool isNewKey = tableSet(&table, keyObj, OBJ_VAL(valObj));
   }
 
   for (int i = 0; i < BENCH_TABLE_ENTRY_COUNT; i++) {
-    char       key[32] = {0};
-    int        keyLen  = sprintf(key, "testKey%i", i);
-    ObjString *keyObj  = copyString(key, keyLen);
-    Value      resultVal;
-    bool       foundKey = tableGet(&table, keyObj, &resultVal);
+    char key[32]      = {0};
+    int keyLen        = sprintf(key, "testKey%i", i);
+    ObjString *keyObj = copyString(key, keyLen);
+    Value resultVal;
+    bool foundKey = tableGet(&table, keyObj, &resultVal);
 
-    ObjString *resultObjStr  = AS_STRING(resultVal);
-    char       expectVal[32] = {0};
-    int        expectValLen  = sprintf(expectVal, "testVal%i", i);
+    ObjString *resultObjStr = AS_STRING(resultVal);
+    char expectVal[32]      = {0};
+    int expectValLen        = sprintf(expectVal, "testVal%i", i);
 
     assert(resultObjStr->length == expectValLen);
     assert(memcmp(resultObjStr->chars, expectVal, expectValLen) == 0);
