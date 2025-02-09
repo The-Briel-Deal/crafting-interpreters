@@ -137,18 +137,20 @@ static void emitReturn() {
   emitByte(OP_RETURN);
 }
 
-static uint8_t makeConstant(Value value) {
+static uint16_t makeConstant(Value value) {
   int constant = addConstant(currentChunk(), value);
-  if (constant > UINT8_MAX) {
+  if (constant > UINT16_MAX) {
     error("Too many constants in one chunk.");
     return 0;
   }
 
-  return (uint8_t)constant;
+  return (uint16_t)constant;
 }
 
 static void emitConstant(Value value) {
-  emitBytes(OP_CONSTANT, makeConstant(value));
+  emitByte(OP_CONSTANT);
+  uint16_t constBytes = makeConstant(value);
+  emitUInt16(constBytes);
 }
 
 static void initCompiler(Compiler *compiler) {

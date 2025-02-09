@@ -78,10 +78,16 @@ static void concatenate() {
   ObjString *result = takeString(chars, length);
   push(OBJ_VAL(result));
 }
+#define READ_BYTE() (*vm.ip++)
+
+uint16_t readUInt16() {
+  uint8_t byte1 = READ_BYTE();
+  uint8_t byte2 = READ_BYTE();
+  return (((uint16_t)(byte1)) << 0) | (((uint16_t)(byte2)) << 8);
+}
 
 static InterpretResult run() {
-#define READ_BYTE()     (*vm.ip++)
-#define READ_CONSTANT() (vm.chunk->constants.values[READ_BYTE()])
+#define READ_CONSTANT() (vm.chunk->constants.values[readUInt16()])
 #define READ_STRING()   AS_STRING(READ_CONSTANT())
 #define BINARY_OP(valueType, op)                                               \
   do {                                                                         \

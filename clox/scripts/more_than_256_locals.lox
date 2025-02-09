@@ -1104,4 +1104,8 @@
   var l1103 = "boogie";
   var l1104 = "boogie";
   var l1105 = "boogie";
+
+	print(l1103);
+	print(l102);
+	print(l32);
 }
