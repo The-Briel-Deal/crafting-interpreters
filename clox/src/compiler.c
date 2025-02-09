@@ -312,17 +312,20 @@ static void string(bool canAssign) {
 static void namedVariable(Token name, bool canAssign) {
   uint8_t getOp, setOp;
   int arg = resolveLocal(current, &name);
+	bool global;
   if (arg != -1) {
+		global = false;
     getOp = OP_GET_LOCAL;
     setOp = OP_SET_LOCAL;
   } else {
+		global = true;
     arg   = identifierConstant(&name);
     getOp = OP_GET_GLOBAL;
     setOp = OP_SET_GLOBAL;
   }
 
   if (canAssign && match(TOKEN_EQUAL)) {
-    if (!current->locals[arg].mutable && current->locals[arg].depth != -1) {
+    if ( !global && !current->locals[arg].mutable && current->locals[arg].depth != -1) {
       error("Reassigning constant variable not allowed.");
     }
     expression();
