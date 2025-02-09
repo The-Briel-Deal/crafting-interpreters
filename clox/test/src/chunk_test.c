@@ -85,11 +85,11 @@ const char TEST_CHUNK_LOCAL_EXPECT[] =
     "0000    2 OP_CONSTANT         0 'greasy'\n"
     "0002    4 OP_CONSTANT         1 'humungooseeee'\n"
     "0004    | OP_SET_LOCAL        0\n"
-    "0006    | OP_POP\n"
-    "0007    6 OP_GET_LOCAL        0\n"
-    "0009    | OP_PRINT\n"
-    "0010    7 OP_POP\n"
-    "0011    8 OP_RETURN\n";
+    "0007    | OP_POP\n"
+    "0008    6 OP_GET_LOCAL        0\n"
+    "0011    | OP_PRINT\n"
+    "0012    7 OP_POP\n"
+    "0013    8 OP_RETURN\n";
 
 void testChunkLocal() {
   Chunk chunk;

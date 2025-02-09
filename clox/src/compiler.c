@@ -311,7 +311,6 @@ static void string(bool canAssign) {
 }
 
 static void namedVariable(Token name, bool canAssign) {
-  uint8_t getOp, setOp;
   int arg = resolveLocal(current, &name);
   if (arg != -1) {
     if (canAssign && match(TOKEN_EQUAL)) {

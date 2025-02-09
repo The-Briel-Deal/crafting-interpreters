@@ -36,9 +36,11 @@ static int simpleInstruction(const char *name, int offset) {
 }
 
 static int byteInstruction(const char *name, Chunk *chunk, int offset) {
-  uint8_t slot = chunk->code[offset + 1];
+  uint8_t byte1 = chunk->code[offset + 1];
+  uint8_t byte2 = chunk->code[offset + 2];
+  uint16_t slot = (((uint16_t)(byte1)) << 0) | (((uint16_t)(byte2)) << 8);
   printf("%-16s %4d\n", name, slot);
-  return offset + 2;
+  return offset + 3;
 }
 
 int disassembleInstruction(Chunk *chunk, int offset) {
