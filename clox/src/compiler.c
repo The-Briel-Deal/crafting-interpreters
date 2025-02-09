@@ -175,7 +175,6 @@ static void endScope() {
   while (current->localCount > 0 &&
          current->locals[current->localCount - 1].depth > current->scopeDepth) {
     Token name = current->locals[current->localCount - 1].name;
-    assert(name.length > 0);
     tableDelete(&current->localIndices, copyString(name.start, name.length));
     emitByte(OP_POP);
     current->localCount--;
@@ -218,7 +217,6 @@ static int resolveLocal(Compiler *compiler, Token *name) {
 }
 
 static void addLocal(Token name) {
-  assert(name.length >= 0);
   if (current->localCount == UINT8_COUNT) {
     error("Too many local variables in function.");
     return;
@@ -226,7 +224,7 @@ static void addLocal(Token name) {
   int index = current->localCount++;
   tableSet(&current->localIndices, copyString(name.start, name.length),
            NUMBER_VAL(index));
-  Local *local = &current->locals[current->localCount++];
+  Local *local = &current->locals[index];
   local->name  = name;
   local->depth = -1;
 }
