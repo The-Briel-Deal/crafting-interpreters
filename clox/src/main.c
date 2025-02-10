@@ -1,15 +1,37 @@
 #include "vm.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <termios.h>
+#include <unistd.h>
+
+struct termios orig_termios;
+
+void disableRawMode() {
+  tcsetattr(STDIN_FILENO, TCSAFLUSH, &orig_termios);
+}
+
+void enableRawMode() {
+  tcgetattr(STDIN_FILENO, &orig_termios);
+  atexit(disableRawMode);
+
+  struct termios raw = orig_termios;
+
+  raw.c_lflag &= ~(ECHO | ICANON);
+
+  tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
+}
 
 static void repl() {
   char line[1024];
+  enableRawMode();
   for (;;) {
     printf("> ");
 
-    if (!fgets(line, sizeof(line), stdin)) {
-      printf("\n");
-      break;
+    char c;
+    while (read(STDIN_FILENO, &c, 1)) {
+      if (c == 'q') {
+        exit(73);
+      }
     }
 
     interpret(line);
