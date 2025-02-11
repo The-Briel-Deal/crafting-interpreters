@@ -12,6 +12,7 @@ void disableRawMode() {
 }
 
 void enableRawMode() {
+  setvbuf(stdout, NULL, _IONBF, 0);
   tcgetattr(STDIN_FILENO, &orig_termios);
   atexit(disableRawMode);
 
@@ -33,9 +34,12 @@ static void repl() {
     char c;
     while (read(STDIN_FILENO, &c, 1)) {
       if (iscntrl(c)) {
-        printf("%d\r\n", c);
+        switch (c) {
+          case '\n':
+          case '\r': printf("\r\n"); break;
+        }
       } else {
-        printf("%d ('%c')\r\n", c, c);
+        printf("%c", c);
       }
     }
 
