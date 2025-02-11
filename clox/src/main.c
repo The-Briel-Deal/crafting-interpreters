@@ -1,5 +1,6 @@
 #include "vm.h"
 #include <ctype.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <termios.h>
@@ -26,23 +27,39 @@ void enableRawMode() {
 }
 
 static void repl() {
+#define CURSOR_FORWARD(n) printf("\x1b[%iC", n)
+#define CURSOR_BACK(n) printf("\x1b[%iD", n)
   char line[1024];
+  uint16_t line_index = 0;
+  printf("> ");
   enableRawMode();
   for (;;) {
-    printf("> ");
-
     char c;
     while (read(STDIN_FILENO, &c, 1)) {
       if (iscntrl(c)) {
         // Control Characters
         switch (c) {
           case '\n':
-          case '\r': printf("\r\n"); break;
-
-          default  : printf("%i", c); break;
+          case '\r': {
+            line[line_index] = '\0';
+            line_index       = 0;
+            printf("\r\n> ");
+            break;
+          }
+          case CTRL('c'): exit(EXIT_FAILURE); break;
+          default       : printf("%i", c); break;
         }
       } else {
-				// Normal Chars
+				if (c == 'h') {
+					CURSOR_BACK(1);
+					continue;
+				}
+				if (c == 'l') {
+					CURSOR_FORWARD(1);
+					continue;
+				}
+        // Normal Chars
+        line[line_index++] = c;
         printf("%c", c);
       }
     }
