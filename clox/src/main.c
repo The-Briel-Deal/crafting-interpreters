@@ -26,11 +26,27 @@ void enableRawMode() {
   tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
 }
 
+char line[1024];
+uint16_t line_index = 0;
+
+#define CURSOR_FORWARD_ESC(n) printf("\x1b[%iC", n)
+#define CURSOR_BACK_ESC(n)    printf("\x1b[%iD", n)
+static bool cursorForward(int n) {
+  if (line[line_index] == '\0')
+    return false;
+  line_index++;
+  CURSOR_FORWARD_ESC(n);
+  return true;
+}
+static bool cursorBack(int n) {
+  if (line_index == 0)
+    return false;
+  line_index--;
+  CURSOR_BACK_ESC(n);
+  return true;
+}
+
 static void repl() {
-#define CURSOR_FORWARD(n) printf("\x1b[%iC", n)
-#define CURSOR_BACK(n) printf("\x1b[%iD", n)
-  char line[1024];
-  uint16_t line_index = 0;
   printf("> ");
   enableRawMode();
   for (;;) {
@@ -41,25 +57,19 @@ static void repl() {
         switch (c) {
           case '\n':
           case '\r': {
-            line[line_index] = '\0';
-            line_index       = 0;
+            line_index = 0;
             printf("\r\n> ");
             break;
           }
+          case CTRL('h'): cursorBack(1); break;
+          case CTRL('l'): cursorForward(1); break;
           case CTRL('c'): exit(EXIT_FAILURE); break;
           default       : printf("%i", c); break;
         }
       } else {
-				if (c == 'h') {
-					CURSOR_BACK(1);
-					continue;
-				}
-				if (c == 'l') {
-					CURSOR_FORWARD(1);
-					continue;
-				}
         // Normal Chars
         line[line_index++] = c;
+        line[line_index]   = '\0';
         printf("%c", c);
       }
     }
