@@ -34,11 +34,15 @@ static void repl() {
     char c;
     while (read(STDIN_FILENO, &c, 1)) {
       if (iscntrl(c)) {
+        // Control Characters
         switch (c) {
           case '\n':
           case '\r': printf("\r\n"); break;
+
+          default  : printf("%i", c); break;
         }
       } else {
+				// Normal Chars
         printf("%c", c);
       }
     }
