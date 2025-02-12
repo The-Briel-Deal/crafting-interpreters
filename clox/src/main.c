@@ -54,7 +54,10 @@ static void repl() {
         not_ready   = false;
         continue;
       }
-      if (!iscntrl(c)) {
+      if (c == CTRL('c')) {
+				exit(1);
+      }
+      if (isprint(c)) {
         line[index++] = c;
         line[index]   = '\0';
         redrawLine(line);
