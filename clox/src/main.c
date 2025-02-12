@@ -5,6 +5,7 @@
 #include <termios.h>
 #include <unistd.h>
 
+#define ANSII_DEL 127
 #define ANSII_ESC 27
 #define OPEN_BRAC 91
 
@@ -55,7 +56,14 @@ static void repl() {
         continue;
       }
       if (c == CTRL('c')) {
-				exit(1);
+        exit(1);
+      }
+      if (c == ANSII_DEL) {
+        if (index <= 0)
+          continue;
+        line[--index] = '\0';
+        redrawLine(line);
+        continue;
       }
       if (isprint(c)) {
         line[index++] = c;
