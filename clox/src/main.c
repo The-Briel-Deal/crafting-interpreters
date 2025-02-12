@@ -16,6 +16,13 @@
     printf("2K");                                                              \
   } while (false)
 
+#define CURSOR_BACK()                                                          \
+  do {                                                                         \
+    putchar(ANSII_ESC);                                                        \
+    putchar(OPEN_BRAC);                                                        \
+    printf("1D");                                                              \
+  } while (false)
+
 static void redrawLine(char *line) {
   CLEAR_LINE();
   putchar('\r');
@@ -58,13 +65,17 @@ static void repl() {
       if (c == CTRL('c')) {
         exit(1);
       }
+      if (c == CTRL('h')) {
+        CURSOR_BACK();
+        index--;
+      }
       if (c == ANSII_DEL) {
         if (index <= 0)
           continue;
-				for (int i = index-1; line[i] != '\0'; i++) {
-					line[i] = line[i+1];
-				}
-				index--;
+        for (int i = index - 1; line[i] != '\0'; i++) {
+          line[i] = line[i + 1];
+        }
+        index--;
         redrawLine(line);
         continue;
       }
