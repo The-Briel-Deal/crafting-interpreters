@@ -1,6 +1,7 @@
 #include "vm.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <termios.h>
 #include <unistd.h>
 
 #define ANSII_ESC 27
@@ -19,7 +20,28 @@ static void redrawLine(char *line) {
   printf("%s", line);
 }
 
+struct termios orig_termios;
+
+void disableRawMode() {
+  tcsetattr(STDIN_FILENO, TCSAFLUSH, &orig_termios);
+}
+
+void enableRawMode() {
+  setvbuf(stdout, NULL, _IONBF, 0);
+  tcgetattr(STDIN_FILENO, &orig_termios);
+  atexit(disableRawMode);
+
+  struct termios raw = orig_termios;
+
+  raw.c_iflag &= ~(ICRNL | IXON);
+  raw.c_oflag &= ~(OPOST);
+  raw.c_lflag &= ~(ECHO | ICANON | IEXTEN | ISIG);
+
+  tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
+}
+
 static void repl() {
+	enableRawMode();
   char line[1024];
   for (;;) {
     printf("> ");
