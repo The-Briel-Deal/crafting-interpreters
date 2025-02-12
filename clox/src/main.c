@@ -61,7 +61,10 @@ static void repl() {
       if (c == ANSII_DEL) {
         if (index <= 0)
           continue;
-        line[--index] = '\0';
+				for (int i = index-1; line[i] != '\0'; i++) {
+					line[i] = line[i+1];
+				}
+				index--;
         redrawLine(line);
         continue;
       }
