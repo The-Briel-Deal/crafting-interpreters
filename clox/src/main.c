@@ -1,6 +1,23 @@
 #include "vm.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
+
+#define ANSII_ESC 27
+#define OPEN_BRAC 91
+
+#define CLEAR_LINE()                                                           \
+  do {                                                                         \
+    putchar(ANSII_ESC);                                                        \
+    putchar(OPEN_BRAC);                                                        \
+    printf("2K");                                                              \
+  } while (false)
+
+static void redrawLine(char *line) {
+  CLEAR_LINE();
+  putchar('\r');
+  printf("%s", line);
+}
 
 static void repl() {
   char line[1024];
