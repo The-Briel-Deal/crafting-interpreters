@@ -69,7 +69,6 @@ static void repl() {
         line[index++] = c;
         line[index]   = '\0';
         redrawLine(line);
-
         continue;
       }
     }
