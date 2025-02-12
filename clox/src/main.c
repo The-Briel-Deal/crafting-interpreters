@@ -1,4 +1,5 @@
 #include "vm.h"
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <termios.h>
@@ -17,7 +18,7 @@
 static void redrawLine(char *line) {
   CLEAR_LINE();
   putchar('\r');
-  printf("%s", line);
+  printf("> %s", line);
 }
 
 struct termios orig_termios;
@@ -41,17 +42,32 @@ void enableRawMode() {
 }
 
 static void repl() {
-	enableRawMode();
+  enableRawMode();
   char line[1024];
+  int index = 0;
   for (;;) {
-    printf("> ");
+    bool not_ready = true;
+    while (not_ready) {
+      char c = getchar();
+      if (c == '\n' || c == '\r') {
+        line[index] = '\0';
+        not_ready   = false;
+        continue;
+      }
+      if (!iscntrl(c)) {
+        line[index++] = c;
+        line[index]   = '\0';
+        redrawLine(line);
 
-    if (!fgets(line, sizeof(line), stdin)) {
-      printf("\n");
-      break;
+        continue;
+      }
     }
-
+    printf("\r\n");
     interpret(line);
+    index       = 0;
+    line[index] = '\0';
+    printf("\r\n");
+    redrawLine(line);
   }
 }
 
