@@ -23,6 +23,13 @@
     printf("1D");                                                              \
   } while (false)
 
+#define CURSOR_FORWARD()                                                       \
+  do {                                                                         \
+    putchar(ANSII_ESC);                                                        \
+    putchar(OPEN_BRAC);                                                        \
+    printf("1C");                                                              \
+  } while (false)
+
 static void redrawLine(char *line) {
   CLEAR_LINE();
   putchar('\r');
@@ -68,6 +75,10 @@ static void repl() {
       if (c == CTRL('h')) {
         CURSOR_BACK();
         index--;
+      }
+      if (c == CTRL('l')) {
+        CURSOR_FORWARD();
+        index++;
       }
       if (c == ANSII_DEL) {
         if (index <= 0)
