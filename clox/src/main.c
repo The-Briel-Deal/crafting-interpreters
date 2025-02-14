@@ -1,5 +1,7 @@
 #include "vm.h"
+#include <assert.h>
 #include <ctype.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <termios.h>
@@ -88,6 +90,36 @@ static void repl() {
         }
         index--;
         redrawLine(line);
+        continue;
+      }
+      if (c == ANSII_ESC) {
+        c = getchar();
+        assert(c == OPEN_BRAC);
+
+        uint8_t digitIndex = 0;
+        char digitStr[8];
+        while (c = getchar(), isdigit(c)) {
+          digitStr[digitIndex++] = c;
+        }
+        digitStr[digitIndex] = '\0';
+
+				// If no count, default to 1.
+        int digitInt = 1;
+        if (digitIndex != 0) {
+          digitInt = atoi(digitStr);
+        }
+        if (c == 'D') {
+          for (int _i = 0; _i < digitInt; _i++) {
+            CURSOR_BACK();
+            index--;
+          }
+        }
+        if (c == 'C') {
+          for (int _i = 0; _i < digitInt; _i++) {
+            CURSOR_FORWARD();
+            index++;
+          }
+        }
         continue;
       }
       if (isprint(c)) {
