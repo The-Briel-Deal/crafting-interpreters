@@ -102,7 +102,7 @@ int deleteChar(int index, char line[1024]) {
   }
   index--;
   redrawLine(line);
-  setCursorPos(pos.row, pos.col-1);
+  setCursorPos(pos.row, pos.col - 1);
   return index;
 }
 
