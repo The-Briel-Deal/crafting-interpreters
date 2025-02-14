@@ -18,20 +18,6 @@
     printf("2K");                                                              \
   } while (false)
 
-#define CURSOR_BACK()                                                          \
-  do {                                                                         \
-    putchar(ANSII_ESC);                                                        \
-    putchar(OPEN_BRAC);                                                        \
-    printf("1D");                                                              \
-  } while (false)
-
-#define CURSOR_FORWARD()                                                       \
-  do {                                                                         \
-    putchar(ANSII_ESC);                                                        \
-    putchar(OPEN_BRAC);                                                        \
-    printf("1C");                                                              \
-  } while (false)
-
 static void setCursorPos(int line, int col) {
   putchar(ANSII_ESC);
   putchar(OPEN_BRAC);
@@ -65,6 +51,22 @@ void enableRawMode() {
 }
 
 static void repl() {
+#define CURSOR_BACK()                                                          \
+  do {                                                                         \
+    putchar(ANSII_ESC);                                                        \
+    putchar(OPEN_BRAC);                                                        \
+    printf("1D");                                                              \
+    index--;                                                                   \
+  } while (false)
+
+#define CURSOR_FORWARD()                                                       \
+  do {                                                                         \
+    putchar(ANSII_ESC);                                                        \
+    putchar(OPEN_BRAC);                                                        \
+    printf("1C");                                                              \
+    index++;                                                                   \
+  } while (false)
+
   enableRawMode();
   char line[1024];
   int index = 0;
@@ -72,67 +74,60 @@ static void repl() {
     bool not_ready = true;
     while (not_ready) {
       char c = getchar();
-      if (c == '\n' || c == '\r') {
-        line[index] = '\0';
-        not_ready   = false;
-        continue;
-      }
-      if (c == CTRL('c')) {
-        exit(1);
-      }
-      if (c == CTRL('h')) {
-        CURSOR_BACK();
-        index--;
-      }
-      if (c == CTRL('l')) {
-        CURSOR_FORWARD();
-        index++;
-      }
-      if (c == ANSII_DEL) {
-        if (index <= 0)
+      switch (c) {
+        case '\n':
+        case '\r':
+          line[index] = '\0';
+          not_ready   = false;
           continue;
-        for (int i = index - 1; line[i] != '\0'; i++) {
-          line[i] = line[i + 1];
-        }
-        index--;
-        redrawLine(line);
-        continue;
-      }
-      if (c == ANSII_ESC) {
-        c = getchar();
-        assert(c == OPEN_BRAC);
-
-        uint8_t digitIndex = 0;
-        char digitStr[8];
-        while (c = getchar(), isdigit(c)) {
-          digitStr[digitIndex++] = c;
-        }
-        digitStr[digitIndex] = '\0';
-
-        // If no count, default to 1.
-        int digitInt = 1;
-        if (digitIndex != 0) {
-          digitInt = atoi(digitStr);
-        }
-        if (c == 'D') {
-          for (int _i = 0; _i < digitInt; _i++) {
-            CURSOR_BACK();
-            index--;
+        case CTRL('c'): exit(1);
+        case CTRL('h'): CURSOR_BACK(); continue;
+        case CTRL('l'): CURSOR_FORWARD(); continue;
+        case ANSII_DEL:
+          if (index <= 0)
+            continue;
+          for (int i = index - 1; line[i] != '\0'; i++) {
+            line[i] = line[i + 1];
           }
-        }
-        if (c == 'C') {
-          for (int _i = 0; _i < digitInt; _i++) {
-            CURSOR_FORWARD();
-            index++;
+          index--;
+          redrawLine(line);
+          continue;
+        case ANSII_ESC:
+          c = getchar();
+          assert(c == OPEN_BRAC);
+
+          uint8_t digitIndex = 0;
+          char digitStr[8];
+          while (c = getchar(), isdigit(c)) {
+            digitStr[digitIndex++] = c;
           }
-        }
-        continue;
-      }
-      if (isprint(c)) {
-        line[index++] = c;
-        line[index]   = '\0';
-        redrawLine(line);
-        continue;
+          digitStr[digitIndex] = '\0';
+
+          // If no count, default to 1.
+          int digitInt = 1;
+          if (digitIndex != 0) {
+            digitInt = atoi(digitStr);
+          }
+          if (c == 'D') {
+            for (int _i = 0; _i < digitInt; _i++) {
+              CURSOR_BACK();
+              index--;
+            }
+          }
+          if (c == 'C') {
+            for (int _i = 0; _i < digitInt; _i++) {
+              CURSOR_FORWARD();
+              index++;
+            }
+          }
+          continue;
+        default:
+          if (isprint(c)) {
+            line[index++] = c;
+            line[index]   = '\0';
+            redrawLine(line);
+            continue;
+          }
       }
     }
     printf("\r\n");
