@@ -50,6 +50,17 @@ void enableRawMode() {
   tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
 }
 
+int deleteChar(int index, char line[1024]) {
+  if (index <= 0)
+    return index;
+  for (int i = index - 1; line[i] != '\0'; i++) {
+    line[i] = line[i + 1];
+  }
+  index--;
+  redrawLine(line);
+  return index;
+}
+
 static void repl() {
 #define CURSOR_BACK()                                                          \
   do {                                                                         \
@@ -83,15 +94,7 @@ static void repl() {
         case CTRL('c'): exit(1);
         case CTRL('h'): CURSOR_BACK(); continue;
         case CTRL('l'): CURSOR_FORWARD(); continue;
-        case ANSII_DEL:
-          if (index <= 0)
-            continue;
-          for (int i = index - 1; line[i] != '\0'; i++) {
-            line[i] = line[i + 1];
-          }
-          index--;
-          redrawLine(line);
-          continue;
+        case ANSII_DEL: index = deleteChar(index, line); continue;
         case ANSII_ESC:
           c = getchar();
           assert(c == OPEN_BRAC);
@@ -137,6 +140,8 @@ static void repl() {
     printf("\r\n");
     redrawLine(line);
   }
+#undef CURSOR_BACK
+#undef CURSOR_FORWARD
 }
 
 static char *readFile(const char *path) {
