@@ -18,10 +18,52 @@
     printf("2K");                                                              \
   } while (false)
 
+static int getNumStdin() {
+  uint8_t digitIndex = 0;
+  char digitStr[10];
+  char c;
+  while (c = getchar(), isdigit(c)) {
+    digitStr[digitIndex++] = c;
+  }
+  digitStr[digitIndex] = '\0';
+
+  // If no count, default to 1.
+  int digitInt = 1;
+  if (digitIndex != 0) {
+    digitInt = atoi(digitStr);
+  }
+  return digitInt;
+}
+
+struct CursorPos {
+  uint16_t row;
+  uint16_t col;
+};
 static void setCursorPos(int line, int col) {
   putchar(ANSII_ESC);
   putchar(OPEN_BRAC);
   printf("%i;%iH", line, col);
+}
+static struct CursorPos getCursorPos() {
+  putchar(ANSII_ESC);
+  putchar(OPEN_BRAC);
+  printf("6n");
+
+  char c = getchar();
+  assert(c == ANSII_ESC);
+  c = getchar();
+  assert(c == OPEN_BRAC);
+
+  int row = getNumStdin();
+
+  c = getchar();
+  assert(c == ';');
+  int col = getNumStdin();
+
+  c = getchar();
+  assert(c == 'R');
+
+  return (struct CursorPos){.col = col, .row = row};
 }
 
 static void redrawLine(char *line) {
@@ -99,28 +141,15 @@ static void repl() {
           c = getchar();
           assert(c == OPEN_BRAC);
 
-          uint8_t digitIndex = 0;
-          char digitStr[8];
-          while (c = getchar(), isdigit(c)) {
-            digitStr[digitIndex++] = c;
-          }
-          digitStr[digitIndex] = '\0';
-
-          // If no count, default to 1.
-          int digitInt = 1;
-          if (digitIndex != 0) {
-            digitInt = atoi(digitStr);
-          }
+          int digitInt = getNumStdin();
           if (c == 'D') {
             for (int _i = 0; _i < digitInt; _i++) {
               CURSOR_BACK();
-              index--;
             }
           }
           if (c == 'C') {
             for (int _i = 0; _i < digitInt; _i++) {
               CURSOR_FORWARD();
-              index++;
             }
           }
           continue;
