@@ -26,6 +26,7 @@ static int getNumStdin() {
     digitStr[digitIndex++] = c;
   }
   digitStr[digitIndex] = '\0';
+  ungetc(c, stdin);
 
   // If no count, default to 1.
   int digitInt = 1;
@@ -101,7 +102,7 @@ int deleteChar(int index, char line[1024]) {
   }
   index--;
   redrawLine(line);
-  setCursorPos(pos.row, pos.col);
+  setCursorPos(pos.row, pos.col-1);
   return index;
 }
 
