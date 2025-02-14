@@ -32,6 +32,12 @@
     printf("1C");                                                              \
   } while (false)
 
+static void setCursorPos(int line, int col) {
+  putchar(ANSII_ESC);
+  putchar(OPEN_BRAC);
+  printf("%i;%iH", line, col);
+}
+
 static void redrawLine(char *line) {
   CLEAR_LINE();
   putchar('\r');
@@ -103,7 +109,7 @@ static void repl() {
         }
         digitStr[digitIndex] = '\0';
 
-				// If no count, default to 1.
+        // If no count, default to 1.
         int digitInt = 1;
         if (digitIndex != 0) {
           digitInt = atoi(digitStr);
