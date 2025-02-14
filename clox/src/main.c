@@ -95,11 +95,13 @@ void enableRawMode() {
 int deleteChar(int index, char line[1024]) {
   if (index <= 0)
     return index;
+  struct CursorPos pos = getCursorPos();
   for (int i = index - 1; line[i] != '\0'; i++) {
     line[i] = line[i + 1];
   }
   index--;
   redrawLine(line);
+  setCursorPos(pos.row, pos.col);
   return index;
 }
 
