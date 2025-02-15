@@ -145,6 +145,7 @@ static void repl() {
     // TODO: Make terminate line helper func.
     line.start[line.length] = '\0';
     interpret(line.start);
+		freeLine(&line);
     initLine(&line);
     printf("\r\n");
     redrawLine(&line);
