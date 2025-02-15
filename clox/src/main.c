@@ -70,22 +70,6 @@ void enableRawMode() {
 }
 
 static void repl() {
-#define CURSOR_BACK()                                                          \
-  do {                                                                         \
-    putchar(ANSII_ESC);                                                        \
-    putchar(OPEN_BRAC);                                                        \
-    printf("1D");                                                              \
-    index--;                                                                   \
-  } while (false)
-
-#define CURSOR_FORWARD()                                                       \
-  do {                                                                         \
-    putchar(ANSII_ESC);                                                        \
-    putchar(OPEN_BRAC);                                                        \
-    printf("1C");                                                              \
-    index++;                                                                   \
-  } while (false)
-
   enableRawMode();
   struct Line line;
   initLine(&line);
