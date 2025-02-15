@@ -1,5 +1,4 @@
 #include <assert.h>
-#include <stdio.h>
 #include <string.h>
 
 #include "helper_test.h"
@@ -35,6 +34,18 @@ void testLine1() {
   assert(line.length == 4);
   assert(line.pos == 2);
   assert(memcmp(line.start, "a1bc", line.length) == 0);
+
+  insertLine(&line, '2');
+  assert(line.length == 5);
+  assert(line.pos == 3);
+  assert(memcmp(line.start, "a12bc", line.length) == 0);
+
+  setPosLine(&line, 4);
+
+  removeLine(&line);
+  assert(line.length == 4);
+	assert(line.pos == 3);
+  assert(memcmp(line.start, "a12c", line.length) == 0);
 }
 
 const TestCase LINE_TESTS[] = {
