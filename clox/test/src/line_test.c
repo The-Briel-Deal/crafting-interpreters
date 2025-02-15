@@ -44,7 +44,15 @@ void testLine1() {
 
   removeLine(&line);
   assert(line.length == 4);
-	assert(line.pos == 3);
+  assert(line.pos == 3);
+  assert(memcmp(line.start, "a12c", line.length) == 0);
+
+  // Nothing should change if I try to delete at beginning.
+  setPosLine(&line, 0);
+
+  removeLine(&line);
+  assert(line.length == 4);
+  assert(line.pos == 0);
   assert(memcmp(line.start, "a12c", line.length) == 0);
 }
 
