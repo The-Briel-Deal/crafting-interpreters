@@ -97,8 +97,14 @@ static void repl() {
         case '\n':
         case '\r'     : not_ready = false; continue;
         case CTRL('c'): exit(1);
-        case CTRL('h'): setPosLine(&line, line.pos - 1); continue;
-        case CTRL('l'): setPosLine(&line, line.pos + 1); continue;
+        case CTRL('h'):
+          setPosLine(&line, line.pos - 1);
+          redrawLine(&line);
+          continue;
+        case CTRL('l'):
+          setPosLine(&line, line.pos + 1);
+          redrawLine(&line);
+          continue;
         case ANSII_DEL:
           removeLine(&line);
           redrawLine(&line);
