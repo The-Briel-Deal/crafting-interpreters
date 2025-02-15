@@ -62,6 +62,8 @@ void testLine1() {
   assert(line.length == 3);
   assert(line.pos == 3);
   assert(memcmp(line.start, "a12", line.length) == 0);
+
+  freeLine(&line);
 }
 
 const TestCase LINE_TESTS[] = {

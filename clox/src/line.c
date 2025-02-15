@@ -51,7 +51,5 @@ void setPosLine(struct Line *line, int index) {
 }
 
 void freeLine(struct Line *line) {
-  if (line->start) {
-    free(line->start);
-  }
+  free(line->start);
 }
