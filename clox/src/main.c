@@ -113,7 +113,13 @@ static void repl() {
           c = getchar();
           assert(c == OPEN_BRAC);
 
-          int digitInt = getNumStdin();
+          c = getchar();
+
+          int digitInt = 1;
+          if (isdigit(c)) {
+            ungetc(c, stdin);
+            digitInt = getNumStdin();
+          }
           if (c == 'D') {
             for (int _i = 0; _i < digitInt; _i++) {
               setPosLine(&line, line.pos - 1);
