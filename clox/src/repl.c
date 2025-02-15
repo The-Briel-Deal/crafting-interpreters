@@ -105,15 +105,11 @@ char *Repl_readLine() {
           digitInt = getNumStdin();
         }
         if (c == 'D') {
-          for (int _i = 0; _i < digitInt; _i++) {
-            setPosLine(&line, line.pos - 1);
-          }
+          setPosLine(&line, line.pos - digitInt);
           redrawLine(&line);
         }
         if (c == 'C') {
-          for (int _i = 0; _i < digitInt; _i++) {
-            setPosLine(&line, line.pos + 1);
-          }
+          setPosLine(&line, line.pos + digitInt);
           redrawLine(&line);
         }
         continue;
