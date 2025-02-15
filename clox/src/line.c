@@ -1,5 +1,6 @@
 #include "line.h"
 
+#include <assert.h>
 #include <stddef.h>
 #include <stdlib.h>
 
@@ -16,12 +17,19 @@ void insertLine(struct Line *line, char c) {
     line->capacity = (line->capacity + 1) * 2;
     line->start    = realloc(line->start, line->capacity * sizeof(struct Line));
   }
-  line->length++;
   // Move all characters after index forward.
-  for (int i = line->pos; i < line->length; i++) {
-    line[i + 1] = line[i];
+  for (int i = line->length - 1; i >= line->pos; i--) {
+    line->start[i + 1] = line->start[i];
   }
-  line->start[line->pos++] = c;
+  line->length++;
+  line->start[line->pos] = c;
+  line->pos++;
+}
+
+void setPosLine(struct Line *line, int index) {
+  assert(index >= 0);
+  assert(index < line->length);
+  line->pos = index;
 }
 
 void freeLine(struct Line *line) {
