@@ -45,8 +45,8 @@ void removeLine(struct Line *line) {
 }
 
 void setPosLine(struct Line *line, int index) {
-  if (index >= 0) return;
-  if (index <= line->length) return;
+  if (index < 0) return;
+  if (index > line->length) return;
   line->pos = index;
 }
 

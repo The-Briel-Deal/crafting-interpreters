@@ -46,7 +46,7 @@ static void redrawLine(struct Line *line) {
   printf("%s%.*s", PROMPT_PREFIX, line->length, line->start);
   putchar('\r');
   printf("%c%c%iC", ANSII_ESC, OPEN_BRAC,
-         (int)(line->pos + sizeof(PROMPT_PREFIX)-1));
+         (int)(line->pos + sizeof(PROMPT_PREFIX) - 1));
 }
 
 struct termios orig_termios;
@@ -99,7 +99,10 @@ static void repl() {
         case CTRL('c'): exit(1);
         case CTRL('h'): setPosLine(&line, line.pos - 1); continue;
         case CTRL('l'): setPosLine(&line, line.pos + 1); continue;
-        case ANSII_DEL: removeLine(&line); continue;
+        case ANSII_DEL:
+          removeLine(&line);
+          redrawLine(&line);
+          continue;
         case ANSII_ESC:
           c = getchar();
           assert(c == OPEN_BRAC);
