@@ -28,7 +28,7 @@ void insertLine(struct Line *line, char c) {
 }
 
 void removeLine(struct Line *line) {
-	// Do nothing if at beginning
+  // Do nothing if at beginning.
   if (line->pos == 0) {
     return;
   }
