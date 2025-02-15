@@ -54,6 +54,14 @@ void testLine1() {
   assert(line.length == 4);
   assert(line.pos == 0);
   assert(memcmp(line.start, "a12c", line.length) == 0);
+
+  // Delete last char.
+  setPosLine(&line, line.length);
+
+  removeLine(&line);
+  assert(line.length == 3);
+  assert(line.pos == 3);
+  assert(memcmp(line.start, "a12", line.length) == 0);
 }
 
 const TestCase LINE_TESTS[] = {
