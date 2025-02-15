@@ -124,11 +124,13 @@ static void repl() {
             for (int _i = 0; _i < digitInt; _i++) {
               setPosLine(&line, line.pos - 1);
             }
+            redrawLine(&line);
           }
           if (c == 'C') {
             for (int _i = 0; _i < digitInt; _i++) {
               setPosLine(&line, line.pos + 1);
             }
+            redrawLine(&line);
           }
           continue;
         default:
