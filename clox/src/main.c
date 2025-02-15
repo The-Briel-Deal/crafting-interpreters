@@ -1,4 +1,3 @@
-#include "vm.h"
 #include <assert.h>
 #include <ctype.h>
 #include <stdint.h>
@@ -7,9 +6,14 @@
 #include <termios.h>
 #include <unistd.h>
 
-#define ANSII_DEL 127
-#define ANSII_ESC 27
-#define OPEN_BRAC 91
+#include "line.h"
+#include "vm.h"
+
+#define PROMPT_PREFIX "> "
+
+#define ANSII_DEL     127
+#define ANSII_ESC     27
+#define OPEN_BRAC     91
 
 #define CLEAR_LINE()                                                           \
   do {                                                                         \
@@ -36,41 +40,13 @@ static int getNumStdin() {
   return digitInt;
 }
 
-struct CursorPos {
-  uint16_t row;
-  uint16_t col;
-};
-static void setCursorPos(int line, int col) {
-  putchar(ANSII_ESC);
-  putchar(OPEN_BRAC);
-  printf("%i;%iH", line, col);
-}
-static struct CursorPos getCursorPos() {
-  putchar(ANSII_ESC);
-  putchar(OPEN_BRAC);
-  printf("6n");
-
-  char c = getchar();
-  assert(c == ANSII_ESC);
-  c = getchar();
-  assert(c == OPEN_BRAC);
-
-  int row = getNumStdin();
-
-  c = getchar();
-  assert(c == ';');
-  int col = getNumStdin();
-
-  c = getchar();
-  assert(c == 'R');
-
-  return (struct CursorPos){.col = col, .row = row};
-}
-
-static void redrawLine(char *line) {
+static void redrawLine(struct Line *line) {
   CLEAR_LINE();
   putchar('\r');
-  printf("> %s", line);
+  printf("%s%.*s", PROMPT_PREFIX, line->length, line->start);
+  putchar('\r');
+  printf("%c%c%iC", ANSII_ESC, OPEN_BRAC,
+         (int)(line->pos + sizeof(PROMPT_PREFIX)));
 }
 
 struct termios orig_termios;
@@ -93,19 +69,6 @@ void enableRawMode() {
   tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
 }
 
-int deleteChar(int index, char line[1024]) {
-  if (index <= 0)
-    return index;
-  struct CursorPos pos = getCursorPos();
-  for (int i = index - 1; line[i] != '\0'; i++) {
-    line[i] = line[i + 1];
-  }
-  index--;
-  redrawLine(line);
-  setCursorPos(pos.row, pos.col - 1);
-  return index;
-}
-
 static void repl() {
 #define CURSOR_BACK()                                                          \
   do {                                                                         \
@@ -124,22 +87,19 @@ static void repl() {
   } while (false)
 
   enableRawMode();
-  char line[1024];
-  int index = 0;
+  struct Line line;
+  initLine(&line);
   for (;;) {
     bool not_ready = true;
     while (not_ready) {
       char c = getchar();
       switch (c) {
         case '\n':
-        case '\r':
-          line[index] = '\0';
-          not_ready   = false;
-          continue;
+        case '\r'     : not_ready = false; continue;
         case CTRL('c'): exit(1);
-        case CTRL('h'): CURSOR_BACK(); continue;
-        case CTRL('l'): CURSOR_FORWARD(); continue;
-        case ANSII_DEL: index = deleteChar(index, line); continue;
+        case CTRL('h'): setPosLine(&line, line.pos - 1); continue;
+        case CTRL('l'): setPosLine(&line, line.pos + 1); continue;
+        case ANSII_DEL: removeLine(&line); continue;
         case ANSII_ESC:
           c = getchar();
           assert(c == OPEN_BRAC);
@@ -147,30 +107,30 @@ static void repl() {
           int digitInt = getNumStdin();
           if (c == 'D') {
             for (int _i = 0; _i < digitInt; _i++) {
-              CURSOR_BACK();
+              setPosLine(&line, line.pos - 1);
             }
           }
           if (c == 'C') {
             for (int _i = 0; _i < digitInt; _i++) {
-              CURSOR_FORWARD();
+              setPosLine(&line, line.pos + 1);
             }
           }
           continue;
         default:
           if (isprint(c)) {
-            line[index++] = c;
-            line[index]   = '\0';
-            redrawLine(line);
+            insertLine(&line, c);
+            redrawLine(&line);
             continue;
           }
       }
     }
     printf("\r\n");
-    interpret(line);
-    index       = 0;
-    line[index] = '\0';
+    // TODO: Make terminate line helper func.
+    line.start[line.length] = '\0';
+    interpret(line.start);
+    initLine(&line);
     printf("\r\n");
-    redrawLine(line);
+    redrawLine(&line);
   }
 #undef CURSOR_BACK
 #undef CURSOR_FORWARD
