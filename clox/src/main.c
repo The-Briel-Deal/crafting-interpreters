@@ -90,6 +90,7 @@ static void repl() {
   struct Line line;
   initLine(&line);
   for (;;) {
+    redrawLine(&line);
     bool not_ready = true;
     while (not_ready) {
       char c = getchar();
@@ -145,7 +146,7 @@ static void repl() {
     // TODO: Make terminate line helper func.
     line.start[line.length] = '\0';
     interpret(line.start);
-		freeLine(&line);
+    freeLine(&line);
     initLine(&line);
     printf("\r\n");
     redrawLine(&line);
