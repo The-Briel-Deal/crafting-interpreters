@@ -46,7 +46,7 @@ static void redrawLine(struct Line *line) {
   printf("%s%.*s", PROMPT_PREFIX, line->length, line->start);
   putchar('\r');
   printf("%c%c%iC", ANSII_ESC, OPEN_BRAC,
-         (int)(line->pos + sizeof(PROMPT_PREFIX)));
+         (int)(line->pos + sizeof(PROMPT_PREFIX)-1));
 }
 
 struct termios orig_termios;
