@@ -143,7 +143,6 @@ static void repl() {
       }
     }
     printf("\r\n");
-    // TODO: Make terminate line helper func.
     line.start[line.length] = '\0';
     interpret(line.start);
     freeLine(&line);
