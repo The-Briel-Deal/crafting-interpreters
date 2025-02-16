@@ -20,12 +20,51 @@ void testScannerIPrint() {
 }
 
 const char TEST_SCANNER_SWITCH_EXPECT[] =
-    "   1 31 'print'\n"
-    "   | 21 '1'\n"
-    "   |  7 '+'\n"
-    "   | 21 '2'\n"
-    "   |  8 ';'\n"
-    "   2 39 ''\n";
+"   1 39 'var'\n"
+"   | 20 'i'\n"
+"   | 14 '='\n"
+"   | 22 '2'\n"
+"   |  9 ';'\n"
+"   2 35 'switch'\n"
+"   |  0 '('\n"
+"   | 20 'i'\n"
+"   |  1 ')'\n"
+"   |  2 '{'\n"
+"   3 20 'case'\n"
+"   | 22 '1'\n"
+"   |  8 ':'\n"
+"   4 32 'print'\n"
+"   |  0 '('\n"
+"   | 21 '\"is one\"'\n"
+"   |  1 ')'\n"
+"   |  9 ';'\n"
+"   5 20 'case'\n"
+"   | 22 '2'\n"
+"   |  8 ':'\n"
+"   6 32 'print'\n"
+"   |  0 '('\n"
+"   | 21 '\"is two\"'\n"
+"   |  1 ')'\n"
+"   |  9 ';'\n"
+"   7 20 'case'\n"
+"   | 22 '3'\n"
+"   |  8 ':'\n"
+"   8 32 'print'\n"
+"   |  0 '('\n"
+"   | 21 '\"is three\"'\n"
+"   |  1 ')'\n"
+"   |  9 ';'\n"
+"   9 36 'default'\n"
+"   |  8 ':'\n"
+"  10 32 'print'\n"
+"   |  0 '('\n"
+"   | 21 '\"default case\"'\n"
+"   |  1 ')'\n"
+"   |  9 ';'\n"
+"  11  3 '}'\n"
+"  12 42 ''\n";
+
+
 void testScannerSwitch() {
   initVM();
   char source[] =
