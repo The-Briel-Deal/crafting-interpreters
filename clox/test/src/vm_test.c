@@ -148,6 +148,28 @@ void testWhile1() {
   interpret(source);
 }
 
+const char TEST_FOR_1_EXPECT[] =
+    "1\n"
+    "2\n"
+    "3\n"
+    "4\n"
+    "5\n"
+    "6\n"
+    "7\n"
+    "8\n"
+    "9\n";
+void testFor1() {
+  initVM();
+
+  // Evaluates like ((true and true) or (false and true))
+  char source[] =
+      "for (var i = 1; i < 10; i = i + 1) { \n"
+      " print(i);                           \n"
+      "}                                    \n";
+
+  interpret(source);
+}
+
 const TestCase VM_TESTS[] = {
     {"testArithmetic1",   testArithmetic1,   TEST_ARITHMETIC_1_EXPECT   },
     {"testArithmetic2",   testArithmetic2,   TEST_ARITHMETIC_2_EXPECT   },
@@ -162,6 +184,7 @@ const TestCase VM_TESTS[] = {
     {"testBranch1",       testBranch1,       TEST_BRANCH_1_EXPECT       },
     {"testBranch2",       testBranch2,       TEST_BRANCH_2_EXPECT       },
     {"testWhile1",        testWhile1,        TEST_WHILE_1_EXPECT        },
+    {"testFor1",          testFor1,          TEST_FOR_1_EXPECT          },
 };
 
 const int VM_TESTS_COUNT = sizeof(VM_TESTS) / sizeof(TestCase);

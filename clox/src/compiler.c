@@ -500,8 +500,6 @@ static void forStatement() {
     exitJump = emitJump(OP_JUMP_IF_FALSE);
     emitByte(OP_POP); // Pop condition result val.
   }
-  consume(TOKEN_SEMICOLON, "Expect ';'.");
-  consume(TOKEN_RIGHT_PAREN, "Expect ')' after for clauses.");
 
   // Increment
   if (!match(TOKEN_RIGHT_PAREN)) {
