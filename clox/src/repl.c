@@ -95,7 +95,12 @@ char *Repl_readLine() {
         continue;
       case ANSII_ESC:
         c = getchar();
-        assert(c == OPEN_BRAC);
+        // If next character isn't OPEN_BRAC then this isn't an escape code and
+        // ESC doesn't do anything.
+        if (c != OPEN_BRAC) {
+          ungetc(c, stdin);
+          continue;
+        }
 
         c = getchar();
 
