@@ -97,6 +97,32 @@ void testLocal2() {
 
   interpret(source);
 }
+const char TEST_BRANCH_1_EXPECT[] = "stmt is true\n";
+void testBranch1() {
+  initVM();
+
+  char source[] =
+      "if (true and false or true)   \n"
+      "  print(\"stmt is true\");    \n"
+      "else                          \n"
+      "  print(\"stmt is false\");   \n";
+
+  interpret(source);
+}
+
+const char TEST_BRANCH_2_EXPECT[] = "stmt is true\n";
+void testBranch2() {
+  initVM();
+
+	// Evaluates like ((true and true) or (false and true))
+  char source[] =
+      "if (true and true or false and true)   \n"
+      "  print(\"stmt is true\");             \n"
+      "else                                   \n"
+      "  print(\"stmt is false\");            \n";
+
+  interpret(source);
+}
 
 const TestCase VM_TESTS[] = {
     {"testArithmetic1",   testArithmetic1,   TEST_ARITHMETIC_1_EXPECT   },
@@ -109,6 +135,8 @@ const TestCase VM_TESTS[] = {
     {"testVar2",          testVar2,          TEST_VAR_2_EXPECT          },
     {"testLocal1",        testLocal1,        TEST_LOCAL_1_EXPECT        },
     {"testLocal2",        testLocal2,        TEST_LOCAL_2_EXPECT        },
+    {"testBranch1",       testBranch1,       TEST_BRANCH_1_EXPECT       },
+    {"testBranch2",       testBranch2,       TEST_BRANCH_2_EXPECT       },
 };
 
 const int VM_TESTS_COUNT = sizeof(VM_TESTS) / sizeof(TestCase);
