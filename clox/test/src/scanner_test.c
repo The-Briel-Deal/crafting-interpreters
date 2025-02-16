@@ -6,16 +6,40 @@
 
 static void scanAndPrintTokens(char *source);
 
-const char TEST_SCANNER_EXPECT[] =
+const char TEST_SCANNER_IPRINT_EXPECT[] =
+    "   1 31 'print'\n"
+    "   | 21 '1'\n"
+    "   |  7 '+'\n"
+    "   | 21 '2'\n"
+    "   |  8 ';'\n"
+    "   2 40 ''\n";
+void testScannerIPrint() {
+  initVM();
+  char source[] = "print 1 + 2;\n";
+  scanAndPrintTokens(source);
+}
+
+const char TEST_SCANNER_SWITCH_EXPECT[] =
     "   1 31 'print'\n"
     "   | 21 '1'\n"
     "   |  7 '+'\n"
     "   | 21 '2'\n"
     "   |  8 ';'\n"
     "   2 39 ''\n";
-void testScanner() {
+void testScannerSwitch() {
   initVM();
-  char source[] = "print 1 + 2;\n";
+  char source[] =
+      "var i = 2;                   \n"
+      "switch (i) {                 \n"
+      "  case 1:                    \n"
+      "    print(\"is one\");       \n"
+      "  case 2:                    \n"
+      "  	 print(\"is two\");       \n"
+      "  case 3:                    \n"
+      "  	 print(\"is three\");     \n"
+      "  default:                   \n"
+      "  	 print(\"default case\"); \n"
+      "}                            \n";
   scanAndPrintTokens(source);
 }
 
@@ -39,7 +63,8 @@ static void scanAndPrintTokens(char *source) {
 }
 
 const TestCase SCANNER_TESTS[] = {
-    {"testScanner", testScanner, TEST_SCANNER_EXPECT},
+    {"testScannerIPrint", testScannerIPrint, TEST_SCANNER_IPRINT_EXPECT},
+    {"testScannerSwitch", testScannerSwitch, TEST_SCANNER_SWITCH_EXPECT},
 };
 
 const int SCANNER_TESTS_COUNT = sizeof(SCANNER_TESTS) / sizeof(TestCase);
