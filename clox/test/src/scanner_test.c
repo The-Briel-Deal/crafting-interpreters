@@ -7,12 +7,12 @@
 static void scanAndPrintTokens(char *source);
 
 const char TEST_SCANNER_IPRINT_EXPECT[] =
-    "   1 31 'print'\n"
-    "   | 21 '1'\n"
+    "   1 32 'print'\n"
+    "   | 22 '1'\n"
     "   |  7 '+'\n"
-    "   | 21 '2'\n"
-    "   |  8 ';'\n"
-    "   2 40 ''\n";
+    "   | 22 '2'\n"
+    "   |  9 ';'\n"
+    "   2 42 ''\n";
 void testScannerIPrint() {
   initVM();
   char source[] = "print 1 + 2;\n";
