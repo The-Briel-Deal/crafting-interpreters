@@ -164,8 +164,25 @@ void testFor1() {
   // Evaluates like ((true and true) or (false and true))
   char source[] =
       "for (var i = 1; i < 10; i = i + 1) { \n"
-      " print(i);                           \n"
+      "  print(i);                          \n"
       "}                                    \n";
+
+  interpret(source);
+}
+
+const char TEST_FOR_2_EXPECT[] =
+    "1000\n"
+    "2031\n"
+    "4002\n";
+void testFor2() {
+  initVM();
+
+  // Evaluates like ((true and true) or (false and true))
+  char source[] =
+      "for (var i = 1; i < 10000; i = i + 1) {    \n"
+      "  if (i == 1000 or i == 4002 or i == 2031) \n"
+      "    print(i);                              \n"
+      "}                                          \n";
 
   interpret(source);
 }
@@ -185,6 +202,7 @@ const TestCase VM_TESTS[] = {
     {"testBranch2",       testBranch2,       TEST_BRANCH_2_EXPECT       },
     {"testWhile1",        testWhile1,        TEST_WHILE_1_EXPECT        },
     {"testFor1",          testFor1,          TEST_FOR_1_EXPECT          },
+    {"testFor2",          testFor2,          TEST_FOR_2_EXPECT          },
 };
 
 const int VM_TESTS_COUNT = sizeof(VM_TESTS) / sizeof(TestCase);
