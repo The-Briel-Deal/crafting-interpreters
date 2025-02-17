@@ -1,0 +1,15 @@
+// Scope 0
+for (var a = 1; a < 10; a = a + 1) // Scope 1
+{ // Scope 2
+  { // Scope 3
+    var b = 2;
+    { // Scope 4
+      var c = 3; 
+      while (true) { // Scope 5
+				var d = 4;
+        // To continue here, we know that the last loop opened at depth 4, so we need to pop the stack till depth 4 to continue.
+      }
+      // To continue here, we know that we have to pop from stack till we hit depth 0.
+    }
+  }
+}

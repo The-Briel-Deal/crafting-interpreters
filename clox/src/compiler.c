@@ -52,6 +52,8 @@ typedef struct {
   Local locals[UINT8_COUNT];
   int localCount;
   int scopeDepth;
+  int loopDepths[UINT8_COUNT];
+  int loopCount;
 } Compiler;
 
 Parser parser;
@@ -177,6 +179,7 @@ static void patchJump(int offset) {
 static void initCompiler(Compiler *compiler) {
   compiler->localCount = 0;
   compiler->scopeDepth = 0;
+  compiler->loopCount  = 0;
   current              = compiler;
 }
 
@@ -193,6 +196,9 @@ static void endCompiler() {
 static void beginScope() {
   current->scopeDepth++;
 }
+static void beginLoop() {
+  current->loopDepths[current->loopCount++] = current->scopeDepth;
+}
 
 static void endScope() {
   current->scopeDepth--;
@@ -202,6 +208,9 @@ static void endScope() {
     emitByte(OP_POP);
     current->localCount--;
   }
+}
+static void endLoop() {
+  current->loopCount--;
 }
 
 static void expression();
@@ -478,6 +487,7 @@ static void expressionStmt() {
 static void varDeclaration();
 
 static void forStatement() {
+  beginLoop();
   beginScope();
   consume(TOKEN_LEFT_PAREN, "Expect '(' after 'for'.");
 
@@ -521,6 +531,7 @@ static void forStatement() {
     emitByte(OP_POP); // Pop condition result val.
   }
   endScope();
+  endLoop();
 }
 
 static void ifStatement() {
@@ -548,6 +559,7 @@ static void printStatement() {
 }
 
 static void whileStatement() {
+  beginLoop();
   int loopStart = currentChunk()->count;
   consume(TOKEN_LEFT_PAREN, "Expect '(' after 'while'.");
   expression();
@@ -560,6 +572,7 @@ static void whileStatement() {
 
   patchJump(exitJump);
   emitByte(OP_POP);
+  endLoop();
 }
 
 static void synchronize() {
