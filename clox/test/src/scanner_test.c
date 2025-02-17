@@ -12,7 +12,7 @@ const char TEST_SCANNER_IPRINT_EXPECT[] =
     "   |  7 '+'\n"
     "   | 22 '2'\n"
     "   |  9 ';'\n"
-    "   2 42 ''\n";
+    "   2 43 ''\n";
 void testScannerIPrint() {
   initVM();
   char source[] = "print 1 + 2;\n";
