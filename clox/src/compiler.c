@@ -578,7 +578,7 @@ static void switchStatement() {
       continue;
     }
 
-    if (check(TOKEN_CASE)) {
+    if (match(TOKEN_CASE)) {
       if (state & SWITCH_SEEN_DEFAULT)
         error("Can't have a case after default.");
       jumpsToEnd[caseIndex++] = emitJump(OP_JUMP);

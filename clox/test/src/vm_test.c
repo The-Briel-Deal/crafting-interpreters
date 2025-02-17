@@ -187,6 +187,26 @@ void testFor2() {
   interpret(source);
 }
 
+const char TEST_SWITCH_1_EXPECT[] = "is two\n";
+void testSwitch1() {
+  initVM();
+
+  char source[] =
+      "var i = 2;                   \n"
+      "switch (i) {                 \n"
+      "  case 1:                    \n"
+      "    print(\"is one\");       \n"
+      "  case 2:                    \n"
+      "  	 print(\"is two\");       \n"
+      "  case 3:                    \n"
+      "  	 print(\"is three\");     \n"
+      "  default:                   \n"
+      "  	 print(\"default case\"); \n"
+      "}                            \n";
+
+  interpret(source);
+}
+
 const TestCase VM_TESTS[] = {
     {"testArithmetic1",   testArithmetic1,   TEST_ARITHMETIC_1_EXPECT   },
     {"testArithmetic2",   testArithmetic2,   TEST_ARITHMETIC_2_EXPECT   },
@@ -203,6 +223,7 @@ const TestCase VM_TESTS[] = {
     {"testWhile1",        testWhile1,        TEST_WHILE_1_EXPECT        },
     {"testFor1",          testFor1,          TEST_FOR_1_EXPECT          },
     {"testFor2",          testFor2,          TEST_FOR_2_EXPECT          },
+    {"testSwitch1",       testSwitch1,       TEST_SWITCH_1_EXPECT       },
 };
 
 const int VM_TESTS_COUNT = sizeof(VM_TESTS) / sizeof(TestCase);
