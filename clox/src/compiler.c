@@ -590,6 +590,7 @@ static void switchStatement() {
       consume(TOKEN_COLON, "Colon must come after case.");
       emitByte(OP_EQUAL);
       emitJump(OP_JUMP_IF_FALSE);
+      state |= SWITCH_SEEN_FIRST_CASE;
       continue;
     }
     // Must be a statement.
@@ -597,6 +598,7 @@ static void switchStatement() {
       error("Switch statement must start with a case.");
     statement();
   }
+  consume(TOKEN_RIGHT_BRACE, "Switch statement should end with right brace.");
 
   for (int i = 0; i < caseIndex; i++) {
     patchJump(jumpsToEnd[i]);
