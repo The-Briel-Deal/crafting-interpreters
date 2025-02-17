@@ -1,0 +1,5 @@
+while (true) {
+  continue;
+	print("Directly after continue");
+}
+print("Directly after loop");

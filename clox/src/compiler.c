@@ -583,6 +583,7 @@ static void whileStatement() {
 
   patchJump(exitJump);
   emitByte(OP_POP);
+  patchContinueJumps();
   endLoop();
 }
 
