@@ -497,8 +497,8 @@ static void patchContinueJumps() {
 }
 
 static void forStatement() {
-  beginLoop();
   beginScope();
+  beginLoop();
   consume(TOKEN_LEFT_PAREN, "Expect '(' after 'for'.");
 
   // Initializer
