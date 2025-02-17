@@ -570,8 +570,10 @@ static void switchStatement() {
     if (match(TOKEN_DEFAULT)) {
       if (state & SWITCH_SEEN_DEFAULT)
         error("Can't have a multile default cases.");
-      if (prevCase != -1)
+      if (prevCase != -1) {
         patchJump(prevCase);
+        emitByte(OP_POP);
+      }
 
       consume(TOKEN_COLON, "Colon must come after default case.");
       state |= SWITCH_SEEN_DEFAULT;
@@ -584,6 +586,7 @@ static void switchStatement() {
       if (prevCase != -1) {
         jumpsToEnd[caseIndex++] = emitJump(OP_JUMP);
         patchJump(prevCase);
+        emitByte(OP_POP);
       }
 
       emitByte(OP_DUP);
