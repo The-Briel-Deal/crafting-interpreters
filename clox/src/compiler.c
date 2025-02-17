@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/types.h>
 
 #include "chunk.h"
 #include "compiler.h"
@@ -541,6 +542,69 @@ static void ifStatement() {
   patchJump(elseJump);
 }
 
+typedef enum {
+  SWITCH_SEEN_FIRST_CASE = 0b0001,
+  SWITCH_SEEN_DEFAULT    = 0b0010,
+} SwitchState;
+
+static void switchStatement() {
+  consume(TOKEN_LEFT_PAREN, "Expect '(' after 'switch'.");
+  expression();
+  addLocal((Token){.start  = "switch_var",
+                   .length = 10,
+                   .line   = parser.previous.line,
+                   .type   = TOKEN_VAR});
+
+  consume(TOKEN_RIGHT_PAREN, "Expect ')' after switch condition.");
+  consume(TOKEN_LEFT_BRACE, "Expect '{' before switch cases.");
+
+  int prevCase  = -1;
+  int caseIndex = 0;
+  int jumpsToEnd[256];
+
+  SwitchState state = 0b0000;
+
+  // If false, jump to next condition. If true, continue through the case, then
+  // at end of case, jump to end of switch statement.
+  while (!(check(TOKEN_RIGHT_BRACE) || check(TOKEN_EOF))) {
+    if (match(TOKEN_DEFAULT)) {
+      if (state & SWITCH_SEEN_DEFAULT)
+        error("Can't have a multile default cases.");
+      if (prevCase != -1)
+        patchJump(prevCase);
+
+      consume(TOKEN_COLON, "Colon must come after default case.");
+      state |= SWITCH_SEEN_DEFAULT;
+      continue;
+    }
+
+    if (check(TOKEN_CASE)) {
+      if (state & SWITCH_SEEN_DEFAULT)
+        error("Can't have a case after default.");
+      jumpsToEnd[caseIndex++] = emitJump(OP_JUMP);
+      if (prevCase != -1)
+        patchJump(prevCase);
+
+      emitByte(OP_DUP);
+      expression();
+      consume(TOKEN_COLON, "Colon must come after case.");
+      emitByte(OP_EQUAL);
+      emitJump(OP_JUMP_IF_FALSE);
+      continue;
+    }
+    // Must be a statement.
+    if (state == 0b0000)
+      error("Switch statement must start with a case.");
+    statement();
+  }
+
+  for (int i = 0; i < caseIndex; i++) {
+    patchJump(jumpsToEnd[i]);
+  }
+
+  emitByte(OP_POP);
+}
+
 static void printStatement() {
   expression();
   consume(TOKEN_SEMICOLON, "Expect ';' after value.");
@@ -616,6 +680,8 @@ static void statement() {
     whileStatement();
   } else if (match(TOKEN_FOR)) {
     forStatement();
+  } else if (match(TOKEN_SWITCH)) {
+    switchStatement();
   } else if (match(TOKEN_LEFT_BRACE)) {
     beginScope();
     block();
