@@ -589,7 +589,7 @@ static void switchStatement() {
       expression();
       consume(TOKEN_COLON, "Colon must come after case.");
       emitByte(OP_EQUAL);
-      emitJump(OP_JUMP_IF_FALSE);
+      prevCase = emitJump(OP_JUMP_IF_FALSE);
       state |= SWITCH_SEEN_FIRST_CASE;
       continue;
     }
