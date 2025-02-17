@@ -571,6 +571,7 @@ static void switchStatement() {
       if (state & SWITCH_SEEN_DEFAULT)
         error("Can't have a multile default cases.");
       if (prevCase != -1) {
+        jumpsToEnd[caseIndex++] = emitJump(OP_JUMP);
         patchJump(prevCase);
         emitByte(OP_POP);
       }

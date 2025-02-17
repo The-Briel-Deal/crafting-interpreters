@@ -119,7 +119,7 @@ const char TEST_CHUNK_SWITCH_EXPECT[] =
     "0010    | OP_JUMP_IF_FALSE   10 -> 19\n"
     "0013    4 OP_CONSTANT         4 'is one'\n"
     "0015    | OP_PRINT\n"
-    "0016    5 OP_JUMP            16 -> 48\n"
+    "0016    5 OP_JUMP            16 -> 51\n"
     "0019    | OP_POP\n"
     "0020    | OP_DUP\n"
     "0021    | OP_CONSTANT         5 '2'\n"
@@ -127,19 +127,20 @@ const char TEST_CHUNK_SWITCH_EXPECT[] =
     "0024    | OP_JUMP_IF_FALSE   24 -> 33\n"
     "0027    6 OP_CONSTANT         6 'is two'\n"
     "0029    | OP_PRINT\n"
-    "0030    7 OP_JUMP            30 -> 48\n"
+    "0030    7 OP_JUMP            30 -> 51\n"
     "0033    | OP_POP\n"
     "0034    | OP_DUP\n"
     "0035    | OP_CONSTANT         7 '3'\n"
     "0037    | OP_EQUAL\n"
-    "0038    | OP_JUMP_IF_FALSE   38 -> 44\n"
+    "0038    | OP_JUMP_IF_FALSE   38 -> 47\n"
     "0041    8 OP_CONSTANT         8 'is three'\n"
     "0043    | OP_PRINT\n"
-    "0044    9 OP_POP\n"
-    "0045   10 OP_CONSTANT         9 'default case'\n"
-    "0047    | OP_PRINT\n"
-    "0048   11 OP_POP\n"
-    "0049   12 OP_RETURN\n";
+    "0044    9 OP_JUMP            44 -> 51\n"
+    "0047    | OP_POP\n"
+    "0048   10 OP_CONSTANT         9 'default case'\n"
+    "0050    | OP_PRINT\n"
+    "0051   11 OP_POP\n"
+    "0052   12 OP_RETURN\n";
 
 void testChunkSwitch() {
   Chunk chunk;

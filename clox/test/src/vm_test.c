@@ -226,7 +226,7 @@ void testSwitch2() {
 
   interpret(source);
 }
-const char TEST_SWITCH_3_EXPECT[] = "Is Schlong\n";
+const char TEST_SWITCH_3_EXPECT[] = "is Schlong\n";
 void testSwitch3() {
   initVM();
 
