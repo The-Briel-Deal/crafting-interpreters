@@ -592,7 +592,7 @@ static void continueStatement() {
   while (current->scopeDepth > current->loopDepths[current->loopCount]) {
     endScope();
   }
-  current->continueJumpsToPatch[current->continueJumpsCount] =
+  current->continueJumpsToPatch[current->continueJumpsCount++] =
       emitJump(OP_JUMP);
 }
 
