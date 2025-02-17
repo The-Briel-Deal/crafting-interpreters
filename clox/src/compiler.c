@@ -54,6 +54,8 @@ typedef struct {
   int scopeDepth;
   int loopDepths[UINT8_COUNT];
   int loopCount;
+  int continueJumpsToPatch[UINT8_COUNT];
+  int continueJumpsCount;
 } Compiler;
 
 Parser parser;
@@ -177,10 +179,11 @@ static void patchJump(int offset) {
 }
 
 static void initCompiler(Compiler *compiler) {
-  compiler->localCount = 0;
-  compiler->scopeDepth = 0;
-  compiler->loopCount  = 0;
-  current              = compiler;
+  compiler->localCount         = 0;
+  compiler->scopeDepth         = 0;
+  compiler->loopCount          = 0;
+  compiler->continueJumpsCount = 0;
+  current                      = compiler;
 }
 
 static void endCompiler() {
@@ -486,6 +489,13 @@ static void expressionStmt() {
 
 static void varDeclaration();
 
+static void patchContinueJumps() {
+  for (int i = 0; i < current->continueJumpsCount; i++) {
+    patchJump(current->continueJumpsToPatch[i]);
+  }
+  current->continueJumpsCount = 0;
+}
+
 static void forStatement() {
   beginLoop();
   beginScope();
@@ -525,6 +535,7 @@ static void forStatement() {
   }
 
   statement();
+  patchContinueJumps();
   emitLoop(loopStart);
   if (exitJump != -1) {
     patchJump(exitJump);
@@ -573,6 +584,15 @@ static void whileStatement() {
   patchJump(exitJump);
   emitByte(OP_POP);
   endLoop();
+}
+
+static void continueStatement() {
+  current->loopCount--;
+  while (current->scopeDepth > current->loopDepths[current->loopCount]) {
+    endScope();
+  }
+  current->continueJumpsToPatch[current->continueJumpsCount] =
+      emitJump(OP_JUMP);
 }
 
 static void synchronize() {
@@ -629,6 +649,8 @@ static void statement() {
     whileStatement();
   } else if (match(TOKEN_FOR)) {
     forStatement();
+  } else if (match(TOKEN_CONTINUE)) {
+    continueStatement();
   } else if (match(TOKEN_LEFT_BRACE)) {
     beginScope();
     block();
