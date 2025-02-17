@@ -587,6 +587,7 @@ static void whileStatement() {
 }
 
 static void continueStatement() {
+  consume(TOKEN_SEMICOLON, "Expect ';' after value.");
   current->loopCount--;
   while (current->scopeDepth > current->loopDepths[current->loopCount]) {
     endScope();
