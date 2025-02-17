@@ -207,6 +207,45 @@ void testSwitch1() {
   interpret(source);
 }
 
+const char TEST_SWITCH_2_EXPECT[] = "default case\n";
+void testSwitch2() {
+  initVM();
+
+  char source[] =
+      "var i = 4;                   \n"
+      "switch (i) {                 \n"
+      "  case 1:                    \n"
+      "    print(\"is one\");       \n"
+      "  case 2:                    \n"
+      "  	 print(\"is two\");       \n"
+      "  case 3:                    \n"
+      "  	 print(\"is three\");     \n"
+      "  default:                   \n"
+      "  	 print(\"default case\"); \n"
+      "}                            \n";
+
+  interpret(source);
+}
+const char TEST_SWITCH_3_EXPECT[] = "Is Schlong\n";
+void testSwitch3() {
+  initVM();
+
+  char source[] =
+      "var i = \"Schlong\";         \n"
+      "switch (i) {                 \n"
+      "  case \"Dong\":             \n"
+      "    print(\"is Dong\");      \n"
+      "  case \"Wong\":             \n"
+      "  	 print(\"is Wong\");      \n"
+      "  case \"Schlong\":          \n"
+      "  	 print(\"is Schlong\");   \n"
+      "  default:                   \n"
+      "  	 print(\"default case\"); \n"
+      "}                            \n";
+
+  interpret(source);
+}
+
 const TestCase VM_TESTS[] = {
     {"testArithmetic1",   testArithmetic1,   TEST_ARITHMETIC_1_EXPECT   },
     {"testArithmetic2",   testArithmetic2,   TEST_ARITHMETIC_2_EXPECT   },
@@ -224,6 +263,8 @@ const TestCase VM_TESTS[] = {
     {"testFor1",          testFor1,          TEST_FOR_1_EXPECT          },
     {"testFor2",          testFor2,          TEST_FOR_2_EXPECT          },
     {"testSwitch1",       testSwitch1,       TEST_SWITCH_1_EXPECT       },
+    {"testSwitch2",       testSwitch2,       TEST_SWITCH_2_EXPECT       },
+    {"testSwitch3",       testSwitch3,       TEST_SWITCH_3_EXPECT       },
 };
 
 const int VM_TESTS_COUNT = sizeof(VM_TESTS) / sizeof(TestCase);
