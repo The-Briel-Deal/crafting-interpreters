@@ -26,13 +26,10 @@ const char TEST_CHUNK_DEF_GLOBAL_EXPECT[] =
     "0002    | OP_DEFINE_GLOBAL    0 'beans'\n"
     "0004    | OP_RETURN\n";
 void testChunkDefGlobal() {
-  Chunk chunk;
-  initChunk(&chunk);
 
-  compile("var beans = \"greasy\";", &chunk);
+  Chunk *chunk = &compile("var beans = \"greasy\";")->chunk;
 
-  disassembleChunk(&chunk, "test chunk");
-  freeChunk(&chunk);
+  disassembleChunk(chunk, "test chunk");
 }
 
 const char TEST_CHUNK_SET_GLOBAL_EXPECT[] =
@@ -44,16 +41,12 @@ const char TEST_CHUNK_SET_GLOBAL_EXPECT[] =
     "0008    | OP_POP\n"
     "0009    3 OP_RETURN\n";
 void testChunkSetGlobal() {
-  Chunk chunk;
-  initChunk(&chunk);
+  Chunk *chunk = &compile(
+                      "var beans = \"greasy\";\n"
+                      "beans = \"stinky\";\n")
+                      ->chunk;
 
-  compile(
-      "var beans = \"greasy\";\n"
-      "beans = \"stinky\";\n",
-      &chunk);
-
-  disassembleChunk(&chunk, "test chunk");
-  freeChunk(&chunk);
+  disassembleChunk(chunk, "test chunk");
 }
 
 const char TEST_CHUNK_GET_GLOBAL_EXPECT[] =
@@ -67,17 +60,13 @@ const char TEST_CHUNK_GET_GLOBAL_EXPECT[] =
     "0011    | OP_DEFINE_GLOBAL    4 'dog'\n"
     "0013    4 OP_RETURN\n";
 void testChunkGetGlobal() {
-  Chunk chunk;
-  initChunk(&chunk);
 
-  compile(
-      "var beans = \"greasy\";\n"
-      "beans = \"stinky\";\n"
-      "var dog = beans;\n",
-      &chunk);
-
-  disassembleChunk(&chunk, "test chunk");
-  freeChunk(&chunk);
+  Chunk *chunk = &compile(
+                      "var beans = \"greasy\";\n"
+                      "beans = \"stinky\";\n"
+                      "var dog = beans;\n")
+                      ->chunk;
+  disassembleChunk(chunk, "test chunk");
 }
 
 const char TEST_CHUNK_LOCAL_EXPECT[] =
@@ -92,21 +81,18 @@ const char TEST_CHUNK_LOCAL_EXPECT[] =
     "0011    8 OP_RETURN\n";
 
 void testChunkLocal() {
-  Chunk chunk;
-  initChunk(&chunk);
 
-  compile(
-      "{\n"
-      "  var beans = \"greasy\";\n"
-      "  {\n"
-      "    beans = \"humungooseeee\";\n"
-      "  }\n"
-      "  print(beans);\n"
-      "}\n",
-      &chunk);
+  Chunk *chunk = &compile(
+                      "{\n"
+                      "  var beans = \"greasy\";\n"
+                      "  {\n"
+                      "    beans = \"humungooseeee\";\n"
+                      "  }\n"
+                      "  print(beans);\n"
+                      "}\n")
+                      ->chunk;
 
-  disassembleChunk(&chunk, "test chunk");
-  freeChunk(&chunk);
+  disassembleChunk(chunk, "test chunk");
 }
 
 const char TEST_CHUNK_LOOPS_EXPECT[] =
@@ -150,28 +136,25 @@ const char TEST_CHUNK_LOOPS_EXPECT[] =
     "0063   15 OP_RETURN\n";
 
 void testChunkLoops() {
-  Chunk chunk;
-  initChunk(&chunk);
 
-  compile(
-      "// Scope 0\n"
-      "for (var a = 1; a < 10; a = a + 1) { // Scope 1\n"
-      "  { // Scope 2\n"
-      "    var b = 2;\n"
-      "    { // Scope 3\n"
-      "      var c = 3; \n"
-      "      var d = 9; \n"
-      "      var z = 9; \n"
-      "      while (c < 20) { // Scope 4\n"
-      "			  c = c + 1;\n"
-      "      }\n"
-      "    }\n"
-      "  }\n"
-      "}\n",
-      &chunk);
+  Chunk *chunk = &compile(
+                      "// Scope 0\n"
+                      "for (var a = 1; a < 10; a = a + 1) { // Scope 1\n"
+                      "  { // Scope 2\n"
+                      "    var b = 2;\n"
+                      "    { // Scope 3\n"
+                      "      var c = 3; \n"
+                      "      var d = 9; \n"
+                      "      var z = 9; \n"
+                      "      while (c < 20) { // Scope 4\n"
+                      "			  c = c + 1;\n"
+                      "      }\n"
+                      "    }\n"
+                      "  }\n"
+                      "}\n")
+                      ->chunk;
 
-  disassembleChunk(&chunk, "test chunk");
-  freeChunk(&chunk);
+  disassembleChunk(chunk, "test chunk");
 }
 const TestCase CHUNK_TESTS[] = {
     {"testWriteChunk",     testWriteChunk,     TEST_WRITE_CHUNK_EXPECT     },
