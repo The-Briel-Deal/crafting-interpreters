@@ -9,6 +9,6 @@
 
 #define UINT8_COUNT (UINT8_MAX + 1)
 
-bool compile(const char *source, Chunk *chunk);
+ObjFunction *compile(const char *source);
 
 #endif
