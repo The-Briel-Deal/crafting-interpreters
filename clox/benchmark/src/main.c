@@ -16,6 +16,7 @@
 long benchStrConcat();
 long benchTable();
 long benchVars();
+void benchFibonacci();
 static void runBench(long (*benchFn)(), FILE *stdoutRedirect);
 
 int main(int argc, char *argv[]) {
@@ -27,6 +28,8 @@ int main(int argc, char *argv[]) {
   printf("benchVars:\n");
   runBench(benchVars, stdoutRedirect);
   fclose(stdoutRedirect);
+
+  benchFibonacci();
 }
 
 static void runBench(long (*benchFn)(), FILE *stdoutRedirect) {
@@ -120,6 +123,22 @@ long benchTable() {
   }
   long endTime = clock();
   return endTime - startTime;
+}
+
+void benchFibonacci() {
+  initVM();
+  char source[] =
+      "fun fib(n) {\n"
+      "  if (n < 2) return n;\n"
+      "  return fib(n - 2) + fib(n - 1);\n"
+      "}\n"
+      "\n"
+      "var start = clock();\n"
+      "print fib(35);\n"
+      "print clock() - start;\n";
+
+  interpret(source);
+  freeVM();
 }
 
 const char VERY_LONG_STR_CONCAT_SCRIPT[] =
