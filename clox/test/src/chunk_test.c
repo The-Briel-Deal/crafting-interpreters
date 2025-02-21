@@ -24,9 +24,10 @@ const char TEST_CHUNK_DEF_GLOBAL_EXPECT[] =
     "== test chunk ==\n"
     "0000    1 OP_CONSTANT         1 'greasy'\n"
     "0002    | OP_DEFINE_GLOBAL    0 'beans'\n"
-    "0004    | OP_RETURN\n";
-void testChunkDefGlobal() {
+    "0004    | OP_NIL\n"
+    "0005    | OP_RETURN\n";
 
+void testChunkDefGlobal() {
   Chunk *chunk = &compile("var beans = \"greasy\";")->chunk;
 
   disassembleChunk(chunk, "test chunk");
@@ -39,7 +40,9 @@ const char TEST_CHUNK_SET_GLOBAL_EXPECT[] =
     "0004    2 OP_CONSTANT         3 'stinky'\n"
     "0006    | OP_SET_GLOBAL       2 'beans'\n"
     "0008    | OP_POP\n"
-    "0009    3 OP_RETURN\n";
+    "0009    3 OP_NIL\n"
+    "0010    | OP_RETURN\n";
+
 void testChunkSetGlobal() {
   Chunk *chunk = &compile(
                       "var beans = \"greasy\";\n"
@@ -58,7 +61,9 @@ const char TEST_CHUNK_GET_GLOBAL_EXPECT[] =
     "0008    | OP_POP\n"
     "0009    3 OP_GET_GLOBAL       5 'beans'\n"
     "0011    | OP_DEFINE_GLOBAL    4 'dog'\n"
-    "0013    4 OP_RETURN\n";
+    "0013    4 OP_NIL\n"
+    "0014    | OP_RETURN\n";
+
 void testChunkGetGlobal() {
 
   Chunk *chunk = &compile(
@@ -78,7 +83,8 @@ const char TEST_CHUNK_LOCAL_EXPECT[] =
     "0007    6 OP_GET_LOCAL        1\n"
     "0009    | OP_PRINT\n"
     "0010    7 OP_POP\n"
-    "0011    8 OP_RETURN\n";
+    "0011    8 OP_NIL\n"
+    "0012    | OP_RETURN\n";
 
 void testChunkLocal() {
 
@@ -133,7 +139,8 @@ const char TEST_CHUNK_LOOPS_EXPECT[] =
     "0058   14 OP_LOOP            58 -> 14\n"
     "0061    | OP_POP\n"
     "0062    | OP_POP\n"
-    "0063   15 OP_RETURN\n";
+    "0063   15 OP_NIL\n"
+    "0064    | OP_RETURN\n";
 
 void testChunkLoops() {
 
