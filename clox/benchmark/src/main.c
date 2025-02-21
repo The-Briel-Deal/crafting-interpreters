@@ -99,6 +99,7 @@ long benchTable() {
     ObjString *valObj = copyString(val, valLen);
 
     bool isNewKey = tableSet(&table, keyObj, OBJ_VAL(valObj));
+    assert(isNewKey);
   }
 
   for (int i = 0; i < BENCH_TABLE_ENTRY_COUNT; i++) {
@@ -107,6 +108,7 @@ long benchTable() {
     ObjString *keyObj = copyString(key, keyLen);
     Value resultVal;
     bool foundKey = tableGet(&table, keyObj, &resultVal);
+    assert(foundKey);
 
     ObjString *resultObjStr = AS_STRING(resultVal);
     char expectVal[32]      = {0};
