@@ -13,8 +13,8 @@
 
 typedef struct {
   ObjFunction *function;
-  uint8_t *ip;
   Value *slots;
+	uint8_t *lastIp;
 } CallFrame;
 
 typedef struct {
