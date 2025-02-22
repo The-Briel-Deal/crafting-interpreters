@@ -2,6 +2,7 @@
 #define clox_object_h
 
 #include "chunk.h"
+#include "table.h"
 #include "value.h"
 #include <stdint.h>
 
@@ -21,6 +22,7 @@ typedef enum {
   OBJ_FUNCTION,
   OBJ_NATIVE,
   OBJ_STRING,
+  OBJ_TABLE,
 } ObjType;
 
 struct Obj {
@@ -35,6 +37,11 @@ typedef struct {
   ObjString *name;
 } ObjFunction;
 
+typedef struct {
+  Obj obj;
+  Table table;
+} ObjTable;
+
 typedef Value (*NativeFn)(int argCount, Value *args);
 
 typedef struct {
@@ -44,6 +51,7 @@ typedef struct {
 
 ObjFunction *newFunction();
 ObjNative *newNative(NativeFn function);
+ObjTable *newTable();
 
 struct ObjString {
   Obj obj;

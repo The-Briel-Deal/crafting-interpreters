@@ -5,6 +5,7 @@
 #include "chunk.h"
 #include "memory.h"
 #include "object.h"
+#include "table.h"
 #include "value.h"
 #include "vm.h"
 
@@ -32,6 +33,12 @@ ObjNative *newNative(NativeFn function) {
   ObjNative *native = ALLOCATE_OBJ(ObjNative, OBJ_NATIVE);
   native->function  = function;
   return native;
+}
+
+ObjTable *newTable() {
+  ObjTable *table = ALLOCATE_OBJ(ObjTable, OBJ_TABLE);
+  initTable(&table->table);
+	return table;
 }
 
 static ObjString *allocateString(char *chars, int length, uint32_t hash) {
@@ -90,5 +97,6 @@ void printObject(Value value) {
     case OBJ_FUNCTION: printFunction(AS_FUNCTION(value)); break;
     case OBJ_NATIVE  : printf("<native fn>"); break;
     case OBJ_STRING  : printf("%s", AS_CSTRING(value)); break;
+		case OBJ_TABLE   : printf("<table>"); break;
   }
 }

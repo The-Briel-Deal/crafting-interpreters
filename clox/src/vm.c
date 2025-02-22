@@ -24,6 +24,10 @@ static Value clockNative(int argCount, Value *args) {
   return NUMBER_VAL((double)clock() / CLOCKS_PER_SEC);
 }
 
+static Value newTableNative(int argCount, Value *args) {
+  return OBJ_VAL(newTable());
+}
+
 static Value sqrtNative(int argCount, Value *args) {
   assert(argCount == 1);
   Value arg1 = args[0];
@@ -31,7 +35,7 @@ static Value sqrtNative(int argCount, Value *args) {
   double num = AS_NUMBER(arg1);
 
   num = sqrt(num);
-	return NUMBER_VAL(num);
+  return NUMBER_VAL(num);
 }
 
 static void resetStack() {
@@ -77,6 +81,7 @@ void initVM() {
 
   defineNative("clock", clockNative);
   defineNative("sqrt", sqrtNative);
+  defineNative("newTable", newTableNative);
 }
 
 void freeVM() {
