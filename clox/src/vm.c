@@ -18,10 +18,6 @@
 
 VM vm;
 
-static Value clockNative(int argCount, Value *args) {
-  return NUMBER_VAL((double)clock() / CLOCKS_PER_SEC);
-}
-
 static void resetStack() {
   vm.stackTop   = vm.stack;
   vm.frameCount = 0;
@@ -47,6 +43,14 @@ static void runtimeError(const char *format, ...) {
     }
   }
   resetStack();
+}
+
+static Value clockNative(int argCount, Value *args) {
+  if (argCount != 0) {
+    runtimeError("Native Function 'clock()' expects 0 arguments.");
+    return ERR_VAL;
+  }
+  return NUMBER_VAL((double)clock() / CLOCKS_PER_SEC);
 }
 
 static void defineNative(const char *name, NativeFn function) {
@@ -112,6 +116,10 @@ static bool callValue(Value callee, int argCount) {
       case OBJ_NATIVE  : {
         NativeFn native = AS_NATIVE(callee);
         Value result    = native(argCount, vm.stackTop - argCount);
+        if (result.type == VAL_ERR) {
+          runtimeError("Native FN had an error.");
+          return false;
+        }
         vm.stackTop -= argCount + 1;
         push(result);
         return true;
