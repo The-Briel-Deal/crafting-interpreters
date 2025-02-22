@@ -93,7 +93,7 @@ static void printFunction(ObjFunction *function) {
 
 void printObject(Value value) {
   switch (OBJ_TYPE(value)) {
-    case OBG_CLOSURE : printFunction(AS_CLOSURE(value)->function);
+    case OBJ_CLOSURE : printFunction(AS_CLOSURE(value)->function);
     case OBJ_FUNCTION: printFunction(AS_FUNCTION(value)); break;
     case OBJ_NATIVE  : printf("<native fn>"); break;
     case OBJ_STRING  : printf("%s", AS_CSTRING(value)); break;
