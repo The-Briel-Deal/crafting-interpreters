@@ -40,10 +40,11 @@ typedef Value (*NativeFn)(int argCount, Value *args);
 typedef struct {
   Obj obj;
   NativeFn function;
+  int arity;
 } ObjNative;
 
 ObjFunction *newFunction();
-ObjNative *newNative(NativeFn function);
+ObjNative *newNative(NativeFn function, int arity);
 
 struct ObjString {
   Obj obj;
