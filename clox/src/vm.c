@@ -1,3 +1,5 @@
+#include <assert.h>
+#include <math.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -20,6 +22,16 @@ VM vm;
 
 static Value clockNative(int argCount, Value *args) {
   return NUMBER_VAL((double)clock() / CLOCKS_PER_SEC);
+}
+
+static Value sqrtNative(int argCount, Value *args) {
+  assert(argCount == 1);
+  Value arg1 = args[0];
+  assert(arg1.type == VAL_NUMBER);
+  double num = AS_NUMBER(arg1);
+
+  num = sqrt(num);
+	return NUMBER_VAL(num);
 }
 
 static void resetStack() {
@@ -64,6 +76,7 @@ void initVM() {
   initTable(&vm.strings);
 
   defineNative("clock", clockNative);
+  defineNative("sqrt", sqrtNative);
 }
 
 void freeVM() {
