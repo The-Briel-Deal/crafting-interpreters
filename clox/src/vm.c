@@ -32,7 +32,7 @@ static void runtimeError(const char *format, ...) {
   va_start(args, format);
   vfprintf(stderr, format, args);
   va_end(args);
-  fputs("\n", stderr);
+  fputs("\r\n", stderr);
 
   for (int i = vm.frameCount - 1; i >= 0; i--) {
     CallFrame *frame      = &vm.frames[i];
@@ -41,9 +41,9 @@ static void runtimeError(const char *format, ...) {
     fprintf(stderr, "[line %d] in ", function->chunk.lines[instruction]);
 
     if (function->name == NULL) {
-      fprintf(stderr, "script\n");
+      fprintf(stderr, "script\r\n");
     } else {
-      fprintf(stderr, "%s()\n", function->name->chars);
+      fprintf(stderr, "%s()\r\n", function->name->chars);
     }
   }
   resetStack();
