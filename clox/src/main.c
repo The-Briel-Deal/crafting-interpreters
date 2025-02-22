@@ -12,7 +12,10 @@
 static void repl() {
   enableRawMode();
   for (;;) {
-    interpret(Repl_readLine());
+    char *line = Repl_readLine();
+    if (line == NULL)
+      continue;
+    interpret(line);
   }
 }
 
