@@ -29,6 +29,7 @@ int main(int argc, char *argv[]) {
   runBench(benchVars, stdoutRedirect);
   fclose(stdoutRedirect);
 
+  printf("benchFibonacci:\n");
   benchFibonacci();
 }
 
