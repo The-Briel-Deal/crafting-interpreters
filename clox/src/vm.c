@@ -116,6 +116,7 @@ static bool callValue(Value callee, int argCount) {
           runtimeError(
               "Passed incorrect number of arguments, expected %i, recieved %i.",
               arity, argCount);
+					return false;
         }
         Value result = native(argCount, vm.stackTop - argCount);
         vm.stackTop -= argCount + 1;
