@@ -3,6 +3,7 @@
 #include "chunk.h"
 #include "memory.h"
 #include "object.h"
+#include "table.h"
 #include "value.h"
 #include "vm.h"
 
@@ -35,6 +36,11 @@ static void freeObject(Obj *object) {
     case OBJ_NATIVE: {
       FREE(ObjNative, object);
       break;
+    }
+    case OBJ_TABLE: {
+      ObjTable *table = (ObjTable *)object;
+      freeTable(&table->table);
+      FREE(ObjTable, object);
     }
   }
 }
