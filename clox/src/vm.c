@@ -28,6 +28,39 @@ static Value newTableNative(int argCount, Value *args) {
   return OBJ_VAL(newTable());
 }
 
+static Value setTableNative(int argCount, Value *args) {
+  assert(argCount == 3);
+  Value arg1 = args[0];
+  assert(IS_OBJ(arg1));
+  assert(AS_OBJ(arg1)->type == OBJ_TABLE);
+  ObjTable *table = (ObjTable *)AS_OBJ(arg1);
+
+  Value arg2 = args[1];
+  assert(IS_OBJ(arg2));
+  assert(AS_OBJ(arg2)->type == OBJ_STRING);
+  ObjString *key = (ObjString *)AS_OBJ(arg2);
+
+  Value value = args[2];
+  return BOOL_VAL(tableSet(&table->table, key, value));
+}
+
+static Value getTableNative(int argCount, Value *args) {
+  assert(argCount == 2);
+  Value arg1 = args[0];
+  assert(IS_OBJ(arg1));
+  assert(AS_OBJ(arg1)->type == OBJ_TABLE);
+  ObjTable *table = (ObjTable *)AS_OBJ(arg1);
+
+  Value arg2 = args[1];
+  assert(IS_OBJ(arg2));
+  assert(AS_OBJ(arg2)->type == OBJ_STRING);
+  ObjString *key = (ObjString *)AS_OBJ(arg2);
+
+	Value value = NIL_VAL;
+  tableGet(&table->table, key, &value);
+  return value;
+}
+
 static Value sqrtNative(int argCount, Value *args) {
   assert(argCount == 1);
   Value arg1 = args[0];
@@ -82,6 +115,8 @@ void initVM() {
   defineNative("clock", clockNative);
   defineNative("sqrt", sqrtNative);
   defineNative("newTable", newTableNative);
+  defineNative("setTable", setTableNative);
+  defineNative("getTable", getTableNative);
 }
 
 void freeVM() {
