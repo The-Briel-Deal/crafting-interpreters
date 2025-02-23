@@ -1,0 +1,10 @@
+fun a() {
+  var va = "Boogie";
+  fun b() {
+	  return va;
+	}
+	return b();
+}
+
+var b = a();
+print(b());
