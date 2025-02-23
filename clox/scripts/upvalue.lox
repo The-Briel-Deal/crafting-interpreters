@@ -3,7 +3,7 @@ fun a() {
   fun b() {
 	  return va;
 	}
-	return b();
+	return b;
 }
 
 var b = a();
