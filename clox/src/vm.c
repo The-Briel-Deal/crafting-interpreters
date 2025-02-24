@@ -87,6 +87,25 @@ static Value peek(int distance) {
   return vm.stackTop[-1 - distance];
 }
 
+static bool callFunction(ObjFunction *function, int argCount) {
+  if (argCount != function->arity) {
+    runtimeError("Expected %d arguments but got %d.", function->arity,
+                 argCount);
+    return false;
+  }
+
+  if (vm.frameCount == FRAMES_MAX) {
+    runtimeError("Stack overflow.");
+    return false;
+  }
+
+  CallFrame *frame = &vm.frames[vm.frameCount++];
+  frame->closure   = NULL;
+  frame->ip        = function->chunk.code;
+  frame->slots     = vm.stackTop - argCount - 1;
+  return true;
+}
+
 static bool call(ObjClosure *closure, int argCount) {
   if (argCount != closure->function->arity) {
     runtimeError("Expected %d arguments but got %d.", closure->function->arity,
@@ -109,8 +128,9 @@ static bool call(ObjClosure *closure, int argCount) {
 static bool callValue(Value callee, int argCount) {
   if (IS_OBJ(callee)) {
     switch (OBJ_TYPE(callee)) {
-      case OBJ_CLOSURE: return call(AS_CLOSURE(callee), argCount);
-      case OBJ_NATIVE : {
+      case OBJ_CLOSURE : return call(AS_CLOSURE(callee), argCount);
+      case OBJ_FUNCTION: return callFunction(AS_FUNCTION(callee), argCount);
+      case OBJ_NATIVE  : {
         NativeFn native = AS_NATIVE(callee);
         Value result    = native(argCount, vm.stackTop - argCount);
         vm.stackTop -= argCount + 1;
