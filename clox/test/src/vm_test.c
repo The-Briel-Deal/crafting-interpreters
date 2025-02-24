@@ -187,6 +187,26 @@ void testFor2() {
   interpret(source);
 }
 
+const char TEST_CLOSURE_1_EXPECT[] = "Boogie\n";
+void testClosure1() {
+  initVM();
+
+  // Evaluates like ((true and true) or (false and true))
+  char source[] =
+      "fun a() {\n"
+      "  var va = \"Boogie\";\n"
+      "  fun b() {\n"
+      "	  return va;\n"
+      "	}\n"
+      "	return b;\n"
+      "}\n"
+      "\n"
+      "var b = a();\n"
+      "print(b());\n";
+
+  interpret(source);
+}
+
 const TestCase VM_TESTS[] = {
     {"testArithmetic1",   testArithmetic1,   TEST_ARITHMETIC_1_EXPECT   },
     {"testArithmetic2",   testArithmetic2,   TEST_ARITHMETIC_2_EXPECT   },
@@ -203,6 +223,7 @@ const TestCase VM_TESTS[] = {
     {"testWhile1",        testWhile1,        TEST_WHILE_1_EXPECT        },
     {"testFor1",          testFor1,          TEST_FOR_1_EXPECT          },
     {"testFor2",          testFor2,          TEST_FOR_2_EXPECT          },
+    {"testClosure1",      testClosure1,      TEST_CLOSURE_1_EXPECT      },
 };
 
 const int VM_TESTS_COUNT = sizeof(VM_TESTS) / sizeof(TestCase);
