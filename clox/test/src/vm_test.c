@@ -207,6 +207,37 @@ void testClosure1() {
   interpret(source);
 }
 
+const char TEST_CLOSURE_2_EXPECT[] =
+    "Greasy Beans\n"
+    "Greasy Beans Beans Beans\n";
+
+void testClosure2() {
+  initVM();
+
+  // Evaluates like ((true and true) or (false and true))
+  char source[] =
+      "var x = \"global\";\n"
+      "var y;\n"
+      "fun outer() {\n"
+      "  var x = \"Greasy\";\n"
+      "  fun inner() {\n"
+      "    print x;\n"
+      "  }\n"
+      "  fun innerMutate() {\n"
+      "    x = x + \" Beans\";\n"
+      "  }\n"
+      "  y = innerMutate;"
+      "  return inner;\n"
+      "}\n"
+      "var inner = outer();\n"
+      "y();\n"
+      "inner();\n"
+      "y();\n"
+      "y();\n"
+      "inner();\n";
+
+  interpret(source);
+}
 const TestCase VM_TESTS[] = {
     {"testArithmetic1",   testArithmetic1,   TEST_ARITHMETIC_1_EXPECT   },
     {"testArithmetic2",   testArithmetic2,   TEST_ARITHMETIC_2_EXPECT   },
@@ -224,6 +255,7 @@ const TestCase VM_TESTS[] = {
     {"testFor1",          testFor1,          TEST_FOR_1_EXPECT          },
     {"testFor2",          testFor2,          TEST_FOR_2_EXPECT          },
     {"testClosure1",      testClosure1,      TEST_CLOSURE_1_EXPECT      },
+    {"testClosure2",      testClosure2,      TEST_CLOSURE_2_EXPECT      },
 };
 
 const int VM_TESTS_COUNT = sizeof(VM_TESTS) / sizeof(TestCase);
