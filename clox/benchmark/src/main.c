@@ -17,6 +17,7 @@ long benchStrConcat();
 long benchTable();
 long benchVars();
 void benchFibonacci();
+void benchClosure();
 static void runBench(long (*benchFn)(), FILE *stdoutRedirect);
 
 int main(int argc, char *argv[]) {
@@ -31,6 +32,9 @@ int main(int argc, char *argv[]) {
 
   printf("benchFibonacci:\n");
   benchFibonacci();
+
+  printf("\nbenchClosure:\n");
+  benchClosure();
 }
 
 static void runBench(long (*benchFn)(), FILE *stdoutRedirect) {
@@ -135,7 +139,32 @@ void benchFibonacci() {
       "}\n"
       "\n"
       "var start = clock();\n"
-      "print fib(35);\n"
+      "fib(35);\n"
+      "print clock() - start;\n";
+
+  interpret(source);
+  freeVM();
+}
+
+void benchClosure() {
+  initVM();
+  char source[] =
+      "fun outer() {\n"
+      "  var x = 1;\n"
+      "  fun inner() {\n"
+      "    x = x + 1;\n"
+      "		return x;\n"
+      "  }\n"
+      "  return inner;\n"
+      "}\n"
+      "var innerAdd = outer();\n"
+      "\n"
+      "var start = clock();\n"
+      "var x = innerAdd();\n"
+      "while (x < 10000000) {\n"
+      "  x = innerAdd();\n"
+      "}\n"
+      "\n"
       "print clock() - start;\n";
 
   interpret(source);

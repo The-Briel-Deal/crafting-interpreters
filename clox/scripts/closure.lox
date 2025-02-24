@@ -1,9 +1,17 @@
-var x = "global";
 fun outer() {
-  var x = "outer";
+  var x = 1;
   fun inner() {
-    print x;
+    x = x + 1;
+		return x;
   }
-  inner();
+  return inner;
 }
-outer();
+var innerAdd = outer();
+
+var start = clock();
+var x = innerAdd();
+while (x < 10000000) {
+  x = innerAdd();
+}
+
+print clock() - start;
