@@ -1,0 +1,2 @@
+fun beans() {print "Beans";}
+beans();
