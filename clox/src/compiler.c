@@ -600,7 +600,7 @@ static void function(FunctionType type) {
     }
   } else {
     emitBytes(OP_CONSTANT, makeConstant(OBJ_VAL(function)));
-	}
+  }
 }
 
 static void funDeclaration() {
