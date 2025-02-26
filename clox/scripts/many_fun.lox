@@ -1,0 +1,8 @@
+var start = clock();
+for (var i = 0; i < 10000; i = i+1) {
+  fun beans() {
+	  var a = 3;
+	}
+  beans();
+}
+print(clock()-start);
