@@ -37,7 +37,7 @@ static void runtimeError(const char *format, ...) {
 
   for (int i = vm.frameCount - 1; i >= 0; i--) {
     CallFrame *frame      = &vm.frames[i];
-    ObjFunction *function = frame->closure->function;
+    ObjFunction *function = frame->as.closure->function;
     size_t instruction    = frame->ip - function->chunk.code - 1;
     fprintf(stderr, "[line %d] in ", function->chunk.lines[instruction]);
 
@@ -99,10 +99,10 @@ static bool callFunction(ObjFunction *function, int argCount) {
     return false;
   }
 
-  CallFrame *frame = &vm.frames[vm.frameCount++];
-  frame->closure   = NULL;
-  frame->ip        = function->chunk.code;
-  frame->slots     = vm.stackTop - argCount - 1;
+  CallFrame *frame   = &vm.frames[vm.frameCount++];
+  frame->as.function = function;
+  frame->ip          = function->chunk.code;
+  frame->slots       = vm.stackTop - argCount - 1;
   return true;
 }
 
@@ -118,10 +118,10 @@ static bool call(ObjClosure *closure, int argCount) {
     return false;
   }
 
-  CallFrame *frame = &vm.frames[vm.frameCount++];
-  frame->closure   = closure;
-  frame->ip        = closure->function->chunk.code;
-  frame->slots     = vm.stackTop - argCount - 1;
+  CallFrame *frame  = &vm.frames[vm.frameCount++];
+  frame->as.closure = closure;
+  frame->ip         = closure->function->chunk.code;
+  frame->slots      = vm.stackTop - argCount - 1;
   return true;
 }
 
@@ -201,7 +201,7 @@ static InterpretResult run() {
 #define READ_SHORT()                                                           \
   (frame->ip += 2, (uint16_t)((frame->ip[-2] << 8) | frame->ip[-1]))
 #define READ_CONSTANT()                                                        \
-  (frame->closure->function->chunk.constants.values[READ_BYTE()])
+  (frame->as.closure->function->chunk.constants.values[READ_BYTE()])
 #define READ_STRING() AS_STRING(READ_CONSTANT())
 #define BINARY_OP(valueType, op)                                               \
   do {                                                                         \
@@ -224,8 +224,8 @@ static InterpretResult run() {
     }
     printf("\n");
     disassembleInstruction(
-        &frame->closure->function->chunk,
-        (int)(frame->ip - frame->closure->function->chunk.code));
+        &frame->as.closure->function->chunk,
+        (int)(frame->ip - frame->as.closure->function->chunk.code));
 #endif
     uint8_t instruction;
     switch (instruction = READ_BYTE()) {
@@ -275,12 +275,12 @@ static InterpretResult run() {
       }
       case OP_GET_UPVALUE: {
         uint8_t slot = READ_BYTE();
-        push(*frame->closure->upvalues[slot]->location);
+        push(*frame->as.closure->upvalues[slot]->location);
         break;
       }
       case OP_SET_UPVALUE: {
-        uint8_t slot                              = READ_BYTE();
-        *frame->closure->upvalues[slot]->location = peek(0);
+        uint8_t slot                                 = READ_BYTE();
+        *frame->as.closure->upvalues[slot]->location = peek(0);
         break;
       }
       case OP_EQUAL: {
@@ -354,7 +354,7 @@ static InterpretResult run() {
           if (isLocal) {
             closure->upvalues[i] = captureUpvalue(frame->slots + index);
           } else {
-            closure->upvalues[i] = frame->closure->upvalues[index];
+            closure->upvalues[i] = frame->as.closure->upvalues[index];
           }
         }
         break;
