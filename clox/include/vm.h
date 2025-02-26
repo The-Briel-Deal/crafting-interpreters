@@ -12,6 +12,7 @@
 #define STACK_MAX  FRAMES_MAX *UINT8_COUNT
 
 typedef struct {
+  enum { CALL_FRAME_CLOSURE, CALL_FRAME_FUNCTION } type;
   union {
     ObjFunction *function;
     ObjClosure *closure;

@@ -100,6 +100,7 @@ static bool callFunction(ObjFunction *function, int argCount) {
   }
 
   CallFrame *frame   = &vm.frames[vm.frameCount++];
+  frame->type        = CALL_FRAME_FUNCTION;
   frame->as.function = function;
   frame->ip          = function->chunk.code;
   frame->slots       = vm.stackTop - argCount - 1;
@@ -119,6 +120,7 @@ static bool call(ObjClosure *closure, int argCount) {
   }
 
   CallFrame *frame  = &vm.frames[vm.frameCount++];
+  frame->type       = CALL_FRAME_CLOSURE;
   frame->as.closure = closure;
   frame->ip         = closure->function->chunk.code;
   frame->slots      = vm.stackTop - argCount - 1;
@@ -201,7 +203,9 @@ static InterpretResult run() {
 #define READ_SHORT()                                                           \
   (frame->ip += 2, (uint16_t)((frame->ip[-2] << 8) | frame->ip[-1]))
 #define READ_CONSTANT()                                                        \
-  (frame->as.closure->function->chunk.constants.values[READ_BYTE()])
+  (frame->type == CALL_FRAME_CLOSURE)                                          \
+      ? (frame->as.closure->function->chunk.constants.values[READ_BYTE()])     \
+      : (frame->as.function->chunk.constants.values[READ_BYTE()])
 #define READ_STRING() AS_STRING(READ_CONSTANT())
 #define BINARY_OP(valueType, op)                                               \
   do {                                                                         \
