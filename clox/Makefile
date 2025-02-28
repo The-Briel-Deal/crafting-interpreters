@@ -19,6 +19,9 @@ endif
 ifeq (${OPTIMIZE}, 1)
 	CFLAGS += -O3
 endif
+ifeq (${DEBUG_STRESS_GC}, 1)
+	CFLAGS += -DDEBUG_STRESS_GC
+endif
 
 # This needs to be below the above modifications to CFLAGS or this var won't contain the changes.
 TEST_CFLAGS := $(CFLAGS) -Itest/include
