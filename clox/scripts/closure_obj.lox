@@ -1,0 +1,47 @@
+fun newVec(x, y) {
+  fun object(message) {
+	  if (message == "getX") {
+		  return x;
+		}
+		if (message == "incrX") {
+      x = x + 1;
+		}
+
+	  if (message == "getY") {
+		  return y;
+		}
+		if (message == "incrY") {
+      y = y + 1;
+		}
+
+		if (message == "add") {
+		  fun add(vec) {
+			  var x2 = vec("getX");
+				var y2 = vec("getY");
+				
+        return newVec(x + x2, y + y2);
+			}
+			return add;
+		}
+	}
+	return object;
+}
+
+var v1 = newVec(2, 4);
+print v1("getX");
+v1("incrX");
+print v1("getX");
+print v1("getY");
+v1("incrY");
+v1("incrY");
+// Should be (3, 6)
+print v1("getY");
+
+var v2 = newVec(4, 7);
+
+var v3 = v1("add")(v2);
+
+print "v3 x: ";
+print v3("getX");
+print "v3 y: ";
+print v3("getY");
