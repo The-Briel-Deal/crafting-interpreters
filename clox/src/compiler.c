@@ -669,7 +669,8 @@ static void forStatement() {
   if (initializerVarSlot != -1) {
     emitBytes(OP_GET_LOCAL, shadowInitVarSlot);
     emitBytes(OP_SET_LOCAL, initializerVarSlot);
-		endScope();
+    emitByte(OP_POP);
+    endScope();
   }
 
   emitLoop(loopStart);
