@@ -616,16 +616,17 @@ static void varDeclaration();
 
 static void forStatement() {
   beginScope();
+
+  int initializerVarSlot = -1;
+  Token initializerVarName;
+  initializerVarName.start = NULL;
+
   consume(TOKEN_LEFT_PAREN, "Expect '(' after 'for'.");
-
-  Token *initializerVarName = NULL;
-  int initializerVarSlot    = -1;
-
   // Initializer
   if (match(TOKEN_SEMICOLON)) {
     // No initializer.
   } else if (match(TOKEN_VAR)) {
-    initializerVarName = &parser.current;
+    initializerVarName = parser.current;
     varDeclaration();
     initializerVarSlot = current->localCount - 1;
   } else {
@@ -660,7 +661,7 @@ static void forStatement() {
   if (initializerVarSlot != -1) {
     beginScope();
     emitBytes(OP_GET_LOCAL, initializerVarSlot);
-    addLocal(*initializerVarName);
+    addLocal(initializerVarName);
     markInitialized();
     shadowInitVarSlot = current->localCount - 1;
   }
