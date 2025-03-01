@@ -5,6 +5,7 @@
 #include "value.h"
 
 #include "helper_test.h"
+#include "vm.h"
 
 const char TEST_WRITE_CHUNK_EXPECT[] =
     "== test chunk ==\n"
@@ -13,6 +14,7 @@ const char TEST_WRITE_CHUNK_EXPECT[] =
 void testWriteChunk() {
   Chunk chunk;
   initChunk(&chunk);
+  initVM();
 
   CONSTANT(NUMBER_VAL(1.2), 123);
 
