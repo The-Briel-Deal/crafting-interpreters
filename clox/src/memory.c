@@ -1,5 +1,6 @@
 #include <stdlib.h>
 
+#include "compiler.h"
 #include "chunk.h"
 #include "memory.h"
 #include "object.h"
@@ -66,8 +67,8 @@ void markObject(Obj *object) {
     return;
 #ifdef DEBUG_LOG_GC
   printf("%p mark ", (void *)object);
-	printValue(OBJ_VAL(object));
-	printf("\n");
+  printValue(OBJ_VAL(object));
+  printf("\n");
 #endif
 
   object->isMarked = true;
@@ -83,7 +84,17 @@ static void markRoots() {
     markValue(*slot);
   }
 
+  for (int i = 0; i < vm.frameCount; i++) {
+    markObject((Obj *)vm.frames[i].closure);
+  }
+
+  for (ObjUpvalue *upvalue = vm.openUpvalues; upvalue != NULL;
+       upvalue             = upvalue->next) {
+    markObject((Obj *)upvalue);
+  }
+
   markTable(&vm.globals);
+	markCompilerRoots();
 }
 
 void collectGarbage() {
