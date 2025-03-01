@@ -95,6 +95,7 @@ long benchVars() {
 }
 
 long benchTable() {
+  initVM();
   long startTime = clock();
   Table table;
   initTable(&table);
