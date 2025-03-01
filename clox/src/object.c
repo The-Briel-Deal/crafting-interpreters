@@ -12,9 +12,8 @@
   (type *)allocateObject(sizeof(type), objectType)
 
 static Obj *allocateObject(size_t size, ObjType type) {
-  Obj *object      = (Obj *)reallocate(NULL, 0, size);
-  object->type     = type;
-  object->isMarked = false;
+  Obj *object  = (Obj *)reallocate(NULL, 0, size);
+  object->type = type & ~OBJ_IS_MARKED;
 
   object->next = vm.objects;
   vm.objects   = object;
@@ -117,7 +116,7 @@ static void printFunction(ObjFunction *function) {
 }
 
 void printObject(Value value) {
-  switch (OBJ_TYPE(value)) {
+  switch (OBJ_TYPE(value) & ~OBJ_IS_MARKED) {
     case OBJ_CLOSURE : printFunction(AS_CLOSURE(value)->function); break;
     case OBJ_FUNCTION: printFunction(AS_FUNCTION(value)); break;
     case OBJ_NATIVE  : printf("<native fn>"); break;

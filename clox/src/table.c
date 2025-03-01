@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "memory.h"
+#include "object.h"
 #include "table.h"
 #include "value.h"
 
@@ -134,7 +135,7 @@ ObjString *tableFindString(Table *table, const char *chars, int length,
 void tableRemoveWhite(Table *table) {
   for (int i = 0; i < table->capacity; i++) {
     Entry *entry = &table->entries[i];
-    if (entry->key != NULL && !entry->key->obj.isMarked) {
+    if (entry->key != NULL && !(entry->key->obj.type & OBJ_IS_MARKED)) {
       tableDelete(table, entry->key);
     }
   }

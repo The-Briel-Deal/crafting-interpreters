@@ -41,7 +41,7 @@ static void freeObject(Obj *object) {
   printf("%p free type %d\n", (void *)object, object->type);
 #endif
 
-  switch (object->type) {
+  switch (object->type & ~OBJ_IS_MARKED) {
     case OBJ_STRING: {
       ObjString *string = (ObjString *)object;
       FREE_ARRAY(char, string->chars, string->length + 1);
@@ -71,7 +71,7 @@ static void freeObject(Obj *object) {
 void markObject(Obj *object) {
   if (object == NULL)
     return;
-  if (object->isMarked)
+  if (object->type & OBJ_IS_MARKED)
     return;
 #ifdef DEBUG_LOG_GC
   printf("%p mark ", (void *)object);
@@ -79,7 +79,7 @@ void markObject(Obj *object) {
   printf("\n");
 #endif
 
-  object->isMarked = true;
+  object->type |= OBJ_IS_MARKED;
 
   if (vm.grayCapacity < vm.grayCount + 1) {
     vm.grayCapacity = GROW_CAPACITY(vm.grayCapacity);
@@ -110,7 +110,7 @@ static void blackenObject(Obj *object) {
   printValue(OBJ_VAL(object));
   printf("\n");
 #endif
-  switch (object->type) {
+  switch (object->type & ~OBJ_IS_MARKED) {
     case OBJ_CLOSURE: {
       ObjClosure *closure = (ObjClosure *)object;
       markObject((Obj *)closure->function);
@@ -160,10 +160,10 @@ static void sweep() {
   Obj *previous = NULL;
   Obj *object   = vm.objects;
   while (object != NULL) {
-    if (object->isMarked) {
-      object->isMarked = false;
-      previous         = object;
-      object           = object->next;
+    if (object->type & OBJ_IS_MARKED) {
+      object->type &= ~OBJ_IS_MARKED;
+      previous = object;
+      object   = object->next;
     } else {
       Obj *unreached = object;
       object         = object->next;

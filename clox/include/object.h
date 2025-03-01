@@ -20,16 +20,16 @@
 #define AS_CSTRING(value)  (((ObjString *)AS_OBJ(value))->chars)
 
 typedef enum {
-  OBJ_CLOSURE,
-  OBJ_FUNCTION,
-  OBJ_NATIVE,
-  OBJ_STRING,
-  OBJ_UPVALUE
+  OBJ_CLOSURE   = 0b00000001,
+  OBJ_FUNCTION  = 0b00000010,
+  OBJ_NATIVE    = 0b00000100,
+  OBJ_STRING    = 0b00001000,
+  OBJ_UPVALUE   = 0b00010000,
+  OBJ_IS_MARKED = 0b10000000,
 } ObjType;
 
 struct Obj {
   ObjType type;
-  bool isMarked;
   struct Obj *next;
 };
 
