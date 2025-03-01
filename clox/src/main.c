@@ -10,9 +10,10 @@
 #include "vm.h"
 
 static void repl() {
-  enableRawMode();
   for (;;) {
+    enableRawMode();
     char *line = Repl_readLine();
+		disableRawMode();
     if (line == NULL)
       continue;
     interpret(line);
