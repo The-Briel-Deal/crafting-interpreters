@@ -1,7 +1,7 @@
 #include <stdlib.h>
 
-#include "compiler.h"
 #include "chunk.h"
+#include "compiler.h"
 #include "memory.h"
 #include "object.h"
 #include "value.h"
@@ -72,6 +72,17 @@ void markObject(Obj *object) {
 #endif
 
   object->isMarked = true;
+
+  if (vm.grayCapacity < vm.grayCount + 1) {
+    vm.grayCapacity = GROW_CAPACITY(vm.grayCapacity);
+    vm.grayStack =
+        (Obj **)realloc(vm.grayStack, sizeof(Obj *) * vm.grayCapacity);
+
+    if (vm.grayStack == NULL)
+      exit(1);
+  }
+
+  vm.grayStack[vm.grayCount++] = object;
 }
 
 void markValue(Value value) {
@@ -94,7 +105,7 @@ static void markRoots() {
   }
 
   markTable(&vm.globals);
-	markCompilerRoots();
+  markCompilerRoots();
 }
 
 void collectGarbage() {
@@ -116,4 +127,6 @@ void freeObjects() {
     freeObject(object);
     object = next;
   }
+
+  free(vm.grayStack);
 }
