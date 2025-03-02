@@ -14,6 +14,8 @@
 
 #define GC_HEAP_GROW_FACTOR 2
 
+bool invertMark = false;
+
 void *reallocate(void *pointer, size_t oldSize, size_t newSize) {
   vm.bytesAllocated += newSize - oldSize;
   if (newSize > oldSize) {
@@ -71,7 +73,7 @@ static void freeObject(Obj *object) {
 void markObject(Obj *object) {
   if (object == NULL)
     return;
-  if (object->isMarked)
+  if (object->isMarked != invertMark)
     return;
 #ifdef DEBUG_LOG_GC
   printf("%p mark ", (void *)object);
@@ -79,7 +81,7 @@ void markObject(Obj *object) {
   printf("\n");
 #endif
 
-  object->isMarked = true;
+  object->isMarked = !object->isMarked;
 
   if (vm.grayCapacity < vm.grayCount + 1) {
     vm.grayCapacity = GROW_CAPACITY(vm.grayCapacity);
@@ -160,8 +162,7 @@ static void sweep() {
   Obj *previous = NULL;
   Obj *object   = vm.objects;
   while (object != NULL) {
-    if (object->isMarked) {
-      object->isMarked = false;
+    if (object->isMarked != invertMark) {
       previous         = object;
       object           = object->next;
     } else {
@@ -188,6 +189,7 @@ void collectGarbage() {
   traceReferences();
   tableRemoveWhite(&vm.strings);
   sweep();
+	invertMark = !invertMark;
 
   vm.nextGC = vm.bytesAllocated * GC_HEAP_GROW_FACTOR;
 

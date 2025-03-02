@@ -5,6 +5,8 @@
 
 #include "object.h"
 
+extern bool invertMark;
+
 #define ALLOCATE(type, count)                                                  \
   (type *)reallocate(NULL, 0, sizeof(type) * (count))
 
