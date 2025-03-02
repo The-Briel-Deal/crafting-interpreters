@@ -6,6 +6,7 @@
 #include <string.h>
 #include <time.h>
 
+#include "memory.h"
 #include "object.h"
 #include "value.h"
 #include "vm.h"
@@ -96,6 +97,7 @@ long benchVars() {
 
 long benchTable() {
   initVM();
+	disableGC();
   long startTime = clock();
   Table table;
   initTable(&table);
@@ -128,6 +130,7 @@ long benchTable() {
     printf("%s -> %s", key, resultObjStr->chars);
   }
   long endTime = clock();
+	enableGC();
   return endTime - startTime;
 }
 

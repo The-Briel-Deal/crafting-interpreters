@@ -177,8 +177,19 @@ static void sweep() {
     }
   }
 }
+static bool gcDisabled = false;
+
+void disableGC() {
+  gcDisabled = true;
+}
+
+void enableGC() {
+  gcDisabled = false;
+}
 
 void collectGarbage() {
+  if (gcDisabled)
+    return;
 #ifdef DEBUG_LOG_GC
   printf("-- gc begin\n");
   size_t before = vm.bytesAllocated;
