@@ -29,8 +29,9 @@ typedef enum {
 } ObjType;
 
 struct Obj {
-  ObjType type;
-  struct Obj *next;
+  // struct Obj *
+	unsigned long next : 56;
+  ObjType type : 8;
 };
 
 typedef struct {

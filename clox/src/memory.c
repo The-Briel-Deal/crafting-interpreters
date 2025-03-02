@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <sys/types.h>
 
 #include "chunk.h"
 #include "compiler.h"
@@ -163,12 +164,12 @@ static void sweep() {
     if (object->type & OBJ_IS_MARKED) {
       object->type &= ~OBJ_IS_MARKED;
       previous = object;
-      object   = object->next;
+      object   = (Obj *)((u_int64_t)object->next);
     } else {
       Obj *unreached = object;
-      object         = object->next;
+      object         = (Obj*)((u_int64_t)object->next);
       if (previous != NULL) {
-        previous->next = object;
+        previous->next = ((unsigned long)(object));
       } else {
         vm.objects = object;
       }
@@ -201,7 +202,7 @@ void collectGarbage() {
 void freeObjects() {
   Obj *object = vm.objects;
   while (object != NULL) {
-    Obj *next = object->next;
+    Obj *next = (Obj *)((u_int64_t)object->next);
     freeObject(object);
     object = next;
   }

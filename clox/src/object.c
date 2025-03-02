@@ -15,7 +15,7 @@ static Obj *allocateObject(size_t size, ObjType type) {
   Obj *object  = (Obj *)reallocate(NULL, 0, size);
   object->type = type & ~OBJ_IS_MARKED;
 
-  object->next = vm.objects;
+  object->next = (unsigned long)vm.objects;
   vm.objects   = object;
 
 #ifdef DEBUG_LOG_GC
