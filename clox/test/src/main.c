@@ -7,6 +7,7 @@
 #include "chunk_test.h"
 #include "helper_test.h"
 #include "line_test.h"
+#include "memory_test.h"
 #include "scanner_test.h"
 #include "table_test.h"
 #include "vm_test.h"
@@ -62,6 +63,8 @@ int main(int argc, char *argv[]) {
   RUN_TESTS(SCANNER_TESTS, SCANNER_TESTS_COUNT);
   RUN_TESTS(TABLE_TESTS, TABLE_TESTS_COUNT);
   RUN_TESTS(LINE_TESTS, LINE_TESTS_COUNT);
+
+  testGC();
 
   printf("Tests Succeeded!\n");
 }
