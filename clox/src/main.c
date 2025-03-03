@@ -13,7 +13,7 @@ static void repl() {
   for (;;) {
     enableRawMode();
     char *line = Repl_readLine();
-		disableRawMode();
+    disableRawMode();
     if (line == NULL)
       continue;
     interpret(line);

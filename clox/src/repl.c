@@ -128,9 +128,9 @@ char *Repl_readLine() {
   }
 
   printf("\r\n");
-	if (line.start == NULL) {
-		return NULL;
-	}
+  if (line.start == NULL) {
+    return NULL;
+  }
   line.start[line.length] = '\0';
   return line.start;
 }
