@@ -60,6 +60,7 @@ static void defineNative(const char *name, NativeFn function) {
 
 void initVM() {
   resetStack();
+  initHeap();
   vm.objects        = NULL;
   vm.bytesAllocated = 0;
   vm.nextGC         = 1024 * 1024;
@@ -77,7 +78,8 @@ void initVM() {
 void freeVM() {
   freeTable(&vm.globals);
   freeTable(&vm.strings);
-  freeObjects();
+	// TODO: Reimplement freeObjects with new GC.
+  //freeObjects();
 }
 
 void push(Value value) {

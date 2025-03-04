@@ -19,6 +19,13 @@
 #define AS_STRING(value)   ((ObjString *)AS_OBJ(value))
 #define AS_CSTRING(value)  (((ObjString *)AS_OBJ(value))->chars)
 
+struct ObjHeap {
+  void *start;
+  void *next;
+  int size;
+};
+extern struct ObjHeap heap;
+
 typedef enum {
   OBJ_CLOSURE,
   OBJ_FUNCTION,
@@ -40,6 +47,8 @@ typedef struct {
   int upvalueCount;
   ObjString *name;
 } ObjFunction;
+
+void initHeap();
 
 typedef Value (*NativeFn)(int argCount, Value *args);
 

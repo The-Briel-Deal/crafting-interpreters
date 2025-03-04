@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "chunk.h"
@@ -11,8 +12,38 @@
 #define ALLOCATE_OBJ(type, objectType)                                         \
   (type *)allocateObject(sizeof(type), objectType)
 
+#define HEAP_SIZE (1024 * 1024)
+
+
+struct ObjHeap heap = {
+    .start = NULL,
+    .next  = NULL,
+    .size  = 0,
+};
+
+void initHeap() {
+  heap.start = malloc(HEAP_SIZE);
+  heap.next  = NULL;
+  heap.size  = HEAP_SIZE;
+}
+static void *allocateOnHeap(size_t size) {
+  if (heap.start == NULL) {
+    printf("Heap Not Initialized, Exiting.");
+    exit(1);
+  }
+
+  // This means there are no items on the heap.
+  if (heap.next == NULL) {
+    heap.next = heap.start;
+  }
+
+  void *ptr = heap.next;
+  heap.next = ((uint8_t *)heap.next) + size;
+  return ptr;
+}
+
 static Obj *allocateObject(size_t size, ObjType type) {
-  Obj *object      = (Obj *)reallocate(NULL, 0, size);
+  Obj *object      = (Obj *)allocateOnHeap(size);
   object->type     = type;
   object->isMarked = false;
 

@@ -18,14 +18,17 @@ void *reallocate(void *pointer, size_t oldSize, size_t newSize) {
   vm.bytesAllocated += newSize - oldSize;
   if (newSize > oldSize) {
 #ifdef DEBUG_STRESS_GC
-    collectGarbage();
+    //! Collect garbage needs to be called after allocateObj
+    // collectGarbage();
 #endif
     if (vm.bytesAllocated > vm.nextGC) {
-      collectGarbage();
+      // collectGarbage();
     }
   }
 
-  if (newSize == 0) {
+  if ((heap.start > pointer ||
+       ((void *)(((char *)heap.start) + heap.size)) < pointer) &&
+      newSize == 0) {
     free(pointer);
     return NULL;
   }
