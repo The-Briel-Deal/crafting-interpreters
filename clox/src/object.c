@@ -100,8 +100,14 @@ void calculateNewObjLocation(Obj *objects) {
   void *currPos = heap.start;
   Obj *currObj  = objects;
   while (currObj != NULL) {
+    if (currObj->isMarked == false) {
+      currObj = currObj->next;
+      continue;
+    }
     currObj->newPos = currPos;
     currPos         = (((char *)currPos) + (getSize(currObj)));
+
+    currObj = currObj->next;
   }
 }
 
