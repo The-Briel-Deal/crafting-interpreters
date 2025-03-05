@@ -56,12 +56,14 @@ Obj *sortObjsByAddr(Obj *objects) {
   int length = getObjListLength(objects);
 
   for (int i = 0; i < length; i++) {
-    Obj *prev = NULL;
-    Obj *curr = head;
+    Obj *prev    = NULL;
+    Obj *curr    = head;
+    bool swapped = false;
     while (curr->next != NULL) {
       Obj *next = curr->next;
       // Swap
       if (curr > next) {
+        swapped    = true;
         curr->next = next->next;
         next->next = curr;
         if (prev != NULL) {
@@ -73,6 +75,9 @@ Obj *sortObjsByAddr(Obj *objects) {
       prev = curr;
       curr = curr->next;
     }
+    // If we walk through list without swapping then everything is sorted.
+    if (!swapped)
+      break;
   }
 
   return head;
