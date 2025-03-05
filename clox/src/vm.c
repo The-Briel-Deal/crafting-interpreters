@@ -78,8 +78,8 @@ void initVM() {
 void freeVM() {
   freeTable(&vm.globals);
   freeTable(&vm.strings);
-	// TODO: Reimplement freeObjects with new GC.
-  //freeObjects();
+  // TODO: Reimplement freeObjects with new GC.
+  // freeObjects();
 }
 
 void push(Value value) {

@@ -92,7 +92,7 @@ static size_t getSize(Obj *object) {
     case OBJ_FUNCTION: return sizeof(ObjFunction);
     default:
       printf("object->type is an invalid enum of val '%i'", object->type);
-			exit(1);
+      exit(1);
   }
 }
 
