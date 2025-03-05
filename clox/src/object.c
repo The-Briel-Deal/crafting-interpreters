@@ -83,16 +83,42 @@ Obj *sortObjsByAddr(Obj *objects) {
   return head;
 }
 
-// void compactHeap() {
-// }
+static size_t getSize(Obj *object) {
+  switch (object->type) {
+    case OBJ_STRING  : return sizeof(ObjString);
+    case OBJ_CLOSURE : return sizeof(ObjClosure);
+    case OBJ_NATIVE  : return sizeof(ObjNative);
+    case OBJ_UPVALUE : return sizeof(ObjUpvalue);
+    case OBJ_FUNCTION: return sizeof(ObjFunction);
+    default:
+      printf("object->type is an invalid enum of val '%i'", object->type);
+			exit(1);
+  }
+}
+
+void calculateNewObjLocation(Obj *objects) {
+  void *currPos = heap.start;
+  Obj *currObj  = objects;
+  while (currObj != NULL) {
+    currObj->newPos = currPos;
+    currPos         = (((char *)currPos) + (getSize(currObj)));
+  }
+}
+
+void compactHeap() {
+  vm.objects = sortObjsByAddr(vm.objects);
+
+  // while ()
+}
 
 static Obj *allocateObject(size_t size, ObjType type) {
   Obj *object      = (Obj *)allocateOnHeap(size);
   object->type     = type;
   object->isMarked = false;
 
-  object->next = vm.objects;
-  vm.objects   = object;
+  object->newPos = NULL;
+  object->next   = vm.objects;
+  vm.objects     = object;
 
 #ifdef DEBUG_LOG_GC
   printf("%p allocate %zu for %d\n", (void *)object, size, type);
