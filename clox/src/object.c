@@ -53,7 +53,6 @@ static int getObjListLength(Obj *objects) {
 // Returns new head.
 Obj *sortObjsByAddr(Obj *objects) {
   Obj *head  = objects;
-  Obj *begin = objects;
   int length = getObjListLength(objects);
 
   for (int i = 0; i < length; i++) {
@@ -71,16 +70,12 @@ Obj *sortObjsByAddr(Obj *objects) {
           head = next;
         }
       }
-      if (curr < begin) {
-        begin = curr;
-      }
-
       prev = curr;
       curr = curr->next;
     }
   }
 
-  return begin;
+  return head;
 }
 
 // void compactHeap() {
