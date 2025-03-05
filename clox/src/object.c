@@ -59,7 +59,7 @@ Obj *sortObjsByAddr(Obj *objects) {
     Obj *prev    = NULL;
     Obj *curr    = head;
     bool swapped = false;
-    while (curr->next != NULL) {
+    while (curr != NULL && curr->next != NULL) {
       Obj *next = curr->next;
       // Swap
       if (curr > next) {

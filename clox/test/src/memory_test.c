@@ -116,7 +116,7 @@ void testManyStrsOnStack() {
   assertStrsOnHeap(strsToFind, sizeof(strsToFind) / sizeof(struct StrToFind));
 }
 
-void testSortObjsByAddr() {
+void testSortObjsByAddr1() {
   Obj objects[] = {
       [0] = {.isMarked = true, .next = NULL, .type = OBJ_STRING},
       [1] = {.isMarked = true, .next = NULL, .type = OBJ_STRING},
@@ -141,6 +141,37 @@ void testSortObjsByAddr() {
   assert(head->next->next->next->next == NULL);
 }
 
+void testSortObjsByAddr2() {
+  Obj objects[] = {
+      [0] = {.isMarked = true, .next = NULL, .type = OBJ_STRING},
+      [1] = {.isMarked = true, .next = NULL, .type = OBJ_STRING},
+      [2] = {.isMarked = true, .next = NULL, .type = OBJ_STRING},
+      [3] = {.isMarked = true, .next = NULL, .type = OBJ_STRING},
+      [4] = {.isMarked = true, .next = NULL, .type = OBJ_STRING},
+      [5] = {.isMarked = true, .next = NULL, .type = OBJ_STRING},
+  };
+
+  // 5 -> 4 -> 3 -> 2 -> 1 -> 0
+  objects[5].next = &objects[4];
+  objects[4].next = &objects[3];
+  objects[3].next = &objects[2];
+  objects[2].next = &objects[1];
+  objects[1].next = &objects[0];
+  objects[0].next = NULL;
+
+  Obj *head = &objects[5];
+
+  head = sortObjsByAddr(head);
+
+  assert(head == &objects[0]);
+  assert(head->next == &objects[1]);
+  assert(head->next->next == &objects[2]);
+  assert(head->next->next->next == &objects[3]);
+  assert(head->next->next->next->next == &objects[4]);
+  assert(head->next->next->next->next->next == &objects[5]);
+  assert(head->next->next->next->next->next->next == NULL);
+}
+
 void testGC() {
   printf("Running Garbage Collector Tests:\n");
   // TODO: Re-enable these tests once GC is implemented.
@@ -148,6 +179,8 @@ void testGC() {
   //  testStrsOnStack();
   //  printf("Running Test: 'testManyStrsOnStack'\n");
   //  testManyStrsOnStack();
-  printf("Running Test: 'testSortObjsByAddr'\n");
-  testSortObjsByAddr();
+  printf("Running Test: 'testSortObjsByAddr1'\n");
+  testSortObjsByAddr1();
+  printf("Running Test: 'testSortObjsByAddr2'\n");
+  testSortObjsByAddr2();
 }
