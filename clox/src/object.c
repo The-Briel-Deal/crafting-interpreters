@@ -14,7 +14,6 @@
 
 #define HEAP_SIZE (1024 * 1024)
 
-
 struct ObjHeap heap = {
     .start = NULL,
     .next  = NULL,
@@ -41,6 +40,51 @@ static void *allocateOnHeap(size_t size) {
   heap.next = ((uint8_t *)heap.next) + size;
   return ptr;
 }
+
+static int getObjListLength(Obj *objects) {
+  int count = 0;
+  while (objects != NULL) {
+    count++;
+    objects = objects->next;
+  }
+  return count;
+}
+
+// Returns new head.
+Obj *sortObjsByAddr(Obj *objects) {
+  Obj *head  = objects;
+  Obj *begin = objects;
+  int length = getObjListLength(objects);
+
+  for (int i = 0; i < length; i++) {
+    Obj *prev = NULL;
+    Obj *curr = head;
+    while (curr->next != NULL) {
+      Obj *next = curr->next;
+      // Swap
+      if (curr > next) {
+        curr->next = next->next;
+        next->next = curr;
+        if (prev != NULL) {
+          prev->next = next;
+        } else {
+          head = next;
+        }
+      }
+      if (curr < begin) {
+        begin = curr;
+      }
+
+      prev = curr;
+      curr = curr->next;
+    }
+  }
+
+  return begin;
+}
+
+// void compactHeap() {
+// }
 
 static Obj *allocateObject(size_t size, ObjType type) {
   Obj *object      = (Obj *)allocateOnHeap(size);

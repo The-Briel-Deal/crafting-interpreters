@@ -49,6 +49,7 @@ typedef struct {
 } ObjFunction;
 
 void initHeap();
+Obj *sortObjsByAddr(Obj *objects);
 
 typedef Value (*NativeFn)(int argCount, Value *args);
 
