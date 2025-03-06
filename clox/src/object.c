@@ -96,7 +96,7 @@ static size_t getSize(Obj *object) {
   }
 }
 
-void calculateNewObjLocation(Obj *objects, void* newStart) {
+void calculateNewObjLocation(Obj *objects, void *newStart) {
   void *currPos = newStart;
   Obj *currObj  = objects;
   while (currObj != NULL) {
@@ -114,7 +114,7 @@ void calculateNewObjLocation(Obj *objects, void* newStart) {
 void compactHeap() {
   vm.objects = sortObjsByAddr(vm.objects);
 
-  // while ()
+  calculateNewObjLocation(vm.objects, heap.start);
 }
 
 static Obj *allocateObject(size_t size, ObjType type) {
