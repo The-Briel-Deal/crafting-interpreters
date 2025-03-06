@@ -51,6 +51,7 @@ typedef struct {
 
 void initHeap();
 Obj *sortObjsByAddr(Obj *objects);
+void calculateNewObjLocation(Obj *objects, void *newStart);
 
 typedef Value (*NativeFn)(int argCount, Value *args);
 

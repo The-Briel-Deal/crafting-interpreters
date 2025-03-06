@@ -96,8 +96,8 @@ static size_t getSize(Obj *object) {
   }
 }
 
-void calculateNewObjLocation(Obj *objects) {
-  void *currPos = heap.start;
+void calculateNewObjLocation(Obj *objects, void* newStart) {
+  void *currPos = newStart;
   Obj *currObj  = objects;
   while (currObj != NULL) {
     if (currObj->isMarked == false) {
