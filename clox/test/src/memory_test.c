@@ -202,6 +202,58 @@ void testCalculateNewObjLocation() {
          (Obj *)(((char *)(&objects[0])) + sizeof(ObjString)));
 }
 
+void testUpdateObjReferences() {
+  Obj objects[] = {
+      [0] = {.isMarked = true,
+             .next     = &objects[1],
+             .type     = OBJ_STRING,
+             .newPos   = NULL},
+      [1] = {.isMarked = false,
+             .next     = &objects[2],
+             .type     = OBJ_STRING,
+             .newPos   = NULL},
+      [2] = {.isMarked = false,
+             .next     = &objects[3],
+             .type     = OBJ_STRING,
+             .newPos   = NULL},
+      [3] = {.isMarked = true,
+             .next     = NULL,
+             .type     = OBJ_STRING,
+             .newPos   = NULL},
+  };
+
+  calculateNewObjLocation(objects, &objects);
+
+  assert(objects[0].newPos == &objects[0]);
+  // Should be NULL since it's not marked.
+  assert(objects[1].newPos == NULL);
+  assert(objects[2].newPos == NULL);
+  assert(objects[3].newPos ==
+         (Obj *)(((char *)(&objects[0])) + sizeof(ObjString)));
+
+  VM fakeVM = {
+      .bytesAllocated = 0,
+      .frameCount     = 0,
+      .frames         = {},
+      .grayCount      = 0,
+      .grayCapacity   = 0,
+      .globals        = {0},
+      .nextGC         = 0,
+      .grayStack      = NULL,
+      .objects        = NULL,
+      .openUpvalues   = NULL,
+      .strings        = {0},
+      .stack          = {{.type = VAL_OBJ, .as.obj = &objects[0]},
+                         {.type = VAL_OBJ, .as.obj = &objects[3]}},
+      .stackTop       = fakeVM.stack + 2,
+  };
+
+  updateObjReferences(&fakeVM);
+
+  assert(fakeVM.stack[1].as.obj ==
+         (Obj *)((char *)(&objects[0]) + sizeof(ObjString)));
+}
+
 void testGC() {
   printf("Running Garbage Collector Tests:\n");
   // TODO: Re-enable these tests once GC is implemented.
@@ -215,4 +267,6 @@ void testGC() {
   testSortObjsByAddr2();
   printf("Running Test: 'testCalculateNewObjLocation'\n");
   testCalculateNewObjLocation();
+  printf("Running Test: 'testUpdateObjReferences'\n");
+  testUpdateObjReferences();
 }

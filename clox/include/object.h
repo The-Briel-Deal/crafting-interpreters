@@ -19,6 +19,8 @@
 #define AS_STRING(value)   ((ObjString *)AS_OBJ(value))
 #define AS_CSTRING(value)  (((ObjString *)AS_OBJ(value))->chars)
 
+typedef struct VM VM;
+
 struct ObjHeap {
   void *start;
   void *next;
@@ -51,6 +53,7 @@ typedef struct {
 
 void initHeap();
 Obj *sortObjsByAddr(Obj *objects);
+void updateObjReferences(VM *_vm);
 void calculateNewObjLocation(Obj *objects, void *newStart);
 
 typedef Value (*NativeFn)(int argCount, Value *args);

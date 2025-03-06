@@ -18,7 +18,7 @@ typedef struct {
   Value *slots;
 } CallFrame;
 
-typedef struct {
+struct VM {
   CallFrame frames[FRAMES_MAX];
   int frameCount;
   Value stack[STACK_MAX];
@@ -33,7 +33,7 @@ typedef struct {
   int grayCount;
   int grayCapacity;
   Obj **grayStack;
-} VM;
+};
 
 typedef enum {
   INTERPRET_OK,

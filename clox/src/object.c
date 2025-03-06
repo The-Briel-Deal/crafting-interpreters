@@ -111,6 +111,19 @@ void calculateNewObjLocation(Obj *objects, void *newStart) {
   }
 }
 
+void updateObjReferences(VM *_vm) {
+  // Walk the stack.
+  for (Value *stackPtr = _vm->stack; stackPtr < _vm->stackTop; stackPtr++) {
+    if (stackPtr->type == VAL_OBJ) {
+			stackPtr->as.obj = stackPtr->as.obj->newPos;
+    }
+  }
+  //  for (int i = _vm->frameCount; i > 0; i--) {
+  //    CallFrame *frame = &_vm->frames[i - 1];
+  //    frame->closure   = (ObjClosure *)(frame->closure->obj.newPos);
+  //  }
+}
+
 void compactHeap() {
   vm.objects = sortObjsByAddr(vm.objects);
 
