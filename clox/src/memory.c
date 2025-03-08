@@ -230,7 +230,8 @@ void compact() {
 		dest->newPos = NULL;
 		dest->isMarked = false;
   }
-  vm.heap.nextFree = dest;
+	// At the end of loop, we are at the start of last element, we want to be at end of last element.
+  vm.heap.nextFree = ((char *)dest) + getObjSize(dest->type);
 }
 
 void collectGarbage() {

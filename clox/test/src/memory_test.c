@@ -21,6 +21,13 @@ void assertStrsOnHeap(struct StrToFind strsToFind[], int len) {
        object      = (Obj *)((char *)(object) + getObjSize(object->type))) {
     for (int i = 0; i < len; i++) {
       struct StrToFind *str = &strsToFind[i];
+
+			//! For Debug:
+      // if (object->type == OBJ_STRING) {
+      //   printf("On Heap: %s\nExpect: %s\n", ((ObjString *)object)->chars,
+      //          str->str);
+      // }
+
       if (object->type == OBJ_STRING &&
           ((ObjString *)object)->length == str->len &&
           memcmp(((ObjString *)object)->chars, str->str, str->len) == 0) {
