@@ -3,6 +3,7 @@
 
 #include "chunk.h"
 #include "value.h"
+#include <stddef.h>
 #include <stdint.h>
 
 #define OBJ_TYPE(value)    (AS_OBJ(value)->type)
@@ -76,6 +77,7 @@ ObjClosure *newClosure(ObjFunction *function);
 ObjString *takeString(char *chars, int length);
 ObjString *copyString(const char *chars, int length);
 ObjUpvalue *newUpvalue(Value *slot);
+size_t getObjSize(ObjType type);
 void printObject(Value value);
 
 static inline bool isObjType(Value value, ObjType type) {

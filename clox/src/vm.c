@@ -61,7 +61,7 @@ static void defineNative(const char *name, NativeFn function) {
 
 void initHeap(Heap *heap) {
   heap->heapStart = malloc(HEAP_SIZE);
-  heap->nextFree  = NULL;
+  heap->nextFree  = heap->heapStart;
 }
 
 void freeHeap(Heap *heap) {

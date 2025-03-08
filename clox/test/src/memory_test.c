@@ -17,7 +17,8 @@ struct StrToFind {
 
 void assertStrsOnHeap(struct StrToFind strsToFind[], int len) {
   // The only object on the heap should be testStr1.
-  for (Obj *object = vm.objects; object != NULL; object = object->next) {
+  for (Obj *object = vm.heap.heapStart; object < (Obj *)(vm.heap.nextFree);
+       object      = (Obj *)((char *)(object) + getObjSize(object->type))) {
     for (int i = 0; i < len; i++) {
       struct StrToFind *str = &strsToFind[i];
       if (object->type == OBJ_STRING &&
@@ -37,7 +38,7 @@ void assertStrsOnHeap(struct StrToFind strsToFind[], int len) {
     }
   }
   if (strNotFound) {
-    printf("Test failed.");
+    printf("Test failed.\n");
     exit(1);
   }
 }
@@ -94,7 +95,7 @@ void testManyStrsOnStack() {
       [0] = {.str         = testStr1,
              .len         = sizeof(testStr1),
              .found       = false,
-             .expectFound = true},
+             .expectFound = true },
       [1] = {.str         = testStr2,
              .len         = sizeof(testStr2),
              .found       = false,
@@ -102,15 +103,15 @@ void testManyStrsOnStack() {
       [2] = {.str         = testStr3,
              .len         = sizeof(testStr3),
              .found       = false,
-             .expectFound = true},
+             .expectFound = true },
       [3] = {.str         = testStr4,
              .len         = sizeof(testStr4),
              .found       = false,
-             .expectFound = true},
+             .expectFound = true },
       [4] = {.str         = testStr5,
              .len         = sizeof(testStr5),
              .found       = false,
-             .expectFound = true},
+             .expectFound = true },
   };
 
   assertStrsOnHeap(strsToFind, sizeof(strsToFind) / sizeof(struct StrToFind));

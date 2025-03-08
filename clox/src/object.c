@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "chunk.h"
@@ -11,13 +12,23 @@
 #define ALLOCATE_OBJ(type, objectType)                                         \
   (type *)allocateObject(sizeof(type), objectType)
 
+size_t getObjSize(ObjType type) {
+  switch (type) {
+    case OBJ_STRING  : return sizeof(ObjString);
+    case OBJ_CLOSURE : return sizeof(ObjClosure);
+    case OBJ_NATIVE  : return sizeof(ObjNative);
+    case OBJ_FUNCTION: return sizeof(ObjFunction);
+    case OBJ_UPVALUE : return sizeof(ObjUpvalue);
+		default: printf("Invalid Object Type"); exit(1);
+  }
+}
+
 static Obj *allocateObject(size_t size, ObjType type) {
-  Obj *object      = (Obj *)reallocate(NULL, 0, size);
+  size_t objSize   = getObjSize(type);
+  Obj *object      = vm.heap.nextFree;
+  vm.heap.nextFree = (char *)(vm.heap.nextFree) + objSize;
   object->type     = type;
   object->isMarked = false;
-
-  object->next = vm.objects;
-  vm.objects   = object;
 
 #ifdef DEBUG_LOG_GC
   printf("%p allocate %zu for %d\n", (void *)object, size, type);

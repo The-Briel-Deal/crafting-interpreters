@@ -37,38 +37,6 @@ void *reallocate(void *pointer, size_t oldSize, size_t newSize) {
   return result;
 }
 
-static void freeObject(Obj *object) {
-#ifdef DEBUG_LOG_GC
-  printf("%p free type %d\n", (void *)object, object->type);
-#endif
-
-  switch (object->type) {
-    case OBJ_STRING: {
-      ObjString *string = (ObjString *)object;
-      FREE_ARRAY(char, string->chars, string->length + 1);
-      FREE(ObjString, object);
-      break;
-    }
-    case OBJ_FUNCTION: {
-      ObjFunction *function = (ObjFunction *)object;
-      freeChunk(&function->chunk);
-      FREE(ObjFunction, object);
-      break;
-    }
-    case OBJ_NATIVE: {
-      FREE(ObjNative, object);
-      break;
-    }
-    case OBJ_CLOSURE: {
-      ObjClosure *closure = (ObjClosure *)object;
-      FREE_ARRAY(ObjUpvalue, closure->upvalues, closure->upvalueCount);
-      FREE(ObjClosure, object);
-      break;
-    }
-    case OBJ_UPVALUE: FREE(ObjUpvalue, object); break;
-  }
-}
-
 void markObject(Obj *object) {
   if (object == NULL)
     return;
@@ -157,27 +125,6 @@ static void traceReferences() {
   }
 }
 
-static void sweep() {
-  Obj *previous = NULL;
-  Obj *object   = vm.objects;
-  while (object != NULL) {
-    if (object->isMarked) {
-      object->isMarked = false;
-      previous         = object;
-      object           = object->next;
-    } else {
-      Obj *unreached = object;
-      object         = object->next;
-      if (previous != NULL) {
-        previous->next = object;
-      } else {
-        vm.objects = object;
-      }
-
-      freeObject(unreached);
-    }
-  }
-}
 static bool gcDisabled = false;
 
 void disableGC() {
@@ -215,31 +162,20 @@ void collectGarbage() {
   // Mark
   markRoots();
   traceReferences();
-  // Old Sweep
-  tableRemoveWhite(&vm.strings);
-  sweep();
-  // Compact
-  //
+  //! Old Sweep
+  // tableRemoveWhite(&vm.strings);
+  // sweep();
+	//
+  //! Compact
   // calculateNewPos();
   // updateObjRefs();
   // compact();
 
-  vm.nextGC = vm.bytesAllocated * GC_HEAP_GROW_FACTOR;
+  // vm.nextGC = vm.bytesAllocated * GC_HEAP_GROW_FACTOR;
 
 #ifdef DEBUG_LOG_GC
   printf("-- gc end\n");
   printf("   collected %zu bytes (from %zu to %zu) next at %zu\n",
          before - vm.bytesAllocated, before, vm.bytesAllocated, vm.nextGC);
 #endif
-}
-
-void freeObjects() {
-  Obj *object = vm.objects;
-  while (object != NULL) {
-    Obj *next = object->next;
-    freeObject(object);
-    object = next;
-  }
-
-  free(vm.grayStack);
 }
