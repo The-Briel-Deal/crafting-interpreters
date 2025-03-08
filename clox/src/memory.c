@@ -195,10 +195,33 @@ void collectGarbage() {
   size_t before = vm.bytesAllocated;
 #endif
 
+  // To move to mark compact we need to replace the call to sweep with a
+  // function that calculates a new position for all unmarked objects. Then we
+  // need a function that updates references to these objects with their new
+  // positions.
+  // * In `stack` we need to walk the stack and update the references to All
+  //   VAL_OBJ objects.
+  // * In `frames` we need to walk through every call frame and update refs to
+  //   `ObjClosure`.
+  // * In `globals` and `strings` we need to walk through all living entries and
+  //   updating their ObjString keys, then all of their values of type VAL_OBJ.
+  // * Finally we walk all objects and create a function similar to markObj
+  //   where we update it's addr.
+  //
+  // Then after all refs are updated, we move all objects to their calculated
+  // position.
+
+  // Mark
   markRoots();
   traceReferences();
+  // Old Sweep
   tableRemoveWhite(&vm.strings);
   sweep();
+  // Compact
+  //
+  // calculateNewPos();
+  // updateObjRefs();
+  // compact();
 
   vm.nextGC = vm.bytesAllocated * GC_HEAP_GROW_FACTOR;
 
