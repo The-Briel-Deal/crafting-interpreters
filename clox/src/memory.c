@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 
 #include "chunk.h"
 #include "compiler.h"
@@ -216,6 +217,20 @@ void updateVMRefs() {
   }
 }
 
+void compact() {
+  Obj *dest = vm.heap.heapStart;
+  for (Obj *object = vm.heap.heapStart; object < (Obj *)(vm.heap.nextFree);
+       object      = (Obj *)((char *)(object) + getObjSize(object->type))) {
+    if (!object->isMarked) {
+      continue;
+    }
+    size_t objSize = getObjSize(object->type);
+    memmove(dest, object, objSize);
+
+    dest = (Obj *)(((char *)dest) + objSize);
+  }
+}
+
 void collectGarbage() {
   if (gcDisabled)
     return;
@@ -250,7 +265,7 @@ void collectGarbage() {
   //! Compact
   calculateNewPos();
   updateVMRefs();
-  // compact();
+  compact();
 
   // vm.nextGC = vm.bytesAllocated * GC_HEAP_GROW_FACTOR;
 
