@@ -22,7 +22,7 @@ void assertStrsOnHeap(struct StrToFind strsToFind[], int len) {
     for (int i = 0; i < len; i++) {
       struct StrToFind *str = &strsToFind[i];
 
-			//! For Debug:
+      //! For Debug:
       // if (object->type == OBJ_STRING) {
       //   printf("On Heap: %s\nExpect: %s\n", ((ObjString *)object)->chars,
       //          str->str);
@@ -54,10 +54,10 @@ void testStrsOnStack() {
   initVM();
   char testStr1[]        = "testStr1";
   ObjString *testStr1Obj = copyString(testStr1, sizeof(testStr1));
+  push(OBJ_VAL(testStr1Obj));
 
   char testStr2[] = "testStr2";
   copyString(testStr2, sizeof(testStr2));
-  push(OBJ_VAL(testStr1Obj));
 
   collectGarbage();
 
@@ -78,11 +78,10 @@ void testManyStrsOnStack() {
   initVM();
   char testStr1[]        = "testStr1";
   ObjString *testStr1Obj = copyString(testStr1, sizeof(testStr1));
+  push(OBJ_VAL(testStr1Obj));
 
   char testStr2[] = "testStr2";
   copyString(testStr2, sizeof(testStr2));
-
-  push(OBJ_VAL(testStr1Obj));
 
   char testStr3[]        = "testStr3";
   ObjString *testStr3Obj = copyString(testStr3, sizeof(testStr3));
