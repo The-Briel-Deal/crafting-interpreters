@@ -19,7 +19,7 @@ size_t getObjSize(ObjType type) {
     case OBJ_NATIVE  : return sizeof(ObjNative);
     case OBJ_FUNCTION: return sizeof(ObjFunction);
     case OBJ_UPVALUE : return sizeof(ObjUpvalue);
-		default: printf("Invalid Object Type"); exit(1);
+    default          : printf("Invalid Object Type"); exit(1);
   }
 }
 

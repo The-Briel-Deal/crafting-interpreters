@@ -165,7 +165,7 @@ void collectGarbage() {
   //! Old Sweep
   // tableRemoveWhite(&vm.strings);
   // sweep();
-	//
+  //
   //! Compact
   // calculateNewPos();
   // updateObjRefs();
