@@ -39,6 +39,12 @@ ObjClosure *newClosure(ObjFunction *function) {
   return closure;
 }
 
+ObjClass *newClass(ObjString *name) {
+  ObjClass *klass = ALLOCATE_OBJ(ObjClass, OBJ_CLASS);
+  klass->name     = name;
+  return klass;
+}
+
 ObjFunction *newFunction() {
   ObjFunction *function  = ALLOCATE_OBJ(ObjFunction, OBJ_FUNCTION);
   function->arity        = 0;
@@ -118,6 +124,7 @@ static void printFunction(ObjFunction *function) {
 
 void printObject(Value value) {
   switch (OBJ_TYPE(value)) {
+    case OBJ_CLASS   : printf("%s", AS_CLASS(value)->name->chars); break;
     case OBJ_CLOSURE : printFunction(AS_CLOSURE(value)->function); break;
     case OBJ_FUNCTION: printFunction(AS_FUNCTION(value)); break;
     case OBJ_NATIVE  : printf("<native fn>"); break;
