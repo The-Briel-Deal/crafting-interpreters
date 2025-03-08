@@ -11,12 +11,18 @@
 
 #define FRAMES_MAX 64
 #define STACK_MAX  FRAMES_MAX *UINT8_COUNT
+#define HEAP_SIZE  1024 * 1024
 
 typedef struct {
   ObjClosure *closure;
   uint8_t *ip;
   Value *slots;
 } CallFrame;
+
+typedef struct {
+  Obj *heapStart;
+  void *nextFree;
+} Heap;
 
 typedef struct {
   CallFrame frames[FRAMES_MAX];
@@ -27,9 +33,7 @@ typedef struct {
   Table strings;
   ObjUpvalue *openUpvalues;
 
-  size_t bytesAllocated;
-  size_t nextGC;
-  Obj *objects;
+  Heap heap;
   int grayCount;
   int grayCapacity;
   Obj **grayStack;

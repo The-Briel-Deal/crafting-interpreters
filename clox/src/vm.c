@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
@@ -58,11 +59,18 @@ static void defineNative(const char *name, NativeFn function) {
   pop();
 }
 
+void initHeap(Heap *heap) {
+  heap->heapStart = malloc(HEAP_SIZE);
+  heap->nextFree  = NULL;
+}
+
+void freeHeap(Heap *heap) {
+  free(heap->heapStart);
+}
+
 void initVM() {
   resetStack();
-  vm.objects        = NULL;
-  vm.bytesAllocated = 0;
-  vm.nextGC         = 1024 * 1024;
+  initHeap(&vm.heap);
 
   vm.grayCount    = 0;
   vm.grayCapacity = 0;
@@ -77,7 +85,7 @@ void initVM() {
 void freeVM() {
   freeTable(&vm.globals);
   freeTable(&vm.strings);
-  freeObjects();
+  freeHeap(&vm.heap);
 }
 
 void push(Value value) {
