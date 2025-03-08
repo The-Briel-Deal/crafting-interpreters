@@ -172,16 +172,22 @@ void updateObjRefs(Obj *object) {
     case OBJ_NATIVE : return;
     case OBJ_CLOSURE: {
       ObjClosure *closure = (ObjClosure *)object;
-      closure->function   = (ObjFunction *)closure->function->obj.newPos;
+      if (closure->function != NULL) {
+        closure->function = (ObjFunction *)closure->function->obj.newPos;
+      }
 
       for (int i = 0; i < closure->upvalueCount; i++) {
-        closure->upvalues[i] = (ObjUpvalue *)closure->upvalues[i]->obj.newPos;
+        if (closure->upvalues[i] != NULL) {
+          closure->upvalues[i] = (ObjUpvalue *)closure->upvalues[i]->obj.newPos;
+        }
       }
       return;
     }
     case OBJ_FUNCTION: {
       ObjFunction *function = (ObjFunction *)object;
-      function->name        = (ObjString *)function->name->obj.newPos;
+      if (function->name != NULL) {
+        function->name = (ObjString *)function->name->obj.newPos;
+      }
       return;
     }
     case OBJ_UPVALUE: {
@@ -227,10 +233,11 @@ void compact() {
     size_t objSize = getObjSize(object->type);
     dest           = object->newPos;
     memmove(dest, object, objSize);
-		dest->newPos = NULL;
-		dest->isMarked = false;
+    dest->newPos   = NULL;
+    dest->isMarked = false;
   }
-	// At the end of loop, we are at the start of last element, we want to be at end of last element.
+  // At the end of loop, we are at the start of last element, we want to be at
+  // end of last element.
   vm.heap.nextFree = ((char *)dest) + getObjSize(dest->type);
 }
 

@@ -24,10 +24,12 @@ size_t getObjSize(ObjType type) {
 }
 
 static Obj *allocateObject(size_t size, ObjType type) {
+  collectGarbage();
+
   size_t objSize   = getObjSize(type);
   Obj *object      = vm.heap.nextFree;
   vm.heap.nextFree = (char *)(vm.heap.nextFree) + objSize;
-	object->newPos = NULL;
+  object->newPos   = NULL;
   object->type     = type;
   object->isMarked = false;
 

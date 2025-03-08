@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "helper_test.h"
+#include "memory.h"
 #include "object.h"
 #include "table.h"
 #include "value.h"
@@ -12,6 +13,9 @@
 
 const char TEST_TABLE_1_EXPECT[] = "testVal";
 void testTable1() {
+  // Disabling GC here since this table isn't going to have it's refs updated
+  // during GC.
+  disableGC();
   Table table;
   initTable(&table);
   char key[]        = "testKey";
@@ -37,6 +41,7 @@ void testTable1() {
   assert(memcmp(resultObjString->chars, val, resultObjString->length) == 0);
 
   printf("%s", resultObjString->chars);
+  enableGC();
 }
 
 struct KeyValPair {
@@ -74,6 +79,9 @@ const char TEST_TABLE_2_EXPECT[] =
     "Googieeee -> Boingleeee\n";
 
 void testTable2() {
+  // Disabling GC here since this table isn't going to have it's refs updated
+  // during GC.
+  disableGC();
   Table table;
   initTable(&table);
 
@@ -114,6 +122,7 @@ void testTable2() {
 
     printf("%s -> %s\n", key, resultObjString->chars);
   }
+  enableGC();
 }
 
 const TestCase TABLE_TESTS[] = {
