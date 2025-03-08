@@ -4,6 +4,7 @@
 #include "compiler.h"
 #include "memory.h"
 #include "object.h"
+#include "table.h"
 #include "value.h"
 #include "vm.h"
 
@@ -135,6 +136,86 @@ void enableGC() {
   gcDisabled = false;
 }
 
+void calculateNewPos() {
+  Obj *currPos = vm.heap.heapStart;
+  for (Obj *object = vm.heap.heapStart; object < (Obj *)(vm.heap.nextFree);
+       object      = (Obj *)((char *)(object) + getObjSize(object->type))) {
+    if (!object->isMarked) {
+      continue;
+    }
+    size_t objSize = getObjSize(object->type);
+    object->newPos = currPos;
+
+    currPos = (Obj *)(((char *)currPos) + objSize);
+  }
+}
+
+void updateTableRefs(Table *table) {
+  if (table->count == 0)
+    return;
+  for (int i = 0; i < table->capacity; i++) {
+    Entry *entry = &table->entries[i];
+    if (entry->key == NULL) {
+      continue;
+    }
+    entry->key = (ObjString *)entry->key->obj.newPos;
+
+    if (entry->value.type == VAL_OBJ) {
+      entry->value.as.obj = entry->value.as.obj->newPos;
+    }
+  }
+}
+void updateObjRefs(Obj *object) {
+  switch (object->type) {
+    case OBJ_STRING : return;
+    case OBJ_NATIVE : return;
+    case OBJ_CLOSURE: {
+      ObjClosure *closure = (ObjClosure *)object;
+      closure->function   = (ObjFunction *)closure->function->obj.newPos;
+
+      for (int i = 0; i < closure->upvalueCount; i++) {
+        closure->upvalues[i] = (ObjUpvalue *)closure->upvalues[i]->obj.newPos;
+      }
+      return;
+    }
+    case OBJ_FUNCTION: {
+      ObjFunction *function = (ObjFunction *)object;
+      function->name        = (ObjString *)function->name->obj.newPos;
+      return;
+    }
+    case OBJ_UPVALUE: {
+      ObjUpvalue *upvalue = (ObjUpvalue *)object;
+      if (upvalue->next != NULL) {
+        upvalue->next = (ObjUpvalue *)upvalue->next->obj.newPos;
+      }
+      if (upvalue->closed.type == VAL_OBJ) {
+        upvalue->closed.as.obj = upvalue->closed.as.obj->newPos;
+      }
+      return;
+    }
+  }
+}
+
+void updateVMRefs() {
+  for (Value *val = vm.stack; val < vm.stackTop; val++) {
+    if (val->type == VAL_OBJ) {
+      val->as.obj = val->as.obj->newPos;
+    }
+  }
+  for (int i = 0; i < vm.frameCount; i++) {
+    CallFrame *frame = &vm.frames[i];
+    frame->closure   = (ObjClosure *)frame->closure->obj.newPos;
+  }
+
+  updateTableRefs(&vm.globals);
+  updateTableRefs(&vm.strings);
+
+  for (Obj *object = vm.heap.heapStart; object < (Obj *)(vm.heap.nextFree);
+       object      = (Obj *)((char *)(object) + getObjSize(object->type))) {
+    updateObjRefs(object);
+  }
+}
+
 void collectGarbage() {
   if (gcDisabled)
     return;
@@ -167,8 +248,8 @@ void collectGarbage() {
   // sweep();
   //
   //! Compact
-  // calculateNewPos();
-  // updateObjRefs();
+  calculateNewPos();
+  updateVMRefs();
   // compact();
 
   // vm.nextGC = vm.bytesAllocated * GC_HEAP_GROW_FACTOR;

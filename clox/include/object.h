@@ -30,6 +30,7 @@ typedef enum {
 
 struct Obj {
   ObjType type;
+	Obj* newPos;
   bool isMarked;
 };
 
