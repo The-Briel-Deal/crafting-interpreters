@@ -221,14 +221,16 @@ void compact() {
   Obj *dest = vm.heap.heapStart;
   for (Obj *object = vm.heap.heapStart; object < (Obj *)(vm.heap.nextFree);
        object      = (Obj *)((char *)(object) + getObjSize(object->type))) {
-    if (!object->isMarked) {
+    if (object->newPos == NULL) {
       continue;
     }
     size_t objSize = getObjSize(object->type);
+    dest           = object->newPos;
     memmove(dest, object, objSize);
-
-    dest = (Obj *)(((char *)dest) + objSize);
+		dest->newPos = NULL;
+		dest->isMarked = false;
   }
+  vm.heap.nextFree = dest;
 }
 
 void collectGarbage() {
