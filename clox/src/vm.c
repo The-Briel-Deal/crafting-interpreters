@@ -229,6 +229,7 @@ static InterpretResult run() {
         break;
       }
       case OP_NIL      : push(NIL_VAL); break;
+      case OP_UNDEFINED: push(UNDEFINED_VAL); break;
       case OP_TRUE     : push(BOOL_VAL(true)); break;
       case OP_FALSE    : push(BOOL_VAL(false)); break;
       case OP_POP      : pop(); break;
@@ -299,8 +300,9 @@ static InterpretResult run() {
           break;
         }
 
-        runtimeError("Undefined property '%s'.", name->chars);
-        return INTERPRET_RUNTIME_ERROR;
+        pop();
+        push(UNDEFINED_VAL);
+        break;
       }
       case OP_SET_PROPERTY: {
         if (!IS_INSTANCE(peek(1))) {
@@ -309,7 +311,7 @@ static InterpretResult run() {
         }
         ObjInstance *instance = AS_INSTANCE(peek(1));
         tableSet(&instance->fields, READ_STRING(), peek(0));
-				// We need to remove the instance from stack, but leave the value.
+        // We need to remove the instance from stack, but leave the value.
         Value value = pop();
         pop();
         push(value);

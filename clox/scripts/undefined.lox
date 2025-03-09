@@ -1,0 +1,13 @@
+class Beans {}
+var beans = Beans();
+beans.type = "Baked";
+
+if (beans.flavor == undefined) {
+	print "Undefined Flavor";
+}
+
+if (beans.type == undefined) {
+  print "Undefined Type";
+}
+
+// Should print "Undefined Flavor"

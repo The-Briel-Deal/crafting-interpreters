@@ -426,9 +426,10 @@ static void dot(bool canAssign) {
 
 static void literal(bool canAssign) {
   switch (parser.previous.type) {
-    case TOKEN_FALSE: emitByte(OP_FALSE); break;
-    case TOKEN_NIL  : emitByte(OP_NIL); break;
-    case TOKEN_TRUE : emitByte(OP_TRUE); break;
+    case TOKEN_FALSE    : emitByte(OP_FALSE); break;
+    case TOKEN_NIL      : emitByte(OP_NIL); break;
+    case TOKEN_TRUE     : emitByte(OP_TRUE); break;
+    case TOKEN_UNDEFINED: emitByte(OP_UNDEFINED); break;
     default:
       error(
           "False, Nil, and True are the only supported literals, this should "
@@ -539,6 +540,7 @@ ParseRule rules[] = {
     [TOKEN_SUPER]         = {NULL,     NULL,   PREC_NONE      },
     [TOKEN_THIS]          = {NULL,     NULL,   PREC_NONE      },
     [TOKEN_TRUE]          = {literal,  NULL,   PREC_NONE      },
+    [TOKEN_UNDEFINED]     = {literal,  NULL,   PREC_NONE      },
     [TOKEN_VAR]           = {NULL,     NULL,   PREC_NONE      },
     [TOKEN_WHILE]         = {NULL,     NULL,   PREC_NONE      },
     [TOKEN_ERROR]         = {NULL,     NULL,   PREC_NONE      },
