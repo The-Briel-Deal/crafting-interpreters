@@ -10,3 +10,11 @@ For example:
 ```js
 getField(instance, "field");
 ```
+
+# Chal 3
+Python uses a delattr function. I'm going to implement something similar like I did for chal 1 and 2.
+
+For example:
+```js
+delField(instance, "field")
+```
