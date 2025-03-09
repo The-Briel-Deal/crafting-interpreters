@@ -18,3 +18,12 @@ For example:
 ```js
 delField(instance, "field")
 ```
+
+# Chal 4
+One way I can think of speeding up field access is via caching, you could store
+a cache of the last 3 accessed ObjString pointers in a circular buffer where
+you attempt to look through the list before hashing, then you can go directly
+there if the cache is still valid. I'm not sure what all the cache invalidation
+scenarios look like though, I feel like there is probably an edge case where we
+access bad data if the table has resized. We could always invalidate the cache
+in that situation however.  
