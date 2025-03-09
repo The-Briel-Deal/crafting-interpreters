@@ -22,6 +22,29 @@ static Value clockNative(int argCount, Value *args) {
   return NUMBER_VAL((double)clock() / CLOCKS_PER_SEC);
 }
 
+static Value getFieldNative(int argCount, Value *args) {
+  if (argCount != 2) {
+    return NIL_VAL;
+  }
+
+  if (!IS_INSTANCE(args[0])) {
+    return NIL_VAL;
+  }
+  ObjInstance *instance = AS_INSTANCE(args[0]);
+
+  if (!IS_STRING(args[1])) {
+    return NIL_VAL;
+  }
+  ObjString *fieldName = AS_STRING(args[1]);
+
+  Value returnVal;
+  if (!tableGet(&instance->fields, fieldName, &returnVal)) {
+    return NIL_VAL;
+  }
+
+  return returnVal;
+}
+
 static void resetStack() {
   vm.stackTop     = vm.stack;
   vm.frameCount   = 0;
@@ -72,6 +95,7 @@ void initVM() {
   initTable(&vm.strings);
 
   defineNative("clock", clockNative);
+  defineNative("getField", getFieldNative);
 }
 
 void freeVM() {
@@ -309,7 +333,7 @@ static InterpretResult run() {
         }
         ObjInstance *instance = AS_INSTANCE(peek(1));
         tableSet(&instance->fields, READ_STRING(), peek(0));
-				// We need to remove the instance from stack, but leave the value.
+        // We need to remove the instance from stack, but leave the value.
         Value value = pop();
         pop();
         push(value);
