@@ -1,0 +1,11 @@
+class Beans {
+  init(type) {
+	  this.type = type;
+	}
+
+	name() {
+    return this.type + " Beans";
+	}
+}
+
+print Beans("Baked").name();
