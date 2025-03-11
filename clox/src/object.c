@@ -30,6 +30,10 @@ ObjBoundMethod *newBoundMethod(Value receiver, ObjClosure *method) {
   ObjBoundMethod *bound = ALLOCATE_OBJ(ObjBoundMethod, OBJ_BOUND_METHOD);
   bound->receiver       = receiver;
   bound->method         = method;
+  if (memcmp(method->function->name, vm.initString->chars,
+             vm.initString->length)) {
+    AS_CLASS(receiver)->initializer = method;
+  }
   return bound;
 }
 
@@ -47,8 +51,9 @@ ObjClosure *newClosure(ObjFunction *function) {
 }
 
 ObjClass *newClass(ObjString *name) {
-  ObjClass *klass = ALLOCATE_OBJ(ObjClass, OBJ_CLASS);
-  klass->name     = name;
+  ObjClass *klass    = ALLOCATE_OBJ(ObjClass, OBJ_CLASS);
+  klass->name        = name;
+  klass->initializer = NULL;
   initTable(&klass->methods);
   return klass;
 }

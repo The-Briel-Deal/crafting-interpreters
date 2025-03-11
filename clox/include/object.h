@@ -81,8 +81,15 @@ typedef struct {
 
 typedef struct {
   Obj obj;
+  Value receiver;
+  ObjClosure *method;
+} ObjBoundMethod;
+
+typedef struct {
+  Obj obj;
   ObjString *name;
   Table methods;
+  ObjClosure *initializer;
 } ObjClass;
 
 typedef struct {
@@ -90,12 +97,6 @@ typedef struct {
   ObjClass *klass;
   Table fields;
 } ObjInstance;
-
-typedef struct {
-  Obj obj;
-  Value receiver;
-  ObjClosure *method;
-} ObjBoundMethod;
 
 ObjBoundMethod *newBoundMethod(Value reciever, ObjClosure *method);
 
