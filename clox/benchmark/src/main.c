@@ -19,6 +19,7 @@ long benchTable();
 long benchVars();
 void benchFibonacci();
 void benchClosure();
+long benchClassInit();
 static void runBench(long (*benchFn)(), FILE *stdoutRedirect);
 
 int main(int argc, char *argv[]) {
@@ -29,6 +30,8 @@ int main(int argc, char *argv[]) {
   runBench(benchTable, stdoutRedirect);
   printf("benchVars:\n");
   runBench(benchVars, stdoutRedirect);
+  printf("benchClassInit:\n");
+  runBench(benchClassInit, stdoutRedirect);
   fclose(stdoutRedirect);
 
   printf("benchFibonacci:\n");
@@ -97,7 +100,7 @@ long benchVars() {
 
 long benchTable() {
   initVM();
-	disableGC();
+  disableGC();
   long startTime = clock();
   Table table;
   initTable(&table);
@@ -130,7 +133,7 @@ long benchTable() {
     printf("%s -> %s", key, resultObjStr->chars);
   }
   long endTime = clock();
-	enableGC();
+  enableGC();
   return endTime - startTime;
 }
 
@@ -173,6 +176,25 @@ void benchClosure() {
 
   interpret(source);
   freeVM();
+}
+
+long benchClassInit() {
+  initVM();
+
+  char source[] =
+      "class Beans {"
+      "	init() {"
+      "    this.toast = 1;"
+      "	}"
+      "}"
+      "var beans = Beans();";
+
+  long startTime = clock();
+  interpret(source);
+  long endTime = clock();
+  freeVM();
+
+  return endTime - startTime;
 }
 
 const char VERY_LONG_STR_CONCAT_SCRIPT[] =
