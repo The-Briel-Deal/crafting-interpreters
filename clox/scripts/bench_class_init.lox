@@ -1,0 +1,6 @@
+class Beans {
+	init() {
+    this.toast = 1;
+	}
+}
+var beans = Beans();
