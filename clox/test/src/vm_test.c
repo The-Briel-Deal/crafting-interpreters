@@ -238,6 +238,33 @@ void testClosure2() {
 
   interpret(source);
 }
+const char TEST_SUPER_1_EXPECT[] =
+    "hot dogs and \n"
+    "baked beans\n";
+
+void testSuper1() {
+  initVM();
+
+  // Evaluates like ((true and true) or (false and true))
+  char source[] =
+		"class Beans {\n"
+		"	 bake() {\n"
+    "    print \"baked beans\";\n"
+		"	 }\n"
+		"}\n"
+	  "class BeanieWeenies < Beans {\n"
+		"	 bake() {\n"
+    "    print \"hot dogs and \";\n"
+		"	 	 super.bake();\n"
+		"	 }\n"
+		"}\n"
+		"var beansAndWeens = BeanieWeenies();"
+	  "beansAndWeens.bake();";
+
+
+  interpret(source);
+}
+
 const TestCase VM_TESTS[] = {
     {"testArithmetic1",   testArithmetic1,   TEST_ARITHMETIC_1_EXPECT   },
     {"testArithmetic2",   testArithmetic2,   TEST_ARITHMETIC_2_EXPECT   },
@@ -256,6 +283,7 @@ const TestCase VM_TESTS[] = {
     {"testFor2",          testFor2,          TEST_FOR_2_EXPECT          },
     {"testClosure1",      testClosure1,      TEST_CLOSURE_1_EXPECT      },
     {"testClosure2",      testClosure2,      TEST_CLOSURE_2_EXPECT      },
+    {"testSuper1",        testSuper1,        TEST_SUPER_1_EXPECT        },
 };
 
 const int VM_TESTS_COUNT = sizeof(VM_TESTS) / sizeof(TestCase);
