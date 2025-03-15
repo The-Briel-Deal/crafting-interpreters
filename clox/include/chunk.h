@@ -39,6 +39,7 @@ typedef enum {
   OP_LOOP,
   OP_RETURN,
   OP_CLASS,
+	OP_INHERIT,
 	OP_METHOD,
 } OpCode;
 
