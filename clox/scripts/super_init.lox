@@ -1,0 +1,14 @@
+class Beans {
+	init() {
+		print "init beans";
+	}
+}
+
+class LimaBeans < Beans {
+	init() {
+    print "init lima beans";
+		super.init();
+	}
+}
+
+var limaBeans = LimaBeans();
