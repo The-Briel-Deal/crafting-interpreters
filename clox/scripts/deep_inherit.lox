@@ -1,0 +1,17 @@
+class A {
+}
+class B < A {
+  test() {
+	  print "B.test() called."; // This is the method that should be called after chap 29 chal 3.
+	}
+}
+class C < B {
+}
+class D < C {
+  test() {
+	  print "D.test() called."; // This is the method that is currently called prior to chap 29 chal 3.
+	}
+}
+
+var d = D();
+d.test();
