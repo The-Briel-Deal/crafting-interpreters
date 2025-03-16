@@ -507,6 +507,7 @@ static InterpretResult run() {
 
         ObjClass *subclass = AS_CLASS(peek(0));
         tableAddAll(&AS_CLASS(superclass)->methods, &subclass->methods);
+        subclass->superClass = AS_CLASS(superclass);
         pop(); // Pop Subclass.
         break;
       }
