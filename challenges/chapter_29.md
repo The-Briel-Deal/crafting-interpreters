@@ -20,3 +20,15 @@ What i'm going to have to do here for my first naive approach, is climb to the
 top inherited class while grabbing a reference to each method with that name.
 Then each bound method will store a reference to the method on the next
 subclass.
+
+There are two pieces to this:
+## Starting Calls at the highest superclass with the method.
+To do this i'm going to store the superclass on every subclass, then in the
+invoke() function i'm going to walk up to the last inherited class with a
+method of the set name.
+
+## Calls to inner should call the previous subclasses method.
+As i'm walking up to the highest superclass, every time I find another method
+on a parent, I will store the last one in the inner field of the bound method,
+this will let me easily call the inner function if it exists.
+
