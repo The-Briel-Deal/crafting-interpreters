@@ -158,7 +158,8 @@ static bool invokeFromClass(ObjClass *klass, ObjString *name, int argCount) {
   ObjClosure *lastMethod = NULL;
   while (klass != NULL) {
     if (tableGet(&klass->methods, name, &method)) {
-      lastMethod = AS_CLOSURE(method);
+      AS_CLOSURE(method)->inner = lastMethod;
+      lastMethod                = AS_CLOSURE(method);
     }
     klass = klass->superClass;
   }
