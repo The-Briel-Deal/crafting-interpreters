@@ -154,11 +154,20 @@ static bool callValue(Value callee, int argCount) {
 
 static bool invokeFromClass(ObjClass *klass, ObjString *name, int argCount) {
   Value method;
-  if (!tableGet(&klass->methods, name, &method)) {
+
+  ObjClosure *lastMethod = NULL;
+  while (klass != NULL) {
+    if (tableGet(&klass->methods, name, &method)) {
+      lastMethod = AS_CLOSURE(method);
+    }
+    klass = klass->superClass;
+  }
+
+  if (lastMethod == NULL) {
     runtimeError("Undefined property '%s'.", name->chars);
     return false;
   }
-  return call(AS_CLOSURE(method), argCount);
+  return call(lastMethod, argCount);
 }
 
 static bool invoke(ObjString *name, int argCount) {
