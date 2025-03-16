@@ -1,8 +1,13 @@
 class A {
+  test() {
+	  print "A.test() called."; // This is the method that should be called first after chap 29 chal 3.
+		inner();
+	}
 }
 class B < A {
   test() {
-	  print "B.test() called."; // This is the method that should be called after chap 29 chal 3.
+	  print "B.test() called."; // This is the method that should be called second after chap 29 chal 3.
+		inner();
 	}
 }
 class C < B {
