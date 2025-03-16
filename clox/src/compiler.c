@@ -521,6 +521,16 @@ static Token syntheticToken(const char *text) {
   return token;
 }
 
+static void inner(bool canAssign) {
+  if (currentClass == NULL) {
+    error("Can't use 'inner' outside of a class.");
+  }
+
+  emitByte(OP_GET_INNER);
+  consume(TOKEN_LEFT_PAREN, "Inner must be directly called.");
+  call(canAssign);
+}
+
 static void super_(bool canAssign) {
   if (currentClass == NULL) {
     error("Can't use 'super' outside of a class.");
@@ -584,6 +594,7 @@ ParseRule rules[] = {
     [TOKEN_LESS]          = {NULL,     binary, PREC_COMPARISON},
     [TOKEN_LESS_EQUAL]    = {NULL,     binary, PREC_COMPARISON},
     [TOKEN_IDENTIFIER]    = {variable, NULL,   PREC_NONE      },
+    [TOKEN_INNER]         = {inner,    NULL,   PREC_NONE      },
     [TOKEN_STRING]        = {string,   NULL,   PREC_NONE      },
     [TOKEN_NUMBER]        = {number,   NULL,   PREC_NONE      },
     [TOKEN_AND]           = {NULL,     and_,   PREC_AND       },

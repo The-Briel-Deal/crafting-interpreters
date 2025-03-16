@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -359,6 +360,10 @@ static InterpretResult run() {
         if (!bindMethod(superclass, name)) {
           return INTERPRET_RUNTIME_ERROR;
         }
+        break;
+      }
+      case OP_GET_INNER: {
+        push(OBJ_VAL(frame->closure->inner));
         break;
       }
       case OP_EQUAL: {
