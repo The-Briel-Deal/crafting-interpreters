@@ -32,7 +32,7 @@ void freeValueArray(ValueArray *array) {
 void printValue(Value value) {
 #ifdef NAN_BOXING
   if (IS_BOOL(value)) {
-    printf(AS_BOOL(value) ? "true" : false);
+    printf(AS_BOOL(value) ? "true" : "false");
   } else if (IS_NIL(value)) {
     printf("nil");
   } else if (IS_NUMBER(value)) {
