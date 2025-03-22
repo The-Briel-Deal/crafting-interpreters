@@ -115,7 +115,7 @@ ObjString *tableFindString(Table *table, const char *chars, int length,
   if (table->count == 0)
     return NULL;
 
-  uint32_t index = hash % table->capacity;
+  uint32_t index = hash & (table->capacity - 1);
 
   for (;;) {
     Entry *entry = &table->entries[index];
@@ -127,7 +127,7 @@ ObjString *tableFindString(Table *table, const char *chars, int length,
       return entry->key;
     }
 
-    index = (index + 1) % table->capacity;
+    index = (index + 1) & (table->capacity - 1);
   }
 }
 
