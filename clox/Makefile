@@ -16,14 +16,17 @@ endif
 ifeq (${DEBUG_PRINT_CODE}, 1)
 	CFLAGS += -DDEBUG_PRINT_CODE
 endif
-ifeq (${OPTIMIZE}, 1)
-	CFLAGS += -O3
-endif
 ifeq (${DEBUG_STRESS_GC}, 1)
 	CFLAGS += -DDEBUG_STRESS_GC
 endif
 ifeq (${DEBUG_LOG_GC}, 1)
 	CFLAGS += -DDEBUG_LOG_GC
+endif
+ifeq (${OPTIMIZE}, 1)
+	CFLAGS += -O3
+endif
+ifeq (${NAN_BOXING}, 1)
+	CFLAGS += -DNAN_BOXING
 endif
 
 # This needs to be below the above modifications to CFLAGS or this var won't contain the changes.
