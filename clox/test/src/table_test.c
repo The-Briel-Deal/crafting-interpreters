@@ -26,7 +26,7 @@ void testTable1() {
   bool foundKey = tableGet(&table, keyObj, &resultVal);
   assert(foundKey == true);
 
-  assert(resultVal.type == VAL_OBJ);
+  assert(IS_OBJ(resultVal));
   Obj *resultObj = AS_OBJ(resultVal);
 
   assert(resultObj->type == OBJ_STRING);
@@ -102,7 +102,7 @@ void testTable2() {
     bool foundKey = tableGet(&table, keyObj, &resultVal);
     assert(foundKey == true);
 
-    assert(resultVal.type == VAL_OBJ);
+    assert(IS_OBJ(resultVal));
     Obj *resultObj = AS_OBJ(resultVal);
 
     assert(resultObj->type == OBJ_STRING);
