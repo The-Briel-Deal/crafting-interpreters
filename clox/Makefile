@@ -24,6 +24,7 @@ ifeq (${DEBUG_LOG_GC}, 1)
 endif
 ifeq (${OPTIMIZE}, 1)
 	CFLAGS += -O3
+	CFLAGS += -DNDEBUG
 endif
 ifeq (${NAN_BOXING}, 1)
 	CFLAGS += -DNAN_BOXING
