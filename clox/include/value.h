@@ -49,7 +49,18 @@ static inline Value numToValue(double num) {
 
 #else
 
-typedef enum { VAL_BOOL, VAL_NIL, VAL_NUMBER, VAL_OBJ } ValueType;
+typedef enum {
+  VAL_BOOL,
+  VAL_NIL,
+  VAL_NUMBER,
+  VAL_SMALL_STR,
+  VAL_OBJ
+} ValueType;
+
+typedef struct {
+  uint8_t len;
+  char start[7];
+} SmallStr;
 
 typedef struct {
   ValueType type;
@@ -57,6 +68,7 @@ typedef struct {
     bool boolean;
     double number;
     Obj *obj;
+    SmallStr smallStr;
   } as;
 } Value;
 
