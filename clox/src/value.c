@@ -1,6 +1,5 @@
 #include <assert.h>
 #include <stdio.h>
-#include <string.h>
 
 #include "memory.h"
 #include "object.h"
@@ -68,4 +67,11 @@ bool valuesEqual(Value a, Value b) {
     default        : assert(false); return false; // Should be unreachable.
   }
 #endif
+}
+
+Value smallStrToObjString(Value smallStrVal) {
+  assert(IS_SMALL_STR(smallStrVal));
+  SmallStr smallStr    = AS_SMALL_STR(smallStrVal);
+  ObjString *objString = copyString(smallStr.start, smallStr.len);
+  return OBJ_VAL(objString);
 }

@@ -80,6 +80,8 @@ typedef struct {
   } as;
 } Value;
 
+Value smallStrToObjString(Value smallStrVal);
+
 #define IS_BOOL(value)          ((value).type == VAL_BOOL)
 #define IS_NIL(value)           ((value).type == VAL_NIL)
 #define IS_NUMBER(value)        ((value).type == VAL_NUMBER)
