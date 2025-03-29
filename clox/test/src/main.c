@@ -11,6 +11,7 @@
 #include "scanner_test.h"
 #include "table_test.h"
 #include "vm_test.h"
+#include "value_test.h"
 
 #define RUN_TESTS(TESTS, TEST_COUNT)                                           \
   for (int i = 0; i < TEST_COUNT; i++) {                                       \
@@ -63,6 +64,7 @@ int main(int argc, char *argv[]) {
   RUN_TESTS(SCANNER_TESTS, SCANNER_TESTS_COUNT);
   RUN_TESTS(TABLE_TESTS, TABLE_TESTS_COUNT);
   RUN_TESTS(LINE_TESTS, LINE_TESTS_COUNT);
+  RUN_TESTS(VALUE_TESTS, VALUE_TESTS_COUNT);
 
   testGC();
 
