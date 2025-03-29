@@ -44,6 +44,7 @@ typedef enum {
 
 extern VM vm;
 
+void concatenate();
 void initVM();
 void freeVM();
 InterpretResult interpret(const char *chunk);

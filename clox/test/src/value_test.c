@@ -1,11 +1,13 @@
 #include <assert.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <string.h>
 
 #include "helper_test.h"
 #include "object.h"
 #include "value.h"
 #include "value_test.h"
+#include "vm.h"
 
 void testMakeSmallStr() {
   char testStr[]      = "foo";
@@ -53,10 +55,28 @@ void testSmallStrToObj() {
   assert(memcmp(testStr, objString->chars, testStrSize) == 0);
 }
 
+void testSmallStrConcat() {
+  initVM();
+  ObjString *a = copyString("abc", 3);
+  push(OBJ_VAL(a));
+  ObjString *b = copyString("def", 3);
+  push(OBJ_VAL(b));
+
+  concatenate();
+
+  Value result = pop();
+
+  assert(IS_SMALL_STR(result));
+  SmallStr smallStr = AS_SMALL_STR(result);
+  assert(smallStr.len == 6);
+  assert(memcmp(smallStr.start, "abcdef", 6) == 0);
+}
+
 const TestCase VALUE_TESTS[] = {
     {"testMakeSmallStr",    testMakeSmallStr,    ""},
     {"testMakeSmallStrVal", testMakeSmallStrVal, ""},
     {"testSmallStrToObj",   testSmallStrToObj,   ""},
+    {"testSmallStrConcat",  testSmallStrConcat,  ""},
 };
 
 const int VALUE_TESTS_COUNT = sizeof(VALUE_TESTS) / sizeof(TestCase);
