@@ -94,7 +94,7 @@ void testManyStrsOnStack() {
       [0] = {.str         = testStr1,
              .len         = sizeof(testStr1),
              .found       = false,
-             .expectFound = true},
+             .expectFound = true },
       [1] = {.str         = testStr2,
              .len         = sizeof(testStr2),
              .found       = false,
@@ -102,24 +102,25 @@ void testManyStrsOnStack() {
       [2] = {.str         = testStr3,
              .len         = sizeof(testStr3),
              .found       = false,
-             .expectFound = true},
+             .expectFound = true },
       [3] = {.str         = testStr4,
              .len         = sizeof(testStr4),
              .found       = false,
-             .expectFound = true},
+             .expectFound = true },
       [4] = {.str         = testStr5,
              .len         = sizeof(testStr5),
              .found       = false,
-             .expectFound = true},
+             .expectFound = true },
   };
 
   assertStrsOnHeap(strsToFind, sizeof(strsToFind) / sizeof(struct StrToFind));
 }
 
 void testGC() {
-  printf("Running Garbage Collector Tests:\n");
-  printf("Running Test: 'testStrsOnStack'\n");
+
+  printf("Running 'gc' Tests:\n");
+  printf("  Running test 'testStrsOnStack'!\n");
   testStrsOnStack();
-  printf("Running Test: 'testManyStrsOnStack'\n");
+  printf("  Running test 'testManyStrsOnStack'!\n");
   testManyStrsOnStack();
 }

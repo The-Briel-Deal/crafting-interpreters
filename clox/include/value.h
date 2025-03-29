@@ -63,7 +63,7 @@ typedef struct {
   char start[7];
 } SmallStr;
 
-inline SmallStr newSmallStr(uint8_t len, char* start) {
+static inline SmallStr newSmallStr(uint8_t len, char* start) {
 	assert(len <= 7);
 	SmallStr smallStr = {.len = len};
 	strncpy(smallStr.start, start, len);

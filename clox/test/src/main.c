@@ -10,12 +10,15 @@
 #include "memory_test.h"
 #include "scanner_test.h"
 #include "table_test.h"
-#include "vm_test.h"
 #include "value_test.h"
+#include "vm_test.h"
 
-#define RUN_TESTS(TESTS, TEST_COUNT)                                           \
+#define RUN_TESTS(TESTS, TEST_COUNT, NAME)                                     \
+  printf("Running '%s' tests:\n", NAME);                                       \
+                                                                               \
   for (int i = 0; i < TEST_COUNT; i++) {                                       \
     TestCase test = TESTS[i];                                                  \
+    printf("  Running test '%s'!\n", test.name);                               \
     assert(runTest(test.name, test.fn, test.expect));                          \
   }
 
@@ -59,12 +62,12 @@ static bool runTest(char *testName, void (*testCase)(), const char *expect) {
 int main(int argc, char *argv[]) {
   printf("Starting Tests (:\n");
 
-  RUN_TESTS(CHUNK_TESTS, CHUNK_TESTS_COUNT);
-  RUN_TESTS(VM_TESTS, VM_TESTS_COUNT);
-  RUN_TESTS(SCANNER_TESTS, SCANNER_TESTS_COUNT);
-  RUN_TESTS(TABLE_TESTS, TABLE_TESTS_COUNT);
-  RUN_TESTS(LINE_TESTS, LINE_TESTS_COUNT);
-  RUN_TESTS(VALUE_TESTS, VALUE_TESTS_COUNT);
+  RUN_TESTS(CHUNK_TESTS, CHUNK_TESTS_COUNT, "chunk");
+  RUN_TESTS(VM_TESTS, VM_TESTS_COUNT, "vm");
+  RUN_TESTS(SCANNER_TESTS, SCANNER_TESTS_COUNT, "scanner");
+  RUN_TESTS(TABLE_TESTS, TABLE_TESTS_COUNT, "table");
+  RUN_TESTS(LINE_TESTS, LINE_TESTS_COUNT, "line");
+  RUN_TESTS(VALUE_TESTS, VALUE_TESTS_COUNT, "value");
 
   testGC();
 

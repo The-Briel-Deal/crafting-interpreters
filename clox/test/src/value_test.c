@@ -1,14 +1,20 @@
 #include <assert.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 #include "helper_test.h"
+#include "value.h"
+#include "value_test.h"
 
-void testVal1() {
-  assert(false);
+void testMakeSmallStr() {
+  char testStr[]      = "foo";
+  uint8_t testStrSize = sizeof(testStr);
+  SmallStr smallStr = newSmallStr(testStrSize, testStr);
+	assert(memcmp(testStr, smallStr.start, testStrSize) == 0);
 }
 
 const TestCase VALUE_TESTS[] = {
-    {"testVal1", testVal1, ""},
+    {"testMakeSmallStr", testMakeSmallStr, ""},
 };
 
 const int VALUE_TESTS_COUNT = sizeof(VALUE_TESTS) / sizeof(TestCase);
