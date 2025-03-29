@@ -81,6 +81,8 @@ typedef struct {
 } Value;
 
 Value smallStrToObjString(Value smallStrVal);
+char *getStringChars(Value *value);
+int getStringLen(Value *value);
 
 #define IS_BOOL(value)          ((value).type == VAL_BOOL)
 #define IS_NIL(value)           ((value).type == VAL_NIL)

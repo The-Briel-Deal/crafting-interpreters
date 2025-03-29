@@ -78,3 +78,23 @@ Value smallStrToObjString(Value smallStrVal) {
   ObjString *objString = copyString(smallStr.start, smallStr.len);
   return OBJ_VAL(objString);
 }
+
+char *getStringChars(Value *value) {
+  if (IS_STRING(*value)) {
+    return AS_STRING(*value)->chars;
+
+  } else if (IS_SMALL_STR(*value)) {
+    return AS_SMALL_STR(*value).start;
+  }
+  assert(false);
+}
+
+int getStringLen(Value *value) {
+  if (IS_STRING(*value)) {
+    return AS_STRING(*value)->length;
+
+  } else if (IS_SMALL_STR(*value)) {
+    return AS_SMALL_STR(*value).len;
+  }
+  assert(false);
+}
