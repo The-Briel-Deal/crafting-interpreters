@@ -45,7 +45,10 @@ void printValue(Value value) {
     case VAL_NIL   : printf("nil"); break;
     case VAL_NUMBER: printf("%g", AS_NUMBER(value)); break;
     case VAL_OBJ   : printObject(value); break;
-    default        : assert(false); // Should be unreachable.
+    case VAL_SMALL_STR:
+      printf("%.*s", AS_SMALL_STR(value).len, AS_SMALL_STR(value).start);
+      break;
+    default: assert(false); // Should be unreachable.
   }
 #endif
 }

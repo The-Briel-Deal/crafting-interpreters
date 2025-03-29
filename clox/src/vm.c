@@ -242,16 +242,25 @@ static void concatenate() {
   ObjString *b = AS_STRING(peek(0));
   ObjString *a = AS_STRING(peek(1));
 
-  int length  = a->length + b->length;
-  char *chars = ALLOCATE(char, length + 1);
-  memcpy(chars, a->chars, a->length);
-  memcpy(chars + a->length, b->chars, b->length);
-  chars[length] = '\0';
+  int length = a->length + b->length;
+  Value result;
+  if (length > 7) {
+    char *chars = ALLOCATE(char, length + 1);
+    memcpy(chars, a->chars, a->length);
+    memcpy(chars + a->length, b->chars, b->length);
+    chars[length] = '\0';
 
-  ObjString *result = takeString(chars, length);
+    result = OBJ_VAL(takeString(chars, length));
+  } else {
+    SmallStr smallStr = newSmallStr(a->length, a->chars);
+    memcpy(smallStr.start + smallStr.len, b->chars, b->length);
+    smallStr.len += b->length;
+    assert(smallStr.len <= 7);
+    result = SMALL_STR_VAL(smallStr);
+  }
   pop();
   pop();
-  push(OBJ_VAL(result));
+  push(result);
 }
 
 static InterpretResult run() {
