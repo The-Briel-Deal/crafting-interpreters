@@ -63,11 +63,11 @@ typedef struct {
   char start[7];
 } SmallStr;
 
-static inline SmallStr newSmallStr(uint8_t len, char* start) {
-	assert(len <= 7);
-	SmallStr smallStr = {.len = len};
-	strncpy(smallStr.start, start, len);
-	return smallStr;
+static inline SmallStr newSmallStr(uint8_t len, char *start) {
+  assert(len <= 7);
+  SmallStr smallStr = {.len = len};
+  strncpy(smallStr.start, start, len);
+  return smallStr;
 }
 
 typedef struct {
@@ -84,10 +84,12 @@ typedef struct {
 #define IS_NIL(value)           ((value).type == VAL_NIL)
 #define IS_NUMBER(value)        ((value).type == VAL_NUMBER)
 #define IS_OBJ(value)           ((value).type == VAL_OBJ)
+#define IS_SMALL_STR(value)     ((value).type == VAL_SMALL_STR)
 
 #define AS_OBJ(value)           ((value).as.obj)
 #define AS_BOOL(value)          ((value).as.boolean)
 #define AS_NUMBER(value)        ((value).as.number)
+#define AS_SMALL_STR(value)     ((value).as.smallStr)
 
 #define BOOL_VAL(value)         ((Value){VAL_BOOL, {.boolean = value}})
 #define NIL_VAL                 ((Value){VAL_NIL, {.number = 0}})
