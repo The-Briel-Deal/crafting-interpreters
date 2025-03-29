@@ -247,20 +247,19 @@ void testSuper1() {
 
   // Evaluates like ((true and true) or (false and true))
   char source[] =
-		"class Beans {\n"
-		"	 bake() {\n"
-    "    print \"baked beans\";\n"
-		"	 }\n"
-		"}\n"
-	  "class BeanieWeenies < Beans {\n"
-		"	 bake() {\n"
-    "    print \"hot dogs and \";\n"
-		"	 	 super.bake();\n"
-		"	 }\n"
-		"}\n"
-		"var beansAndWeens = BeanieWeenies();"
-	  "beansAndWeens.bake();";
-
+      "class Beans {\n"
+      "	 bake() {\n"
+      "    print \"baked beans\";\n"
+      "	 }\n"
+      "}\n"
+      "class BeanieWeenies < Beans {\n"
+      "	 bake() {\n"
+      "    print \"hot dogs and \";\n"
+      "	 	 super.bake();\n"
+      "	 }\n"
+      "}\n"
+      "var beansAndWeens = BeanieWeenies();"
+      "beansAndWeens.bake();";
 
   interpret(source);
 }

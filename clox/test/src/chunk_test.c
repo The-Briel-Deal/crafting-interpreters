@@ -11,7 +11,7 @@ const char TEST_WRITE_CHUNK_EXPECT[] =
     "== test chunk ==\n"
     "0000  123 OP_CONSTANT         0 '1.2'\n"
     "0002    | OP_RETURN\n"
-		"== test chunk end ==\n";
+    "== test chunk end ==\n";
 void testWriteChunk() {
   Chunk chunk;
   initChunk(&chunk);
@@ -29,7 +29,7 @@ const char TEST_CHUNK_DEF_GLOBAL_EXPECT[] =
     "0002    | OP_DEFINE_GLOBAL    0 'beans'\n"
     "0004    | OP_NIL\n"
     "0005    | OP_RETURN\n"
-		"== test chunk end ==\n";
+    "== test chunk end ==\n";
 
 void testChunkDefGlobal() {
   Chunk *chunk = &compile("var beans = \"greasy\";")->chunk;
@@ -46,7 +46,7 @@ const char TEST_CHUNK_SET_GLOBAL_EXPECT[] =
     "0008    | OP_POP\n"
     "0009    3 OP_NIL\n"
     "0010    | OP_RETURN\n"
-		"== test chunk end ==\n";
+    "== test chunk end ==\n";
 
 void testChunkSetGlobal() {
   Chunk *chunk = &compile(
@@ -68,7 +68,7 @@ const char TEST_CHUNK_GET_GLOBAL_EXPECT[] =
     "0011    | OP_DEFINE_GLOBAL    4 'dog'\n"
     "0013    4 OP_NIL\n"
     "0014    | OP_RETURN\n"
-		"== test chunk end ==\n";
+    "== test chunk end ==\n";
 
 void testChunkGetGlobal() {
 
@@ -91,7 +91,7 @@ const char TEST_CHUNK_LOCAL_EXPECT[] =
     "0010    7 OP_POP\n"
     "0011    8 OP_NIL\n"
     "0012    | OP_RETURN\n"
-		"== test chunk end ==\n";
+    "== test chunk end ==\n";
 
 void testChunkLocal() {
 
@@ -148,7 +148,7 @@ const char TEST_CHUNK_LOOPS_EXPECT[] =
     "0062    | OP_POP\n"
     "0063   15 OP_NIL\n"
     "0064    | OP_RETURN\n"
-		"== test chunk end ==\n";
+    "== test chunk end ==\n";
 
 void testChunkLoops() {
 
