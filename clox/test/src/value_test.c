@@ -72,11 +72,31 @@ void testSmallStrConcat() {
   assert(memcmp(smallStr.start, "abcdef", 6) == 0);
 }
 
+void testDoubleSmallStrConcat() {
+  initVM();
+  ObjString *a = copyString("ab", 2);
+  push(OBJ_VAL(a));
+  ObjString *b = copyString("cd", 2);
+  push(OBJ_VAL(b));
+  ObjString *c = copyString("ef", 2);
+  push(OBJ_VAL(c));
+
+  concatenate();
+  concatenate();
+
+  Value result = pop();
+
+  assert(IS_SMALL_STR(result));
+  SmallStr smallStr = AS_SMALL_STR(result);
+  assert(smallStr.len == 6);
+  assert(memcmp(smallStr.start, "abcdef", 6) == 0);
+}
 const TestCase VALUE_TESTS[] = {
-    {"testMakeSmallStr",    testMakeSmallStr,    ""},
-    {"testMakeSmallStrVal", testMakeSmallStrVal, ""},
-    {"testSmallStrToObj",   testSmallStrToObj,   ""},
-    {"testSmallStrConcat",  testSmallStrConcat,  ""},
+    {"testMakeSmallStr",         testMakeSmallStr,         ""},
+    {"testMakeSmallStrVal",      testMakeSmallStrVal,      ""},
+    {"testSmallStrToObj",        testSmallStrToObj,        ""},
+    {"testSmallStrConcat",       testSmallStrConcat,       ""},
+    {"testDoubleSmallStrConcat", testDoubleSmallStrConcat, ""},
 };
 
 const int VALUE_TESTS_COUNT = sizeof(VALUE_TESTS) / sizeof(TestCase);
