@@ -1,0 +1,12 @@
+fun cat() {
+  var a = "foo";
+	var b = "bar";
+	var c = a + b;
+}
+
+var start = clock();
+for (var i = 0; i < 1000000; i = i + 1) {
+  cat();
+}
+print clock() - start;
+
